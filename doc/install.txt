@@ -1,0 +1,11 @@
+1. set up mysql
+   -- create database fridge;
+   -- grant all privileges on fridge.* to 'fridge'@'localhost' identified by 'orange123';
+
+2. config/databases.yml: set up database username and password
+
+3. update database mapping, sample data
+   $ symfony propel-build-all fridge
+   $ symfony cc
+   $ symfony propel-load-data fridge
+   

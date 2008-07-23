@@ -1,0 +1,68 @@
+propel:
+  user:
+    id:
+    email:          varchar(255)
+    name:           varchar(255)
+    nickname:       varchar(255)
+    password_hash:  varchar(255)
+    
+    created_at:
+    updated_at:
+    last_login:     timestamp
+  
+  # user permissions
+  user_permission:
+    id:
+    user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: cascade }
+    permission:     varchar(32)       # some sort of user permission key (tbd)
+    created_at:
+
+  # products in the fridge
+  product:
+    id:
+    title:          varchar(255)
+    price:          decimal   # per item
+    inventory:      integer
+    image_url:      varchar(255)
+    sort_order:     integer
+
+  # people make purchases
+  purchase:
+    id:
+    user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
+    product_id:     { type: integer, foreignTable: product, foreignReference: id, onDelete: setnull }
+    quantity:       integer
+    price:          decimal   # per item
+    created_at:
+
+  # people can then re-credit the fridge
+  credit:
+    id:
+    user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
+    product_id:     { type: integer, foreignTable: product, foreignReference: id, onDelete: setnull }
+    quantity:       integer
+    price:          decimal   # per item
+
+  # emails
+  email:
+    id:
+    user_id:      { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
+    to_address:   varchar(255)
+    to_name:      varchar(255)
+    from_address: varchar(255)
+    from_name:    varchar(255)
+    subject:      varchar(255)
+    body:         clob
+    created_at:
+    updated_at:
+    sent_at:      timestamp
+    
+  email_attachment:
+    id:
+    email_id:     { type: integer, foreignTable: email, foreignReference: id, onDelete: cascade }
+    filename:     varchar(255)
+    media_type:   varchar(255)
+    content:      blob
+    created_at:
+
+  

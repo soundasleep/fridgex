@@ -1,0 +1,6 @@
+User:
+  user_jevon:
+    email:            jevon@jevon.org
+    password_hash:    e03239b27e34a5f7f3bde739459dd537      # md5 hash of 'galaxy'
+    name:             Jevon Wright
+    nickname:         jevon

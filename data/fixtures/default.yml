@@ -1,0 +1,6 @@
+User:
+  user_server:
+    email:            server@jevon.org
+    password_hash:    daeccf0ad3c1fc8c8015205c332f5b42      # md5 hash of 'apples'
+    name:             Server
+    nickname:         server
