@@ -9,11 +9,27 @@
  */
 class Purchase extends BasePurchase
 {
-	public function setuser($v) {
+	/**
+	 * some helper functions
+ 	 */
+
+	public function setUser($v) {
 		return $this->setUserRelatedByUserId($v);
 	}
 
 	public function setVerifiedUser($v) {
 		return $this->setUserRelatedByVerifiedById($v);
+	}
+
+	public function getUser() {
+		return $this->getUserRelatedByUserId();
+	}
+
+	public function getVerifiedByUser() {
+		return $this->getUserRelatedByVerifiedById();
+	}
+
+	public function getVerifiedBy() {
+		return $this->getUserRelatedByVerifiedById();
 	}
 }

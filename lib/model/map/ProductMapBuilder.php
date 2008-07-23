@@ -36,7 +36,7 @@ class ProductMapBuilder {
 
 		$tMap->addColumn('TITLE', 'Title', 'string', CreoleTypes::VARCHAR, false, 255);
 
-		$tMap->addColumn('PRICE', 'Price', 'double', CreoleTypes::DECIMAL, false, null);
+		$tMap->addColumn('PRICE', 'Price', 'double', CreoleTypes::DECIMAL, false, 9);
 
 		$tMap->addColumn('INVENTORY', 'Inventory', 'int', CreoleTypes::INTEGER, false, null);
 

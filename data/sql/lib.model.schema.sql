@@ -20,7 +20,7 @@ CREATE TABLE `user`
 	`created_at` DATETIME,
 	`updated_at` DATETIME,
 	`last_login` DATETIME,
-	`account_credit` DECIMAL,
+	`account_credit` DECIMAL(9,2),
 	PRIMARY KEY (`id`)
 )Type=MyISAM;
 
@@ -56,7 +56,7 @@ CREATE TABLE `product`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`title` VARCHAR(255),
-	`price` DECIMAL,
+	`price` DECIMAL(9,2),
 	`inventory` INTEGER,
 	`image_url` VARCHAR(255),
 	`sort_order` INTEGER,
@@ -78,7 +78,7 @@ CREATE TABLE `purchase`
 	`user_id` INTEGER,
 	`product_id` INTEGER,
 	`quantity` INTEGER,
-	`price` DECIMAL,
+	`price` DECIMAL(9,2),
 	`created_at` DATETIME,
 	`verified_by_id` INTEGER,
 	`verified_at` DATETIME,

@@ -34,7 +34,9 @@
 </tbody>
 </table>
 
-<?php if ($product->getInventory() > 0 && $user) { ?>
+<?php if ($user) { ?>
+
+<?php if ($product->getInventory() > 0) { ?>
 
 <hr />
 Purchase some of these:
@@ -43,6 +45,13 @@ Purchase some of these:
 Quantity: <?php echo input_tag("quantity", 1); ?>
 <?php echo submit_tag("Purchase"); ?>
 </form>
+
+<?php } else { ?>
+
+<hr />
+<span class="disabled">Purchase some of these</span>
+
+<?php } ?>
 
 <?php if ($user->canCredit($product)) { ?>
 <hr />

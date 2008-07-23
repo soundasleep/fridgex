@@ -34,6 +34,15 @@ class productActions extends myActions
 		$c->add(PurchasePeer::USER_ID, $this->user->getId());
 		$this->purchase = PurchasePeer::doSelectOne($c);
 	}
+
+    // previous credit
+    $this->credit = false;
+    if ($this->getRequestParameter("credit") && $this->user) {
+		$c = new Criteria();
+		$c->add(PurchasePeer::ID, $this->getRequestParameter("credit"));
+		$c->add(PurchasePeer::USER_ID, $this->user->getId());
+		$this->credit = PurchasePeer::doSelectOne($c);
+	}
   }
 
   public function executeShow()
@@ -82,6 +91,55 @@ class productActions extends myActions
 
 		  // redirect to ok page
 		  return $this->redirect("product/list?purchase=".$purchase->getId());
+
+	  } catch (sfError404Exception $e) {
+		  $this->getRequest()->setError("exception", $e->getMessage());
+		  return sfView::ERROR;
+	  }
+
+  }
+
+  public function executeCredit() {
+	  // user needs to be logged in
+	  $this->user = $this->getUserObject();
+
+	  try {
+		  $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
+		  $this->forward404Unless($this->product, "no product specified");
+		  $this->quantity = (int) $this->getRequestParameter('quantity');
+		  $this->forward404Unless($this->quantity > 0, "no quantity specified");
+		  $this->price = $this->getRequestParameter('price');
+		  $this->forward404Unless($this->price > 0, "no price specified");
+		  $total = $this->price * $this->quantity;
+		  $this->forward404Unless($this->user->canCredit($this->product), "user cannot credit this product");
+
+		  // execute credit
+		  $purchase = new Purchase();
+		  $purchase->setUser($this->user);
+		  $purchase->setProduct($this->product);
+		  $purchase->setQuantity($this->quantity);
+		  $purchase->setPrice($this->price);
+		  $purchase->save();
+
+		  // add balance
+		  $this->user->setAccountCredit($this->user->getAccountCredit() + $total);
+		  $this->user->save();
+
+		  // update product
+		  $this->product->setInventory($this->product->getInventory() + $this->quantity);
+		  // some interesting logic goes here, to update the new product price
+		  // new product price = ((old price * old quantity) + (new price * added quantity)) / total new quantity
+     	  sfContext::getInstance()->getLogger()->debug("{productActions} old price: " . $this->product->getPrice());
+     	  sfContext::getInstance()->getLogger()->debug("{productActions} old quantity: " . $this->product->getInventory());
+		  $this->product->setPrice(
+			  (($this->product->getPrice() * $this->product->getInventory()) +
+			  ($this->price * $this->quantity)) / ($this->product->getInventory() + $this->quantity));
+		  $this->product->save();
+     	  sfContext::getInstance()->getLogger()->debug("{productActions} new price: " . $this->product->getPrice());
+     	  sfContext::getInstance()->getLogger()->debug("{productActions} new quantity: " . $this->product->getInventory());
+
+		  // redirect to ok page
+		  return $this->redirect("product/list?credit=".$purchase->getId());
 
 	  } catch (sfError404Exception $e) {
 		  $this->getRequest()->setError("exception", $e->getMessage());

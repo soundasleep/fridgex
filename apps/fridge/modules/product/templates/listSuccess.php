@@ -17,6 +17,18 @@
 </div>
 <?php } ?>
 
+<?php if ($credit) { ?>
+<div class="message">
+	You have successfully credited <?php echo number_format($credit->getQuantity()); ?>
+	<?php echo link_to($credit->getProduct()->getTitle() . ($credit->getQuantity() == 1 ? "" : "s"), "product/show?id=".$credit->getProduct()->getId()); ?>
+	at <b><?php echo format_currency($credit->getPrice()); ?></b> each. The new product price
+	is now <b><?php echo format_currency($credit->getProduct()->getPrice()); ?></b>.
+	<br>
+	Your <?php echo link_to("account balance", "user/index"); ?>
+	is now <b><?php echo format_currency($user->getAccountCredit()); ?></b>.
+</div>
+<?php } ?>
+
 <table>
 <thead>
 <tr>

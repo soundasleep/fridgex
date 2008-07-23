@@ -40,7 +40,7 @@ class PurchaseMapBuilder {
 
 		$tMap->addColumn('QUANTITY', 'Quantity', 'int', CreoleTypes::INTEGER, false, null);
 
-		$tMap->addColumn('PRICE', 'Price', 'double', CreoleTypes::DECIMAL, false, null);
+		$tMap->addColumn('PRICE', 'Price', 'double', CreoleTypes::DECIMAL, false, 9);
 
 		$tMap->addColumn('CREATED_AT', 'CreatedAt', 'int', CreoleTypes::TIMESTAMP, false, null);
 

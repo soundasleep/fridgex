@@ -48,7 +48,7 @@ class UserMapBuilder {
 
 		$tMap->addColumn('LAST_LOGIN', 'LastLogin', 'int', CreoleTypes::TIMESTAMP, false, null);
 
-		$tMap->addColumn('ACCOUNT_CREDIT', 'AccountCredit', 'double', CreoleTypes::DECIMAL, false, null);
+		$tMap->addColumn('ACCOUNT_CREDIT', 'AccountCredit', 'double', CreoleTypes::DECIMAL, false, 9);
 
 	} 
 } 
