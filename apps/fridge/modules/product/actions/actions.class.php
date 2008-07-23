@@ -25,12 +25,67 @@ class productActions extends myActions
     $this->products = ProductPeer::doSelect(new Criteria());
 
 	$this->user = $this->getUserObject(false);
+
+    // previous purchase
+    $this->purchase = false;
+    if ($this->getRequestParameter("purchase") && $this->user) {
+		$c = new Criteria();
+		$c->add(PurchasePeer::ID, $this->getRequestParameter("purchase"));
+		$c->add(PurchasePeer::USER_ID, $this->user->getId());
+		$this->purchase = PurchasePeer::doSelectOne($c);
+	}
   }
 
   public function executeShow()
   {
     $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($this->product);
+  }
+
+  public function executePurchase() {
+	  // user needs to be logged in
+	  $this->user = $this->getUserObject();
+
+	  // how much do we need?
+	  try {
+		  $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
+		  $this->forward404Unless($this->product, "no product specified");
+		  $this->quantity = (int) $this->getRequestParameter('quantity');
+		  $this->forward404Unless($this->quantity > 0, "no quantity specified");
+		  $total = $this->product->getPrice() * $this->quantity;
+		  $this->forward404Unless($this->product->getInventory() >= $this->quantity, "insufficient quantites available");
+
+		  // do we have enough credit?
+		  if (($this->user->getAccountCredit() - $total) < sfConfig::get("app_credit_minimum", 0)) {
+			  // no we don't; display an error message
+			  sfLoader::loadHelpers('Url');
+			  throw new sfError404Exception("You don't have enough credit in your account. You need to credit your account.");
+		  }
+
+		  // execute purchase
+		  $purchase = new Purchase();
+		  $purchase->setUser($this->user);
+		  $purchase->setProduct($this->product);
+		  $purchase->setQuantity($this->quantity);
+		  $purchase->setPrice($this->product->getPrice());
+		  $purchase->save();
+
+		  // deduct balance
+		  $this->user->setAccountCredit($this->user->getAccountCredit() - $total);
+		  $this->user->save();
+
+		  // update product
+		  $this->product->setInventory($this->product->getInventory() - $this->quantity);
+		  $this->product->save();
+
+		  // redirect to ok page
+		  return $this->redirect("product/list?purchase=".$purchase->getId());
+
+	  } catch (sfError404Exception $e) {
+		  $this->getRequest()->setError("exception", $e->getMessage());
+		  return sfView::ERROR;
+	  }
+
   }
 
 }

@@ -6,6 +6,17 @@
 
 <?php use_helper('Number'); ?>
 
+<?php if ($purchase) { ?>
+<div class="message">
+	You have successfully purchased <?php echo number_format($purchase->getQuantity()); ?>
+	<?php echo link_to($purchase->getProduct()->getTitle() . ($purchase->getQuantity() == 1 ? "" : "s"), "product/show?id=".$purchase->getProduct()->getId()); ?>
+	for <b><?php echo format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></b>.
+	<br>
+	Your <?php echo link_to("account balance", "user/home"); ?>
+	is now <b><?php echo format_currency($user->getAccountCredit()); ?></b>.
+</div>
+<?php } ?>
+
 <table>
 <thead>
 <tr>
@@ -22,7 +33,12 @@
       <td><?php echo format_currency($product->getPrice()) ?></td>
       <td><?php echo $product->getInventory() ?></td>
       <td><?php echo $product->getImageUrl() ?></td>
-      <td><?php echo link_to("purchase one (" . format_currency($product->getPrice()) . ")", 'product/purchase?id='.$product->getId().'&quantity=1') ?></td>
+      <td><?php if ($product->getInventory() > 0) { ?>
+    	<?php echo link_to("purchase one (" . format_currency($product->getPrice()) . ")", 'product/purchase?id='.$product->getId().'&quantity=1') ?>
+      <?php } else { ?>
+        <span class="disabled">purchase one (<?php echo format_currency($product->getPrice()); ?>)</span>
+      <?php } ?>
+    </td>
   </tr>
 <?php endforeach; ?>
 </tbody>

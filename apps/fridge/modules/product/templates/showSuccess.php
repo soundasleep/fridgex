@@ -35,8 +35,17 @@
 </table>
 <hr />
 
+<?php if ($product->getInventory() > 0) { ?>
+
 Purchase some of these:
 <?php echo form_tag("product/purchase"); ?>
+<?php echo input_hidden_tag("id", $product->getId()); ?>
 Quantity: <?php echo input_tag("quantity", 1); ?>
 <?php echo submit_tag("Purchase"); ?>
 </form>
+
+<?php } else { ?>
+
+<span class="disabled">Purchase some of these</span>
+
+<?php } ?>

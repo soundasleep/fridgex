@@ -33,6 +33,7 @@ h1 { margin-top: .2em; margin-bottom: .2em; }
 div.error { padding: 5px; margin: 5px; width: 40%; border: 1px solid #cc9999; background: #ffcccc; }
 div.message { padding: 5px; margin: 5px; width: 40%; border: 1px solid #9999cc; background: #ccccff; }
 ul,ol { padding-left: 1em; margin: 1em; }
+span.disabled { color: gray; }
 
 /* top navigation bar */
 div#navigation { margin-left: auto; margin-right: auto; width: auto; }
