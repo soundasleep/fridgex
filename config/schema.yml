@@ -28,8 +28,10 @@ propel:
     inventory:      integer
     image_url:      varchar(255)
     sort_order:     integer
+    created_at:
+    updated_at:
 
-  # people make purchases
+  # people make purchases or credits (they are stored in the same table)
   purchase:
     id:
     user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
@@ -37,14 +39,11 @@ propel:
     quantity:       integer
     price:          decimal   # per item
     created_at:
-
-  # people can then re-credit the fridge
-  credit:
-    id:
-    user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
-    product_id:     { type: integer, foreignTable: product, foreignReference: id, onDelete: setnull }
-    quantity:       integer
-    price:          decimal   # per item
+    
+    # when crediting, they need to be verified by someone with authority
+    verified_by_id: { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
+    verified_at:    timestamp
+    notes:          varchar(255)
 
   # emails
   email:

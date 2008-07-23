@@ -16,7 +16,7 @@ Product:
     title:          Can of Coke
     price:          1.99
     inventory:      12
-    image_url:      "products/coke_bottle.jpg"
+    image_url:      "products/coke_can.jpg"
 
   product_dew_bottle:
     title:          Bottle of Mountain Dew

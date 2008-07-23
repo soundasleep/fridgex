@@ -40,6 +40,8 @@ class productActions extends myActions
   {
     $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($this->product);
+
+    $this->user = $this->getUserObject(false);
   }
 
   public function executePurchase() {
@@ -66,7 +68,7 @@ class productActions extends myActions
 		  $purchase = new Purchase();
 		  $purchase->setUser($this->user);
 		  $purchase->setProduct($this->product);
-		  $purchase->setQuantity($this->quantity);
+		  $purchase->setQuantity(-$this->quantity);
 		  $purchase->setPrice($this->product->getPrice());
 		  $purchase->save();
 

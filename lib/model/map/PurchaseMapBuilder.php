@@ -44,5 +44,11 @@ class PurchaseMapBuilder {
 
 		$tMap->addColumn('CREATED_AT', 'CreatedAt', 'int', CreoleTypes::TIMESTAMP, false, null);
 
+		$tMap->addForeignKey('VERIFIED_BY_ID', 'VerifiedById', 'int', CreoleTypes::INTEGER, 'user', 'ID', false, null);
+
+		$tMap->addColumn('VERIFIED_AT', 'VerifiedAt', 'int', CreoleTypes::TIMESTAMP, false, null);
+
+		$tMap->addColumn('NOTES', 'Notes', 'string', CreoleTypes::VARCHAR, false, 255);
+
 	} 
 } 

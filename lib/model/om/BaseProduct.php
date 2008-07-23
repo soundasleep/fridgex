@@ -31,17 +31,19 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 	
 	protected $sort_order;
 
+
+	
+	protected $created_at;
+
+
+	
+	protected $updated_at;
+
 	
 	protected $collPurchases;
 
 	
 	protected $lastPurchaseCriteria = null;
-
-	
-	protected $collCredits;
-
-	
-	protected $lastCreditCriteria = null;
 
 	
 	protected $alreadyInSave = false;
@@ -89,6 +91,50 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 	{
 
 		return $this->sort_order;
+	}
+
+	
+	public function getCreatedAt($format = 'Y-m-d H:i:s')
+	{
+
+		if ($this->created_at === null || $this->created_at === '') {
+			return null;
+		} elseif (!is_int($this->created_at)) {
+						$ts = strtotime($this->created_at);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse value of [created_at] as date/time value: " . var_export($this->created_at, true));
+			}
+		} else {
+			$ts = $this->created_at;
+		}
+		if ($format === null) {
+			return $ts;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $ts);
+		} else {
+			return date($format, $ts);
+		}
+	}
+
+	
+	public function getUpdatedAt($format = 'Y-m-d H:i:s')
+	{
+
+		if ($this->updated_at === null || $this->updated_at === '') {
+			return null;
+		} elseif (!is_int($this->updated_at)) {
+						$ts = strtotime($this->updated_at);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse value of [updated_at] as date/time value: " . var_export($this->updated_at, true));
+			}
+		} else {
+			$ts = $this->updated_at;
+		}
+		if ($format === null) {
+			return $ts;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $ts);
+		} else {
+			return date($format, $ts);
+		}
 	}
 
 	
@@ -182,6 +228,40 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setCreatedAt($v)
+	{
+
+		if ($v !== null && !is_int($v)) {
+			$ts = strtotime($v);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse date/time value for [created_at] from input: " . var_export($v, true));
+			}
+		} else {
+			$ts = $v;
+		}
+		if ($this->created_at !== $ts) {
+			$this->created_at = $ts;
+			$this->modifiedColumns[] = ProductPeer::CREATED_AT;
+		}
+
+	} 
+	
+	public function setUpdatedAt($v)
+	{
+
+		if ($v !== null && !is_int($v)) {
+			$ts = strtotime($v);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse date/time value for [updated_at] from input: " . var_export($v, true));
+			}
+		} else {
+			$ts = $v;
+		}
+		if ($this->updated_at !== $ts) {
+			$this->updated_at = $ts;
+			$this->modifiedColumns[] = ProductPeer::UPDATED_AT;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -198,11 +278,15 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 			$this->sort_order = $rs->getInt($startcol + 5);
 
+			$this->created_at = $rs->getTimestamp($startcol + 6, null);
+
+			$this->updated_at = $rs->getTimestamp($startcol + 7, null);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 6; 
+						return $startcol + 8; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Product object", $e);
 		}
@@ -233,6 +317,16 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 	
 	public function save($con = null)
 	{
+    if ($this->isNew() && !$this->isColumnModified(ProductPeer::CREATED_AT))
+    {
+      $this->setCreatedAt(time());
+    }
+
+    if ($this->isModified() && !$this->isColumnModified(ProductPeer::UPDATED_AT))
+    {
+      $this->setUpdatedAt(time());
+    }
+
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
 		}
@@ -272,14 +366,6 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 			if ($this->collPurchases !== null) {
 				foreach($this->collPurchases as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
-			if ($this->collCredits !== null) {
-				foreach($this->collCredits as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -335,14 +421,6 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 					}
 				}
 
-				if ($this->collCredits !== null) {
-					foreach($this->collCredits as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
-
 
 			$this->alreadyInValidation = false;
 		}
@@ -379,6 +457,12 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			case 5:
 				return $this->getSortOrder();
 				break;
+			case 6:
+				return $this->getCreatedAt();
+				break;
+			case 7:
+				return $this->getUpdatedAt();
+				break;
 			default:
 				return null;
 				break;
@@ -395,6 +479,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			$keys[3] => $this->getInventory(),
 			$keys[4] => $this->getImageUrl(),
 			$keys[5] => $this->getSortOrder(),
+			$keys[6] => $this->getCreatedAt(),
+			$keys[7] => $this->getUpdatedAt(),
 		);
 		return $result;
 	}
@@ -428,6 +514,12 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			case 5:
 				$this->setSortOrder($value);
 				break;
+			case 6:
+				$this->setCreatedAt($value);
+				break;
+			case 7:
+				$this->setUpdatedAt($value);
+				break;
 		} 	}
 
 	
@@ -441,6 +533,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[3], $arr)) $this->setInventory($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setImageUrl($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setSortOrder($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setCreatedAt($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setUpdatedAt($arr[$keys[7]]);
 	}
 
 	
@@ -454,6 +548,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ProductPeer::INVENTORY)) $criteria->add(ProductPeer::INVENTORY, $this->inventory);
 		if ($this->isColumnModified(ProductPeer::IMAGE_URL)) $criteria->add(ProductPeer::IMAGE_URL, $this->image_url);
 		if ($this->isColumnModified(ProductPeer::SORT_ORDER)) $criteria->add(ProductPeer::SORT_ORDER, $this->sort_order);
+		if ($this->isColumnModified(ProductPeer::CREATED_AT)) $criteria->add(ProductPeer::CREATED_AT, $this->created_at);
+		if ($this->isColumnModified(ProductPeer::UPDATED_AT)) $criteria->add(ProductPeer::UPDATED_AT, $this->updated_at);
 
 		return $criteria;
 	}
@@ -494,16 +590,16 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 		$copyObj->setSortOrder($this->sort_order);
 
+		$copyObj->setCreatedAt($this->created_at);
+
+		$copyObj->setUpdatedAt($this->updated_at);
+
 
 		if ($deepCopy) {
 									$copyObj->setNew(false);
 
 			foreach($this->getPurchases() as $relObj) {
 				$copyObj->addPurchase($relObj->copy($deepCopy));
-			}
-
-			foreach($this->getCredits() as $relObj) {
-				$copyObj->addCredit($relObj->copy($deepCopy));
 			}
 
 		} 
@@ -603,7 +699,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 
 	
-	public function getPurchasesJoinUser($criteria = null, $con = null)
+	public function getPurchasesJoinUserRelatedByUserId($criteria = null, $con = null)
 	{
 				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
@@ -621,14 +717,14 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 				$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
 
-				$this->collPurchases = PurchasePeer::doSelectJoinUser($criteria, $con);
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByUserId($criteria, $con);
 			}
 		} else {
 									
 			$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
 
 			if (!isset($this->lastPurchaseCriteria) || !$this->lastPurchaseCriteria->equals($criteria)) {
-				$this->collPurchases = PurchasePeer::doSelectJoinUser($criteria, $con);
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByUserId($criteria, $con);
 			}
 		}
 		$this->lastPurchaseCriteria = $criteria;
@@ -636,18 +732,11 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		return $this->collPurchases;
 	}
 
-	
-	public function initCredits()
-	{
-		if ($this->collCredits === null) {
-			$this->collCredits = array();
-		}
-	}
 
 	
-	public function getCredits($criteria = null, $con = null)
+	public function getPurchasesJoinUserRelatedByVerifiedById($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
+				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
 			$criteria = new Criteria();
 		}
@@ -656,89 +745,26 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		if ($this->collCredits === null) {
+		if ($this->collPurchases === null) {
 			if ($this->isNew()) {
-			   $this->collCredits = array();
+				$this->collPurchases = array();
 			} else {
 
-				$criteria->add(CreditPeer::PRODUCT_ID, $this->getId());
+				$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
 
-				CreditPeer::addSelectColumns($criteria);
-				$this->collCredits = CreditPeer::doSelect($criteria, $con);
-			}
-		} else {
-						if (!$this->isNew()) {
-												
-
-				$criteria->add(CreditPeer::PRODUCT_ID, $this->getId());
-
-				CreditPeer::addSelectColumns($criteria);
-				if (!isset($this->lastCreditCriteria) || !$this->lastCreditCriteria->equals($criteria)) {
-					$this->collCredits = CreditPeer::doSelect($criteria, $con);
-				}
-			}
-		}
-		$this->lastCreditCriteria = $criteria;
-		return $this->collCredits;
-	}
-
-	
-	public function countCredits($criteria = null, $distinct = false, $con = null)
-	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
-		if ($criteria === null) {
-			$criteria = new Criteria();
-		}
-		elseif ($criteria instanceof Criteria)
-		{
-			$criteria = clone $criteria;
-		}
-
-		$criteria->add(CreditPeer::PRODUCT_ID, $this->getId());
-
-		return CreditPeer::doCount($criteria, $distinct, $con);
-	}
-
-	
-	public function addCredit(Credit $l)
-	{
-		$this->collCredits[] = $l;
-		$l->setProduct($this);
-	}
-
-
-	
-	public function getCreditsJoinUser($criteria = null, $con = null)
-	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
-		if ($criteria === null) {
-			$criteria = new Criteria();
-		}
-		elseif ($criteria instanceof Criteria)
-		{
-			$criteria = clone $criteria;
-		}
-
-		if ($this->collCredits === null) {
-			if ($this->isNew()) {
-				$this->collCredits = array();
-			} else {
-
-				$criteria->add(CreditPeer::PRODUCT_ID, $this->getId());
-
-				$this->collCredits = CreditPeer::doSelectJoinUser($criteria, $con);
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByVerifiedById($criteria, $con);
 			}
 		} else {
 									
-			$criteria->add(CreditPeer::PRODUCT_ID, $this->getId());
+			$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
 
-			if (!isset($this->lastCreditCriteria) || !$this->lastCreditCriteria->equals($criteria)) {
-				$this->collCredits = CreditPeer::doSelectJoinUser($criteria, $con);
+			if (!isset($this->lastPurchaseCriteria) || !$this->lastPurchaseCriteria->equals($criteria)) {
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByVerifiedById($criteria, $con);
 			}
 		}
-		$this->lastCreditCriteria = $criteria;
+		$this->lastPurchaseCriteria = $criteria;
 
-		return $this->collCredits;
+		return $this->collPurchases;
 	}
 
 } 

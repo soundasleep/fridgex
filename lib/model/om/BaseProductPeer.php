@@ -13,7 +13,7 @@ abstract class BaseProductPeer {
 	const CLASS_DEFAULT = 'lib.model.Product';
 
 	
-	const NUM_COLUMNS = 6;
+	const NUM_COLUMNS = 8;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -38,23 +38,29 @@ abstract class BaseProductPeer {
 	const SORT_ORDER = 'product.SORT_ORDER';
 
 	
+	const CREATED_AT = 'product.CREATED_AT';
+
+	
+	const UPDATED_AT = 'product.UPDATED_AT';
+
+	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Price', 'Inventory', 'ImageUrl', 'SortOrder', ),
-		BasePeer::TYPE_COLNAME => array (ProductPeer::ID, ProductPeer::TITLE, ProductPeer::PRICE, ProductPeer::INVENTORY, ProductPeer::IMAGE_URL, ProductPeer::SORT_ORDER, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'price', 'inventory', 'image_url', 'sort_order', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Price', 'Inventory', 'ImageUrl', 'SortOrder', 'CreatedAt', 'UpdatedAt', ),
+		BasePeer::TYPE_COLNAME => array (ProductPeer::ID, ProductPeer::TITLE, ProductPeer::PRICE, ProductPeer::INVENTORY, ProductPeer::IMAGE_URL, ProductPeer::SORT_ORDER, ProductPeer::CREATED_AT, ProductPeer::UPDATED_AT, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'price', 'inventory', 'image_url', 'sort_order', 'created_at', 'updated_at', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Price' => 2, 'Inventory' => 3, 'ImageUrl' => 4, 'SortOrder' => 5, ),
-		BasePeer::TYPE_COLNAME => array (ProductPeer::ID => 0, ProductPeer::TITLE => 1, ProductPeer::PRICE => 2, ProductPeer::INVENTORY => 3, ProductPeer::IMAGE_URL => 4, ProductPeer::SORT_ORDER => 5, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'price' => 2, 'inventory' => 3, 'image_url' => 4, 'sort_order' => 5, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Price' => 2, 'Inventory' => 3, 'ImageUrl' => 4, 'SortOrder' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
+		BasePeer::TYPE_COLNAME => array (ProductPeer::ID => 0, ProductPeer::TITLE => 1, ProductPeer::PRICE => 2, ProductPeer::INVENTORY => 3, ProductPeer::IMAGE_URL => 4, ProductPeer::SORT_ORDER => 5, ProductPeer::CREATED_AT => 6, ProductPeer::UPDATED_AT => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'price' => 2, 'inventory' => 3, 'image_url' => 4, 'sort_order' => 5, 'created_at' => 6, 'updated_at' => 7, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	
@@ -119,6 +125,10 @@ abstract class BaseProductPeer {
 		$criteria->addSelectColumn(ProductPeer::IMAGE_URL);
 
 		$criteria->addSelectColumn(ProductPeer::SORT_ORDER);
+
+		$criteria->addSelectColumn(ProductPeer::CREATED_AT);
+
+		$criteria->addSelectColumn(ProductPeer::UPDATED_AT);
 
 	}
 
@@ -317,12 +327,6 @@ abstract class BaseProductPeer {
 			$updateValues = new Criteria(ProductPeer::DATABASE_NAME);
 			$selectCriteria->add(PurchasePeer::PRODUCT_ID, $obj->getId());
 			$updateValues->add(PurchasePeer::PRODUCT_ID, null);
-
-			BasePeer::doUpdate($selectCriteria, $updateValues, $con); 
-						$selectCriteria = new Criteria(ProductPeer::DATABASE_NAME);
-			$updateValues = new Criteria(ProductPeer::DATABASE_NAME);
-			$selectCriteria->add(CreditPeer::PRODUCT_ID, $obj->getId());
-			$updateValues->add(CreditPeer::PRODUCT_ID, null);
 
 			BasePeer::doUpdate($selectCriteria, $updateValues, $con); 
 		}

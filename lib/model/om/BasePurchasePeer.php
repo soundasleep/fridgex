@@ -13,7 +13,7 @@ abstract class BasePurchasePeer {
 	const CLASS_DEFAULT = 'lib.model.Purchase';
 
 	
-	const NUM_COLUMNS = 6;
+	const NUM_COLUMNS = 9;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -38,23 +38,32 @@ abstract class BasePurchasePeer {
 	const CREATED_AT = 'purchase.CREATED_AT';
 
 	
+	const VERIFIED_BY_ID = 'purchase.VERIFIED_BY_ID';
+
+	
+	const VERIFIED_AT = 'purchase.VERIFIED_AT';
+
+	
+	const NOTES = 'purchase.NOTES';
+
+	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'ProductId', 'Quantity', 'Price', 'CreatedAt', ),
-		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID, PurchasePeer::USER_ID, PurchasePeer::PRODUCT_ID, PurchasePeer::QUANTITY, PurchasePeer::PRICE, PurchasePeer::CREATED_AT, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'product_id', 'quantity', 'price', 'created_at', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'ProductId', 'Quantity', 'Price', 'CreatedAt', 'VerifiedById', 'VerifiedAt', 'Notes', ),
+		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID, PurchasePeer::USER_ID, PurchasePeer::PRODUCT_ID, PurchasePeer::QUANTITY, PurchasePeer::PRICE, PurchasePeer::CREATED_AT, PurchasePeer::VERIFIED_BY_ID, PurchasePeer::VERIFIED_AT, PurchasePeer::NOTES, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'product_id', 'quantity', 'price', 'created_at', 'verified_by_id', 'verified_at', 'notes', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'ProductId' => 2, 'Quantity' => 3, 'Price' => 4, 'CreatedAt' => 5, ),
-		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID => 0, PurchasePeer::USER_ID => 1, PurchasePeer::PRODUCT_ID => 2, PurchasePeer::QUANTITY => 3, PurchasePeer::PRICE => 4, PurchasePeer::CREATED_AT => 5, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'product_id' => 2, 'quantity' => 3, 'price' => 4, 'created_at' => 5, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'ProductId' => 2, 'Quantity' => 3, 'Price' => 4, 'CreatedAt' => 5, 'VerifiedById' => 6, 'VerifiedAt' => 7, 'Notes' => 8, ),
+		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID => 0, PurchasePeer::USER_ID => 1, PurchasePeer::PRODUCT_ID => 2, PurchasePeer::QUANTITY => 3, PurchasePeer::PRICE => 4, PurchasePeer::CREATED_AT => 5, PurchasePeer::VERIFIED_BY_ID => 6, PurchasePeer::VERIFIED_AT => 7, PurchasePeer::NOTES => 8, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'product_id' => 2, 'quantity' => 3, 'price' => 4, 'created_at' => 5, 'verified_by_id' => 6, 'verified_at' => 7, 'notes' => 8, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 
 	
@@ -119,6 +128,12 @@ abstract class BasePurchasePeer {
 		$criteria->addSelectColumn(PurchasePeer::PRICE);
 
 		$criteria->addSelectColumn(PurchasePeer::CREATED_AT);
+
+		$criteria->addSelectColumn(PurchasePeer::VERIFIED_BY_ID);
+
+		$criteria->addSelectColumn(PurchasePeer::VERIFIED_AT);
+
+		$criteria->addSelectColumn(PurchasePeer::NOTES);
 
 	}
 
@@ -199,7 +214,7 @@ abstract class BasePurchasePeer {
 	}
 
 	
-	public static function doCountJoinUser(Criteria $criteria, $distinct = false, $con = null)
+	public static function doCountJoinUserRelatedByUserId(Criteria $criteria, $distinct = false, $con = null)
 	{
 				$criteria = clone $criteria;
 
@@ -255,7 +270,35 @@ abstract class BasePurchasePeer {
 
 
 	
-	public static function doSelectJoinUser(Criteria $c, $con = null)
+	public static function doCountJoinUserRelatedByVerifiedById(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(PurchasePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(PurchasePeer::COUNT);
+		}
+
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
+
+		$rs = PurchasePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doSelectJoinUserRelatedByUserId(Criteria $c, $con = null)
 	{
 		$c = clone $c;
 
@@ -287,14 +330,14 @@ abstract class BasePurchasePeer {
 
 			$newObject = true;
 			foreach($results as $temp_obj1) {
-				$temp_obj2 = $temp_obj1->getUser(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+				$temp_obj2 = $temp_obj1->getUserRelatedByUserId(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
 					$newObject = false;
-										$temp_obj2->addPurchase($obj1); 					break;
+										$temp_obj2->addPurchaseRelatedByUserId($obj1); 					break;
 				}
 			}
 			if ($newObject) {
-				$obj2->initPurchases();
-				$obj2->addPurchase($obj1); 			}
+				$obj2->initPurchasesRelatedByUserId();
+				$obj2->addPurchaseRelatedByUserId($obj1); 			}
 			$results[] = $obj1;
 		}
 		return $results;
@@ -349,6 +392,53 @@ abstract class BasePurchasePeer {
 
 
 	
+	public static function doSelectJoinUserRelatedByVerifiedById(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+				if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		PurchasePeer::addSelectColumns($c);
+		$startcol = (PurchasePeer::NUM_COLUMNS - PurchasePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+		UserPeer::addSelectColumns($c);
+
+		$c->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+
+		while($rs->next()) {
+
+			$omClass = PurchasePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);
+
+			$omClass = UserPeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj2 = new $cls();
+			$obj2->hydrate($rs, $startcol);
+
+			$newObject = true;
+			foreach($results as $temp_obj1) {
+				$temp_obj2 = $temp_obj1->getUserRelatedByVerifiedById(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+										$temp_obj2->addPurchaseRelatedByVerifiedById($obj1); 					break;
+				}
+			}
+			if ($newObject) {
+				$obj2->initPurchasesRelatedByVerifiedById();
+				$obj2->addPurchaseRelatedByVerifiedById($obj1); 			}
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
 	public static function doCountJoinAll(Criteria $criteria, $distinct = false, $con = null)
 	{
 		$criteria = clone $criteria;
@@ -368,6 +458,8 @@ abstract class BasePurchasePeer {
 		$criteria->addJoin(PurchasePeer::USER_ID, UserPeer::ID);
 
 		$criteria->addJoin(PurchasePeer::PRODUCT_ID, ProductPeer::ID);
+
+		$criteria->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
 
 		$rs = PurchasePeer::doSelectRS($criteria, $con);
 		if ($rs->next()) {
@@ -396,9 +488,14 @@ abstract class BasePurchasePeer {
 		ProductPeer::addSelectColumns($c);
 		$startcol4 = $startcol3 + ProductPeer::NUM_COLUMNS;
 
+		UserPeer::addSelectColumns($c);
+		$startcol5 = $startcol4 + UserPeer::NUM_COLUMNS;
+
 		$c->addJoin(PurchasePeer::USER_ID, UserPeer::ID);
 
 		$c->addJoin(PurchasePeer::PRODUCT_ID, ProductPeer::ID);
+
+		$c->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
 
 		$rs = BasePeer::doSelect($c, $con);
 		$results = array();
@@ -424,15 +521,15 @@ abstract class BasePurchasePeer {
 			$newObject = true;
 			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
 				$temp_obj1 = $results[$j];
-				$temp_obj2 = $temp_obj1->getUser(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+				$temp_obj2 = $temp_obj1->getUserRelatedByUserId(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
 					$newObject = false;
-					$temp_obj2->addPurchase($obj1); 					break;
+					$temp_obj2->addPurchaseRelatedByUserId($obj1); 					break;
 				}
 			}
 
 			if ($newObject) {
-				$obj2->initPurchases();
-				$obj2->addPurchase($obj1);
+				$obj2->initPurchasesRelatedByUserId();
+				$obj2->addPurchaseRelatedByUserId($obj1);
 			}
 
 
@@ -458,6 +555,29 @@ abstract class BasePurchasePeer {
 				$obj3->addPurchase($obj1);
 			}
 
+
+					
+			$omClass = UserPeer::getOMClass();
+
+
+			$cls = Propel::import($omClass);
+			$obj4 = new $cls();
+			$obj4->hydrate($rs, $startcol4);
+
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj4 = $temp_obj1->getUserRelatedByVerifiedById(); 				if ($temp_obj4->getPrimaryKey() === $obj4->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj4->addPurchaseRelatedByVerifiedById($obj1); 					break;
+				}
+			}
+
+			if ($newObject) {
+				$obj4->initPurchasesRelatedByVerifiedById();
+				$obj4->addPurchaseRelatedByVerifiedById($obj1);
+			}
+
 			$results[] = $obj1;
 		}
 		return $results;
@@ -465,7 +585,7 @@ abstract class BasePurchasePeer {
 
 
 	
-	public static function doCountJoinAllExceptUser(Criteria $criteria, $distinct = false, $con = null)
+	public static function doCountJoinAllExceptUserRelatedByUserId(Criteria $criteria, $distinct = false, $con = null)
 	{
 				$criteria = clone $criteria;
 
@@ -511,6 +631,8 @@ abstract class BasePurchasePeer {
 
 		$criteria->addJoin(PurchasePeer::USER_ID, UserPeer::ID);
 
+		$criteria->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
+
 		$rs = PurchasePeer::doSelectRS($criteria, $con);
 		if ($rs->next()) {
 			return $rs->getInt(1);
@@ -521,7 +643,35 @@ abstract class BasePurchasePeer {
 
 
 	
-	public static function doSelectJoinAllExceptUser(Criteria $c, $con = null)
+	public static function doCountJoinAllExceptUserRelatedByVerifiedById(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(PurchasePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(PurchasePeer::COUNT);
+		}
+
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(PurchasePeer::PRODUCT_ID, ProductPeer::ID);
+
+		$rs = PurchasePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doSelectJoinAllExceptUserRelatedByUserId(Criteria $c, $con = null)
 	{
 		$c = clone $c;
 
@@ -592,7 +742,12 @@ abstract class BasePurchasePeer {
 		UserPeer::addSelectColumns($c);
 		$startcol3 = $startcol2 + UserPeer::NUM_COLUMNS;
 
+		UserPeer::addSelectColumns($c);
+		$startcol4 = $startcol3 + UserPeer::NUM_COLUMNS;
+
 		$c->addJoin(PurchasePeer::USER_ID, UserPeer::ID);
+
+		$c->addJoin(PurchasePeer::VERIFIED_BY_ID, UserPeer::ID);
 
 
 		$rs = BasePeer::doSelect($c, $con);
@@ -616,7 +771,86 @@ abstract class BasePurchasePeer {
 			$newObject = true;
 			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
 				$temp_obj1 = $results[$j];
-				$temp_obj2 = $temp_obj1->getUser(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+				$temp_obj2 = $temp_obj1->getUserRelatedByUserId(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj2->addPurchaseRelatedByUserId($obj1);
+					break;
+				}
+			}
+
+			if ($newObject) {
+				$obj2->initPurchasesRelatedByUserId();
+				$obj2->addPurchaseRelatedByUserId($obj1);
+			}
+
+			$omClass = UserPeer::getOMClass();
+
+
+			$cls = Propel::import($omClass);
+			$obj3  = new $cls();
+			$obj3->hydrate($rs, $startcol3);
+
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj3 = $temp_obj1->getUserRelatedByVerifiedById(); 				if ($temp_obj3->getPrimaryKey() === $obj3->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj3->addPurchaseRelatedByVerifiedById($obj1);
+					break;
+				}
+			}
+
+			if ($newObject) {
+				$obj3->initPurchasesRelatedByVerifiedById();
+				$obj3->addPurchaseRelatedByVerifiedById($obj1);
+			}
+
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
+	public static function doSelectJoinAllExceptUserRelatedByVerifiedById(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+								if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		PurchasePeer::addSelectColumns($c);
+		$startcol2 = (PurchasePeer::NUM_COLUMNS - PurchasePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+
+		ProductPeer::addSelectColumns($c);
+		$startcol3 = $startcol2 + ProductPeer::NUM_COLUMNS;
+
+		$c->addJoin(PurchasePeer::PRODUCT_ID, ProductPeer::ID);
+
+
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+
+		while($rs->next()) {
+
+			$omClass = PurchasePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);
+
+			$omClass = ProductPeer::getOMClass();
+
+
+			$cls = Propel::import($omClass);
+			$obj2  = new $cls();
+			$obj2->hydrate($rs, $startcol2);
+
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj2 = $temp_obj1->getProduct(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
 					$newObject = false;
 					$temp_obj2->addPurchase($obj1);
 					break;

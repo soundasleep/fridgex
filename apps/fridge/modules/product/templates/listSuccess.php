@@ -8,11 +8,11 @@
 
 <?php if ($purchase) { ?>
 <div class="message">
-	You have successfully purchased <?php echo number_format($purchase->getQuantity()); ?>
-	<?php echo link_to($purchase->getProduct()->getTitle() . ($purchase->getQuantity() == 1 ? "" : "s"), "product/show?id=".$purchase->getProduct()->getId()); ?>
-	for <b><?php echo format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></b>.
+	You have successfully purchased <?php echo number_format(-$purchase->getQuantity()); ?>
+	<?php echo link_to($purchase->getProduct()->getTitle() . (-$purchase->getQuantity() == 1 ? "" : "s"), "product/show?id=".$purchase->getProduct()->getId()); ?>
+	for <b><?php echo format_currency($purchase->getPrice() * -$purchase->getQuantity()); ?></b>.
 	<br>
-	Your <?php echo link_to("account balance", "user/home"); ?>
+	Your <?php echo link_to("account balance", "user/index"); ?>
 	is now <b><?php echo format_currency($user->getAccountCredit()); ?></b>.
 </div>
 <?php } ?>
@@ -43,9 +43,3 @@
 <?php endforeach; ?>
 </tbody>
 </table>
-
-<?php if ($user) { ?>
-user: <?php echo $user->getEmail(); ?>
-<?php } else { ?>
-no current user
-<?php } ?>

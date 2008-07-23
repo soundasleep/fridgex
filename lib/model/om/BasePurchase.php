@@ -31,11 +31,26 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	
 	protected $created_at;
 
+
 	
-	protected $aUser;
+	protected $verified_by_id;
+
+
+	
+	protected $verified_at;
+
+
+	
+	protected $notes;
+
+	
+	protected $aUserRelatedByUserId;
 
 	
 	protected $aProduct;
+
+	
+	protected $aUserRelatedByVerifiedById;
 
 	
 	protected $alreadyInSave = false;
@@ -101,6 +116,42 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	}
 
 	
+	public function getVerifiedById()
+	{
+
+		return $this->verified_by_id;
+	}
+
+	
+	public function getVerifiedAt($format = 'Y-m-d H:i:s')
+	{
+
+		if ($this->verified_at === null || $this->verified_at === '') {
+			return null;
+		} elseif (!is_int($this->verified_at)) {
+						$ts = strtotime($this->verified_at);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse value of [verified_at] as date/time value: " . var_export($this->verified_at, true));
+			}
+		} else {
+			$ts = $this->verified_at;
+		}
+		if ($format === null) {
+			return $ts;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $ts);
+		} else {
+			return date($format, $ts);
+		}
+	}
+
+	
+	public function getNotes()
+	{
+
+		return $this->notes;
+	}
+
+	
 	public function setId($v)
 	{
 
@@ -131,8 +182,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			$this->modifiedColumns[] = PurchasePeer::USER_ID;
 		}
 
-		if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-			$this->aUser = null;
+		if ($this->aUserRelatedByUserId !== null && $this->aUserRelatedByUserId->getId() !== $v) {
+			$this->aUserRelatedByUserId = null;
 		}
 
 	} 
@@ -200,6 +251,59 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setVerifiedById($v)
+	{
+
+		
+		
+		if ($v !== null && !is_int($v) && is_numeric($v)) {
+			$v = (int) $v;
+		}
+
+		if ($this->verified_by_id !== $v) {
+			$this->verified_by_id = $v;
+			$this->modifiedColumns[] = PurchasePeer::VERIFIED_BY_ID;
+		}
+
+		if ($this->aUserRelatedByVerifiedById !== null && $this->aUserRelatedByVerifiedById->getId() !== $v) {
+			$this->aUserRelatedByVerifiedById = null;
+		}
+
+	} 
+	
+	public function setVerifiedAt($v)
+	{
+
+		if ($v !== null && !is_int($v)) {
+			$ts = strtotime($v);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse date/time value for [verified_at] from input: " . var_export($v, true));
+			}
+		} else {
+			$ts = $v;
+		}
+		if ($this->verified_at !== $ts) {
+			$this->verified_at = $ts;
+			$this->modifiedColumns[] = PurchasePeer::VERIFIED_AT;
+		}
+
+	} 
+	
+	public function setNotes($v)
+	{
+
+		
+		
+		if ($v !== null && !is_string($v)) {
+			$v = (string) $v; 
+		}
+
+		if ($this->notes !== $v) {
+			$this->notes = $v;
+			$this->modifiedColumns[] = PurchasePeer::NOTES;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -216,11 +320,17 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 			$this->created_at = $rs->getTimestamp($startcol + 5, null);
 
+			$this->verified_by_id = $rs->getInt($startcol + 6);
+
+			$this->verified_at = $rs->getTimestamp($startcol + 7, null);
+
+			$this->notes = $rs->getString($startcol + 8);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 6; 
+						return $startcol + 9; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Purchase object", $e);
 		}
@@ -283,11 +393,11 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 
 												
-			if ($this->aUser !== null) {
-				if ($this->aUser->isModified()) {
-					$affectedRows += $this->aUser->save($con);
+			if ($this->aUserRelatedByUserId !== null) {
+				if ($this->aUserRelatedByUserId->isModified()) {
+					$affectedRows += $this->aUserRelatedByUserId->save($con);
 				}
-				$this->setUser($this->aUser);
+				$this->setUserRelatedByUserId($this->aUserRelatedByUserId);
 			}
 
 			if ($this->aProduct !== null) {
@@ -295,6 +405,13 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 					$affectedRows += $this->aProduct->save($con);
 				}
 				$this->setProduct($this->aProduct);
+			}
+
+			if ($this->aUserRelatedByVerifiedById !== null) {
+				if ($this->aUserRelatedByVerifiedById->isModified()) {
+					$affectedRows += $this->aUserRelatedByVerifiedById->save($con);
+				}
+				$this->setUserRelatedByVerifiedById($this->aUserRelatedByVerifiedById);
 			}
 
 
@@ -346,15 +463,21 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 
 												
-			if ($this->aUser !== null) {
-				if (!$this->aUser->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
+			if ($this->aUserRelatedByUserId !== null) {
+				if (!$this->aUserRelatedByUserId->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByUserId->getValidationFailures());
 				}
 			}
 
 			if ($this->aProduct !== null) {
 				if (!$this->aProduct->validate($columns)) {
 					$failureMap = array_merge($failureMap, $this->aProduct->getValidationFailures());
+				}
+			}
+
+			if ($this->aUserRelatedByVerifiedById !== null) {
+				if (!$this->aUserRelatedByVerifiedById->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByVerifiedById->getValidationFailures());
 				}
 			}
 
@@ -400,6 +523,15 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 5:
 				return $this->getCreatedAt();
 				break;
+			case 6:
+				return $this->getVerifiedById();
+				break;
+			case 7:
+				return $this->getVerifiedAt();
+				break;
+			case 8:
+				return $this->getNotes();
+				break;
 			default:
 				return null;
 				break;
@@ -416,6 +548,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			$keys[3] => $this->getQuantity(),
 			$keys[4] => $this->getPrice(),
 			$keys[5] => $this->getCreatedAt(),
+			$keys[6] => $this->getVerifiedById(),
+			$keys[7] => $this->getVerifiedAt(),
+			$keys[8] => $this->getNotes(),
 		);
 		return $result;
 	}
@@ -449,6 +584,15 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 5:
 				$this->setCreatedAt($value);
 				break;
+			case 6:
+				$this->setVerifiedById($value);
+				break;
+			case 7:
+				$this->setVerifiedAt($value);
+				break;
+			case 8:
+				$this->setNotes($value);
+				break;
 		} 	}
 
 	
@@ -462,6 +606,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[3], $arr)) $this->setQuantity($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setPrice($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setVerifiedById($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setVerifiedAt($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setNotes($arr[$keys[8]]);
 	}
 
 	
@@ -475,6 +622,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(PurchasePeer::QUANTITY)) $criteria->add(PurchasePeer::QUANTITY, $this->quantity);
 		if ($this->isColumnModified(PurchasePeer::PRICE)) $criteria->add(PurchasePeer::PRICE, $this->price);
 		if ($this->isColumnModified(PurchasePeer::CREATED_AT)) $criteria->add(PurchasePeer::CREATED_AT, $this->created_at);
+		if ($this->isColumnModified(PurchasePeer::VERIFIED_BY_ID)) $criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->verified_by_id);
+		if ($this->isColumnModified(PurchasePeer::VERIFIED_AT)) $criteria->add(PurchasePeer::VERIFIED_AT, $this->verified_at);
+		if ($this->isColumnModified(PurchasePeer::NOTES)) $criteria->add(PurchasePeer::NOTES, $this->notes);
 
 		return $criteria;
 	}
@@ -515,6 +665,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 		$copyObj->setCreatedAt($this->created_at);
 
+		$copyObj->setVerifiedById($this->verified_by_id);
+
+		$copyObj->setVerifiedAt($this->verified_at);
+
+		$copyObj->setNotes($this->notes);
+
 
 		$copyObj->setNew(true);
 
@@ -540,7 +696,7 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	}
 
 	
-	public function setUser($v)
+	public function setUserRelatedByUserId($v)
 	{
 
 
@@ -551,21 +707,21 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		}
 
 
-		$this->aUser = $v;
+		$this->aUserRelatedByUserId = $v;
 	}
 
 
 	
-	public function getUser($con = null)
+	public function getUserRelatedByUserId($con = null)
 	{
-		if ($this->aUser === null && ($this->user_id !== null)) {
+		if ($this->aUserRelatedByUserId === null && ($this->user_id !== null)) {
 						include_once 'lib/model/om/BaseUserPeer.php';
 
-			$this->aUser = UserPeer::retrieveByPK($this->user_id, $con);
+			$this->aUserRelatedByUserId = UserPeer::retrieveByPK($this->user_id, $con);
 
 			
 		}
-		return $this->aUser;
+		return $this->aUserRelatedByUserId;
 	}
 
 	
@@ -595,6 +751,35 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			
 		}
 		return $this->aProduct;
+	}
+
+	
+	public function setUserRelatedByVerifiedById($v)
+	{
+
+
+		if ($v === null) {
+			$this->setVerifiedById(NULL);
+		} else {
+			$this->setVerifiedById($v->getId());
+		}
+
+
+		$this->aUserRelatedByVerifiedById = $v;
+	}
+
+
+	
+	public function getUserRelatedByVerifiedById($con = null)
+	{
+		if ($this->aUserRelatedByVerifiedById === null && ($this->verified_by_id !== null)) {
+						include_once 'lib/model/om/BaseUserPeer.php';
+
+			$this->aUserRelatedByVerifiedById = UserPeer::retrieveByPK($this->verified_by_id, $con);
+
+			
+		}
+		return $this->aUserRelatedByVerifiedById;
 	}
 
 } 

@@ -50,16 +50,16 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	protected $lastUserPermissionCriteria = null;
 
 	
-	protected $collPurchases;
+	protected $collPurchasesRelatedByUserId;
 
 	
-	protected $lastPurchaseCriteria = null;
+	protected $lastPurchaseRelatedByUserIdCriteria = null;
 
 	
-	protected $collCredits;
+	protected $collPurchasesRelatedByVerifiedById;
 
 	
-	protected $lastCreditCriteria = null;
+	protected $lastPurchaseRelatedByVerifiedByIdCriteria = null;
 
 	
 	protected $collEmails;
@@ -435,16 +435,16 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				}
 			}
 
-			if ($this->collPurchases !== null) {
-				foreach($this->collPurchases as $referrerFK) {
+			if ($this->collPurchasesRelatedByUserId !== null) {
+				foreach($this->collPurchasesRelatedByUserId as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
 				}
 			}
 
-			if ($this->collCredits !== null) {
-				foreach($this->collCredits as $referrerFK) {
+			if ($this->collPurchasesRelatedByVerifiedById !== null) {
+				foreach($this->collPurchasesRelatedByVerifiedById as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -508,16 +508,16 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 					}
 				}
 
-				if ($this->collPurchases !== null) {
-					foreach($this->collPurchases as $referrerFK) {
+				if ($this->collPurchasesRelatedByUserId !== null) {
+					foreach($this->collPurchasesRelatedByUserId as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
 					}
 				}
 
-				if ($this->collCredits !== null) {
-					foreach($this->collCredits as $referrerFK) {
+				if ($this->collPurchasesRelatedByVerifiedById !== null) {
+					foreach($this->collPurchasesRelatedByVerifiedById as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -724,12 +724,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				$copyObj->addUserPermission($relObj->copy($deepCopy));
 			}
 
-			foreach($this->getPurchases() as $relObj) {
-				$copyObj->addPurchase($relObj->copy($deepCopy));
+			foreach($this->getPurchasesRelatedByUserId() as $relObj) {
+				$copyObj->addPurchaseRelatedByUserId($relObj->copy($deepCopy));
 			}
 
-			foreach($this->getCredits() as $relObj) {
-				$copyObj->addCredit($relObj->copy($deepCopy));
+			foreach($this->getPurchasesRelatedByVerifiedById() as $relObj) {
+				$copyObj->addPurchaseRelatedByVerifiedById($relObj->copy($deepCopy));
 			}
 
 			foreach($this->getEmails() as $relObj) {
@@ -832,15 +832,15 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	}
 
 	
-	public function initPurchases()
+	public function initPurchasesRelatedByUserId()
 	{
-		if ($this->collPurchases === null) {
-			$this->collPurchases = array();
+		if ($this->collPurchasesRelatedByUserId === null) {
+			$this->collPurchasesRelatedByUserId = array();
 		}
 	}
 
 	
-	public function getPurchases($criteria = null, $con = null)
+	public function getPurchasesRelatedByUserId($criteria = null, $con = null)
 	{
 				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
@@ -851,15 +851,15 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		if ($this->collPurchases === null) {
+		if ($this->collPurchasesRelatedByUserId === null) {
 			if ($this->isNew()) {
-			   $this->collPurchases = array();
+			   $this->collPurchasesRelatedByUserId = array();
 			} else {
 
 				$criteria->add(PurchasePeer::USER_ID, $this->getId());
 
 				PurchasePeer::addSelectColumns($criteria);
-				$this->collPurchases = PurchasePeer::doSelect($criteria, $con);
+				$this->collPurchasesRelatedByUserId = PurchasePeer::doSelect($criteria, $con);
 			}
 		} else {
 						if (!$this->isNew()) {
@@ -868,17 +868,17 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				$criteria->add(PurchasePeer::USER_ID, $this->getId());
 
 				PurchasePeer::addSelectColumns($criteria);
-				if (!isset($this->lastPurchaseCriteria) || !$this->lastPurchaseCriteria->equals($criteria)) {
-					$this->collPurchases = PurchasePeer::doSelect($criteria, $con);
+				if (!isset($this->lastPurchaseRelatedByUserIdCriteria) || !$this->lastPurchaseRelatedByUserIdCriteria->equals($criteria)) {
+					$this->collPurchasesRelatedByUserId = PurchasePeer::doSelect($criteria, $con);
 				}
 			}
 		}
-		$this->lastPurchaseCriteria = $criteria;
-		return $this->collPurchases;
+		$this->lastPurchaseRelatedByUserIdCriteria = $criteria;
+		return $this->collPurchasesRelatedByUserId;
 	}
 
 	
-	public function countPurchases($criteria = null, $distinct = false, $con = null)
+	public function countPurchasesRelatedByUserId($criteria = null, $distinct = false, $con = null)
 	{
 				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
@@ -895,15 +895,15 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	}
 
 	
-	public function addPurchase(Purchase $l)
+	public function addPurchaseRelatedByUserId(Purchase $l)
 	{
-		$this->collPurchases[] = $l;
-		$l->setUser($this);
+		$this->collPurchasesRelatedByUserId[] = $l;
+		$l->setUserRelatedByUserId($this);
 	}
 
 
 	
-	public function getPurchasesJoinProduct($criteria = null, $con = null)
+	public function getPurchasesRelatedByUserIdJoinProduct($criteria = null, $con = null)
 	{
 				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
@@ -914,40 +914,40 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		if ($this->collPurchases === null) {
+		if ($this->collPurchasesRelatedByUserId === null) {
 			if ($this->isNew()) {
-				$this->collPurchases = array();
+				$this->collPurchasesRelatedByUserId = array();
 			} else {
 
 				$criteria->add(PurchasePeer::USER_ID, $this->getId());
 
-				$this->collPurchases = PurchasePeer::doSelectJoinProduct($criteria, $con);
+				$this->collPurchasesRelatedByUserId = PurchasePeer::doSelectJoinProduct($criteria, $con);
 			}
 		} else {
 									
 			$criteria->add(PurchasePeer::USER_ID, $this->getId());
 
-			if (!isset($this->lastPurchaseCriteria) || !$this->lastPurchaseCriteria->equals($criteria)) {
-				$this->collPurchases = PurchasePeer::doSelectJoinProduct($criteria, $con);
+			if (!isset($this->lastPurchaseRelatedByUserIdCriteria) || !$this->lastPurchaseRelatedByUserIdCriteria->equals($criteria)) {
+				$this->collPurchasesRelatedByUserId = PurchasePeer::doSelectJoinProduct($criteria, $con);
 			}
 		}
-		$this->lastPurchaseCriteria = $criteria;
+		$this->lastPurchaseRelatedByUserIdCriteria = $criteria;
 
-		return $this->collPurchases;
+		return $this->collPurchasesRelatedByUserId;
 	}
 
 	
-	public function initCredits()
+	public function initPurchasesRelatedByVerifiedById()
 	{
-		if ($this->collCredits === null) {
-			$this->collCredits = array();
+		if ($this->collPurchasesRelatedByVerifiedById === null) {
+			$this->collPurchasesRelatedByVerifiedById = array();
 		}
 	}
 
 	
-	public function getCredits($criteria = null, $con = null)
+	public function getPurchasesRelatedByVerifiedById($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
+				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
 			$criteria = new Criteria();
 		}
@@ -956,36 +956,36 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		if ($this->collCredits === null) {
+		if ($this->collPurchasesRelatedByVerifiedById === null) {
 			if ($this->isNew()) {
-			   $this->collCredits = array();
+			   $this->collPurchasesRelatedByVerifiedById = array();
 			} else {
 
-				$criteria->add(CreditPeer::USER_ID, $this->getId());
+				$criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->getId());
 
-				CreditPeer::addSelectColumns($criteria);
-				$this->collCredits = CreditPeer::doSelect($criteria, $con);
+				PurchasePeer::addSelectColumns($criteria);
+				$this->collPurchasesRelatedByVerifiedById = PurchasePeer::doSelect($criteria, $con);
 			}
 		} else {
 						if (!$this->isNew()) {
 												
 
-				$criteria->add(CreditPeer::USER_ID, $this->getId());
+				$criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->getId());
 
-				CreditPeer::addSelectColumns($criteria);
-				if (!isset($this->lastCreditCriteria) || !$this->lastCreditCriteria->equals($criteria)) {
-					$this->collCredits = CreditPeer::doSelect($criteria, $con);
+				PurchasePeer::addSelectColumns($criteria);
+				if (!isset($this->lastPurchaseRelatedByVerifiedByIdCriteria) || !$this->lastPurchaseRelatedByVerifiedByIdCriteria->equals($criteria)) {
+					$this->collPurchasesRelatedByVerifiedById = PurchasePeer::doSelect($criteria, $con);
 				}
 			}
 		}
-		$this->lastCreditCriteria = $criteria;
-		return $this->collCredits;
+		$this->lastPurchaseRelatedByVerifiedByIdCriteria = $criteria;
+		return $this->collPurchasesRelatedByVerifiedById;
 	}
 
 	
-	public function countCredits($criteria = null, $distinct = false, $con = null)
+	public function countPurchasesRelatedByVerifiedById($criteria = null, $distinct = false, $con = null)
 	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
+				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
 			$criteria = new Criteria();
 		}
@@ -994,23 +994,23 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		$criteria->add(CreditPeer::USER_ID, $this->getId());
+		$criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->getId());
 
-		return CreditPeer::doCount($criteria, $distinct, $con);
+		return PurchasePeer::doCount($criteria, $distinct, $con);
 	}
 
 	
-	public function addCredit(Credit $l)
+	public function addPurchaseRelatedByVerifiedById(Purchase $l)
 	{
-		$this->collCredits[] = $l;
-		$l->setUser($this);
+		$this->collPurchasesRelatedByVerifiedById[] = $l;
+		$l->setUserRelatedByVerifiedById($this);
 	}
 
 
 	
-	public function getCreditsJoinProduct($criteria = null, $con = null)
+	public function getPurchasesRelatedByVerifiedByIdJoinProduct($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseCreditPeer.php';
+				include_once 'lib/model/om/BasePurchasePeer.php';
 		if ($criteria === null) {
 			$criteria = new Criteria();
 		}
@@ -1019,26 +1019,26 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		if ($this->collCredits === null) {
+		if ($this->collPurchasesRelatedByVerifiedById === null) {
 			if ($this->isNew()) {
-				$this->collCredits = array();
+				$this->collPurchasesRelatedByVerifiedById = array();
 			} else {
 
-				$criteria->add(CreditPeer::USER_ID, $this->getId());
+				$criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->getId());
 
-				$this->collCredits = CreditPeer::doSelectJoinProduct($criteria, $con);
+				$this->collPurchasesRelatedByVerifiedById = PurchasePeer::doSelectJoinProduct($criteria, $con);
 			}
 		} else {
 									
-			$criteria->add(CreditPeer::USER_ID, $this->getId());
+			$criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->getId());
 
-			if (!isset($this->lastCreditCriteria) || !$this->lastCreditCriteria->equals($criteria)) {
-				$this->collCredits = CreditPeer::doSelectJoinProduct($criteria, $con);
+			if (!isset($this->lastPurchaseRelatedByVerifiedByIdCriteria) || !$this->lastPurchaseRelatedByVerifiedByIdCriteria->equals($criteria)) {
+				$this->collPurchasesRelatedByVerifiedById = PurchasePeer::doSelectJoinProduct($criteria, $con);
 			}
 		}
-		$this->lastCreditCriteria = $criteria;
+		$this->lastPurchaseRelatedByVerifiedByIdCriteria = $criteria;
 
-		return $this->collCredits;
+		return $this->collPurchasesRelatedByVerifiedById;
 	}
 
 	

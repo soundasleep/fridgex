@@ -60,6 +60,8 @@ CREATE TABLE `product`
 	`inventory` INTEGER,
 	`image_url` VARCHAR(255),
 	`sort_order` INTEGER,
+	`created_at` DATETIME,
+	`updated_at` DATETIME,
 	PRIMARY KEY (`id`)
 )Type=MyISAM;
 
@@ -78,6 +80,9 @@ CREATE TABLE `purchase`
 	`quantity` INTEGER,
 	`price` DECIMAL,
 	`created_at` DATETIME,
+	`verified_by_id` INTEGER,
+	`verified_at` DATETIME,
+	`notes` VARCHAR(255),
 	PRIMARY KEY (`id`),
 	INDEX `purchase_FI_1` (`user_id`),
 	CONSTRAINT `purchase_FK_1`
@@ -88,33 +93,11 @@ CREATE TABLE `purchase`
 	CONSTRAINT `purchase_FK_2`
 		FOREIGN KEY (`product_id`)
 		REFERENCES `product` (`id`)
-		ON DELETE SET NULL
-)Type=MyISAM;
-
-#-----------------------------------------------------------------------------
-#-- credit
-#-----------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `credit`;
-
-
-CREATE TABLE `credit`
-(
-	`id` INTEGER  NOT NULL AUTO_INCREMENT,
-	`user_id` INTEGER,
-	`product_id` INTEGER,
-	`quantity` INTEGER,
-	`price` DECIMAL,
-	PRIMARY KEY (`id`),
-	INDEX `credit_FI_1` (`user_id`),
-	CONSTRAINT `credit_FK_1`
-		FOREIGN KEY (`user_id`)
-		REFERENCES `user` (`id`)
 		ON DELETE SET NULL,
-	INDEX `credit_FI_2` (`product_id`),
-	CONSTRAINT `credit_FK_2`
-		FOREIGN KEY (`product_id`)
-		REFERENCES `product` (`id`)
+	INDEX `purchase_FI_3` (`verified_by_id`),
+	CONSTRAINT `purchase_FK_3`
+		FOREIGN KEY (`verified_by_id`)
+		REFERENCES `user` (`id`)
 		ON DELETE SET NULL
 )Type=MyISAM;
 

@@ -33,10 +33,10 @@
 </tr>
 </tbody>
 </table>
+
+<?php if ($product->getInventory() > 0 && $user) { ?>
+
 <hr />
-
-<?php if ($product->getInventory() > 0) { ?>
-
 Purchase some of these:
 <?php echo form_tag("product/purchase"); ?>
 <?php echo input_hidden_tag("id", $product->getId()); ?>
@@ -44,8 +44,19 @@ Quantity: <?php echo input_tag("quantity", 1); ?>
 <?php echo submit_tag("Purchase"); ?>
 </form>
 
+<?php if ($user->canCredit($product)) { ?>
+<hr />
+Credit some of these:
+<?php echo form_tag("product/credit"); ?>
+<?php echo input_hidden_tag("id", $product->getId()); ?>
+Quantity: <?php echo input_tag("quantity", 1); ?><br>
+Price paid each: <?php echo input_tag("price", 1); ?>
+<?php echo submit_tag("Credit"); ?>
+<?php } ?>
+
 <?php } else { ?>
 
+<hr />
 <span class="disabled">Purchase some of these</span>
 
 <?php } ?>

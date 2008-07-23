@@ -41,4 +41,8 @@ class User extends BaseUser
 
 	}
 
+	public function canCredit($product) {
+		return true;		// currently all members can always credit new purchases
+	}
+
 }

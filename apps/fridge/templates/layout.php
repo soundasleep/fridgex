@@ -18,7 +18,7 @@
 		<li class="title">TINA Fridge System</li>
 		<li><?php echo link_to("home", "@homepage"); ?></li>
 		<?php if ($sf_user->isAuthenticated()) { ?>
-		<li><?php echo link_to("your account", "user/home"); ?></li>
+		<li><?php echo link_to("your account", "user/index"); ?></li>
 		<li><?php echo link_to("logout", "security/logout"); ?></li>
 		<?php } else { ?>
 		<li><?php echo link_to("signup", "security/signup"); ?></li>
