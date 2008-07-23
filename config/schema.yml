@@ -9,6 +9,9 @@ propel:
     created_at:
     updated_at:
     last_login:     timestamp
+    
+    # account credit
+    account_credit:   decimal
   
   # user permissions
   user_permission:

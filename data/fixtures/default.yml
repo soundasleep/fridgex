@@ -4,3 +4,22 @@ User:
     password_hash:    daeccf0ad3c1fc8c8015205c332f5b42      # md5 hash of 'apples'
     name:             Server
     nickname:         server
+
+Product:
+  product_dew_can:
+    title:          Can of Mountain Dew
+    price:          0.99
+    inventory:      12
+    image_url:      "products/dew_can.jpg"
+
+  product_coke_can:
+    title:          Can of Coke
+    price:          1.99
+    inventory:      12
+    image_url:      "products/coke_bottle.jpg"
+
+  product_dew_bottle:
+    title:          Bottle of Mountain Dew
+    price:          2.99
+    inventory:      12
+    image_url:      "products/dew_bottle.jpg"

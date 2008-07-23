@@ -25,3 +25,20 @@ body
 {
   padding: 20px;
 }
+
+/* my changes */
+td,th { line-height: 1.4em; background: white; padding: 2px; }
+th { font-weight: bold; text-align: left; background: #ddeeff; }
+h1 { margin-top: .2em; margin-bottom: .2em; }
+div.error { padding: 5px; margin: 5px; width: 40%; border: 1px solid #cc9999; background: #ffcccc; }
+div.message { padding: 5px; margin: 5px; width: 40%; border: 1px solid #9999cc; background: #ccccff; }
+ul,ol { padding-left: 1em; margin: 1em; }
+
+/* top navigation bar */
+div#navigation { margin-left: auto; margin-right: auto; width: auto; }
+div#navigation ul { list-style: none; padding: 7px 7px 7px 5px; margin: 0; width: 600px; border: 1px inset #ddeeff; background: #ddeeff; }
+div#navigation li { display: inline; margin-right: 1px; }
+div#navigation li a { padding: 2px 5px 2px 5px; margin-right: 1px; border: 1px outset #aaccee; background: #aaccee; }
+div#navigation li.manager a { border: 1px outset #ddbbdd; background: #ddbbdd; }
+div#navigation li.admin a { border: 1px outset #ddccbb; background: #ddccbb; }
+div#navigation li.offline a { border: 1px outset #bbddcc; background: #bbddcc; }

@@ -10,7 +10,22 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 
 </head>
+
 <body>
+
+<div id="navigation">
+	<ul>
+		<li class="title">TINA Fridge System</li>
+		<li><?php echo link_to("home", "@homepage"); ?></li>
+		<?php if ($sf_user->isAuthenticated()) { ?>
+		<li><?php echo link_to("your account", "user/home"); ?></li>
+		<li><?php echo link_to("logout", "security/logout"); ?></li>
+		<?php } else { ?>
+		<li><?php echo link_to("signup", "security/signup"); ?></li>
+		<li><?php echo link_to("login", "security/index"); ?></li>
+		<?php } ?>
+	</ul>
+</div>
 
 <?php echo $sf_data->getRaw('sf_content') ?>
 

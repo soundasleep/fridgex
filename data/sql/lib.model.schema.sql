@@ -20,6 +20,7 @@ CREATE TABLE `user`
 	`created_at` DATETIME,
 	`updated_at` DATETIME,
 	`last_login` DATETIME,
+	`account_credit` DECIMAL,
 	PRIMARY KEY (`id`)
 )Type=MyISAM;
 
