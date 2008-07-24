@@ -53,7 +53,7 @@ propel:
     verified_by_id: { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
     verified_at:    timestamp
     notes:          varchar(255)
-
+    
   # emails
   email:
     id:

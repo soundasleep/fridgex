@@ -24,7 +24,7 @@ class securityActions extends myActions
 		$user = User::login($this);
 
 		if ($user) {
-			return $this->redirect("user/index");
+			return $this->redirect("product/list");
 		} else {
 			return $this->forward("security", "index");
 		}

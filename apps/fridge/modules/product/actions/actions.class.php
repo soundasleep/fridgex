@@ -43,6 +43,9 @@ class productActions extends myActions
 		$c->add(PurchasePeer::USER_ID, $this->user->getId());
 		$this->credit = PurchasePeer::doSelectOne($c);
 	}
+
+	$this->list = $this->getRequestParameter("list", false);
+	$this->gallery_size = sfConfig::get("app_product_gallerysize", 5);
   }
 
   public function executeShow()

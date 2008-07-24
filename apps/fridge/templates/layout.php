@@ -24,6 +24,11 @@
 		<li><?php echo link_to("signup", "security/signup"); ?></li>
 		<li><?php echo link_to("login", "security/index"); ?></li>
 		<?php } ?>
+		<?php if ($sf_user->getUserObject(false)) { ?>
+		<li class="login">You are logged in as <?php echo link_to($sf_user->getUserObject()->getNickname(), "user/index"); ?></li>
+		<?php } else { ?>
+		<li class="login">You are anonymous</li>
+		<?php } ?>
 	</ul>
 </div>
 
