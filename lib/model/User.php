@@ -45,4 +45,46 @@ class User extends BaseUser
 		return true;		// currently all members can always credit new purchases
 	}
 
+	public function canAddProduct() {
+		return $this->hasSpecificPermission("edit");
+	}
+
+	public function canEditProduct($product) {
+		return $this->hasSpecificPermission("edit");
+	}
+
+	public function canDeleteProduct($product) {
+		return $this->hasSpecificPermission("edit") && $this->hasSpecificPermission("delete");
+	}
+
+	public function canSetInventory($product) {
+		return $this->hasSpecificPermission("inventory");
+	}
+
+	public function canAddUser() {
+		return $this->hasSpecificPermission("user");
+	}
+
+	public function canVerifyCredit() {
+		return $this->hasSpecificPermission("verify");
+	}
+
+	public function canEditUser($user) {
+		return $this->hasSpecificPermission("user");
+	}
+
+	public function canDeleteUser($product) {
+		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("delete");
+	}
+
+	public function hasSpecificPermission($key) {
+		$permissions = $this->getUserPermissions();
+		foreach ($permissions as $p) {
+			if ($p->getPermission() == $key)
+				return true;
+		}
+
+		return false;
+	}
+
 }

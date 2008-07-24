@@ -15,6 +15,8 @@ class userActions extends myActions
 	 * Only users are allowed to access pages in here.
 	 */
 	public function preExecute() {
+		parent::preExecute();
+
 		// get the user object
 		$this->user = $this->getUserObject();
 	}

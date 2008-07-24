@@ -69,3 +69,8 @@ Price paid each: <?php echo input_tag("price", 1); ?>
 <span class="disabled">Purchase some of these</span>
 
 <?php } ?>
+
+<?php if ($user->canEditProduct($product)) { ?>
+<hr />
+<?php echo link_to("edit product", "product_admin/edit?id=".$product->getId()); ?>
+<?php } ?>

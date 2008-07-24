@@ -50,6 +50,17 @@
       <td><?php echo $product->getInventory() ?></td>
       <td><?php echo $product->getImageUrl() ?></td>
       <td>
+
+      	<?php echo form_tag("product/purchase"); ?>
+	  	      	<?php echo input_hidden_tag("id", $product->getId()); ?>
+	  	      	<?php echo input_hidden_tag("quantity", 1); ?>
+	  	      	<?php echo submit_tag("purchase one (" . format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
+      	</form>
+
+		<?php if ($user && $user->canEditProduct($product)) { ?>
+		<?php echo link_to("edit", "product_admin/edit?id=".$product->getId()); ?>
+		<?php } ?>
+
     </td>
   </tr>
 <?php endforeach; ?>
@@ -73,11 +84,16 @@
 
 	<?php echo link_to($product->getTitle(), 'product/show?id='.$product->getId()) ?> - <b><?php echo format_currency($product->getPrice()) ?></b><br>
 
-	<?php echo form_tag("product/purchase"); ?>
+		<?php echo form_tag("product/purchase"); ?>
 	      	<?php echo input_hidden_tag("id", $product->getId()); ?>
 	      	<?php echo input_hidden_tag("quantity", 1); ?>
 	      	<?php echo submit_tag("purchase one (" . format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
       	</form>
+
+		<?php if ($user && $user->canEditProduct($product)) { ?>
+		<?php echo link_to("edit", "product_admin/edit?id=".$product->getId()); ?>
+		<?php } ?>
+
 </td>
 
 <?php if ($i % $gallery_size == $gallery_size - 1) echo "</tr>"; ?>
@@ -88,4 +104,8 @@
 </table>
 </div>
 
+<?php } ?>
+
+<?php if ($user && $user->canAddProduct()) { ?>
+<?php echo link_to("add new product", "product_admin/create"); ?>
 <?php } ?>

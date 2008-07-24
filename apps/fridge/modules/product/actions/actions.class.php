@@ -22,7 +22,10 @@ class productActions extends myActions
 
   public function executeList()
   {
-    $this->products = ProductPeer::doSelect(new Criteria());
+	$c = new Criteria();
+	$c->addDescendingOrderByColumn(ProductPeer::SORT_ORDER);
+
+    $this->products = ProductPeer::doSelect($c);
 
 	$this->user = $this->getUserObject(false);
 
@@ -129,17 +132,16 @@ class productActions extends myActions
 		  $this->user->save();
 
 		  // update product
-		  $this->product->setInventory($this->product->getInventory() + $this->quantity);
 		  // some interesting logic goes here, to update the new product price
 		  // new product price = ((old price * old quantity) + (new price * added quantity)) / total new quantity
-     	  sfContext::getInstance()->getLogger()->debug("{productActions} old price: " . $this->product->getPrice());
-     	  sfContext::getInstance()->getLogger()->debug("{productActions} old quantity: " . $this->product->getInventory());
 		  $this->product->setPrice(
 			  (($this->product->getPrice() * $this->product->getInventory()) +
 			  ($this->price * $this->quantity)) / ($this->product->getInventory() + $this->quantity));
+
+		  // now we have set the price, we can set the inventory
+		  $this->product->setInventory($this->product->getInventory() + $this->quantity);
+
 		  $this->product->save();
-     	  sfContext::getInstance()->getLogger()->debug("{productActions} new price: " . $this->product->getPrice());
-     	  sfContext::getInstance()->getLogger()->debug("{productActions} new quantity: " . $this->product->getInventory());
 
 		  // redirect to ok page
 		  return $this->redirect("product/list?credit=".$purchase->getId());

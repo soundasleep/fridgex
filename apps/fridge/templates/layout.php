@@ -17,8 +17,13 @@
 	<ul>
 		<li class="title">TINA Fridge System</li>
 		<li><?php echo link_to("home", "@homepage"); ?></li>
-		<?php if ($sf_user->isAuthenticated()) { ?>
+		<?php if ($sf_user->isAuthenticated() && $sf_user->getUserObject(false)) { ?>
 		<li><?php echo link_to("your account", "user/index"); ?></li>
+
+		<?php if ($sf_user->getUserObject(false)->canAddUser()) { ?>
+		<li class="admin"><?php echo link_to("manage users", "user_admin/index"); ?></li>
+		<?php } ?>
+
 		<li><?php echo link_to("logout", "security/logout"); ?></li>
 		<?php } else { ?>
 		<li><?php echo link_to("signup", "security/signup"); ?></li>
