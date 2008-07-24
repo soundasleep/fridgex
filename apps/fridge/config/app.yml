@@ -1,2 +1,9 @@
-# default values
-#all:
+all:
+  mail:
+    charset:    utf-8
+    hostname:   localhost
+    username:
+    password:
+    
+    from:       Fridex
+    address:    fridex@jevon.org
