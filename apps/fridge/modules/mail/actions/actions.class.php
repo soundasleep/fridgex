@@ -34,7 +34,6 @@ class mailActions extends sfActions
 
 	}
 
-
 	public function executeChangeEmail() {
 		// send changed address e-mail
 		$this->user = UserPeer::retrieveByPk($this->getRequestParameter("user"));		// alternative would be to use sfUser::setParameter
@@ -43,6 +42,20 @@ class mailActions extends sfActions
 		$e = new Email();
 		$e->initialise($this->user->getName(), $this->user->getEmail());
 		$e->setSubject("Email Address Changed");
+		$e->setUser($this->user);
+
+		$this->mail = $e->getMailer();
+
+	}
+
+	public function executeSignup() {
+		// send signup e-mail
+		$this->user = UserPeer::retrieveByPk($this->getRequestParameter("user"));		// alternative would be to use sfUser::setParameter
+		$this->forward404Unless($this->user, "no such user to mail");
+
+		$e = new Email();
+		$e->initialise($this->user->getName(), $this->user->getEmail());
+		$e->setSubject("New Account");
 		$e->setUser($this->user);
 
 		$this->mail = $e->getMailer();

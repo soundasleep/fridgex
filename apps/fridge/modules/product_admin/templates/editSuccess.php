@@ -4,6 +4,12 @@
 ?>
 <?php use_helper('Object') ?>
 
+<?php if ($sf_request->hasErrors()): ?>
+<div class="error">
+  <?php echo implode("; ", $sf_request->getErrors()); ?> - please try again
+</div>
+<?php endif; ?>
+
 <?php echo form_tag('product_admin/update', 'multipart=true') ?><?php /* multipart required for file upload */ ?>
 
 <?php echo object_input_hidden_tag($product, 'getId') ?>

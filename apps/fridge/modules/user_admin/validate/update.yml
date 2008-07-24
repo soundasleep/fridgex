@@ -1,0 +1,25 @@
+fields:
+  email:
+    required:
+      msg:      e-mail is required
+    sfEmailValidator:
+      msg:      invalid e-mail address
+
+  name:
+    required:
+      msg:      name is required
+    sfRegexValidator:
+      match:    Yes
+      pattern:  /.{3}/i
+      match_error:    name must be at least three characters long
+
+  nickname:
+    required:
+      msg:      nickname is required
+    sfRegexValidator:
+      match:    Yes
+      pattern:  /.{3}/i
+      match_error:    nickname must be at least three characters long
+
+fillin:
+  enabled: true  # Enable the form repopulation

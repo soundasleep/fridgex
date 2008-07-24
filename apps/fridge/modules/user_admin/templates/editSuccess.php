@@ -4,6 +4,14 @@
 ?>
 <?php use_helper('Object') ?>
 
+<h1>create user</h1>
+
+<?php if ($sf_request->hasErrors()): ?>
+<div class="error">
+  <?php echo implode("; ", $sf_request->getErrors()); ?> - please try again
+</div>
+<?php endif; ?>
+
 <?php echo form_tag('user_admin/update') ?>
 
 <?php echo object_input_hidden_tag($user, 'getId') ?>

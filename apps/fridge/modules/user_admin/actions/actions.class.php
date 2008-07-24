@@ -65,6 +65,26 @@ class user_adminActions extends myActions
 
   }
 
+	public function validateUpdate() {
+		$c = new Criteria();
+		$c->add(UserPeer::EMAIL, $this->getRequestParameter("email"));
+		$user = UserPeer::doSelectOne($c);
+		if ($user && $user->getId() != $this->getRequestParameter("id")) {
+			$this->getRequest()->setError("email", "email address already exists in the system");
+		}
+
+		return !$this->getRequest()->hasErrors();
+	}
+
+	public function handleErrorUpdate() {
+		// error in form => redirect to login page
+		if ($this->getRequestParameter("id")) {
+			return $this->forward("user_admin", "edit", array("id" => $this->getRequestParameter("id")));
+		} else {
+			return $this->forward("user_admin", "create");
+		}
+	}
+
   public function executeUpdate()
   {
     if (!$this->getRequestParameter('id'))
@@ -89,6 +109,14 @@ class user_adminActions extends myActions
     	$user->setAccountCredit($this->getRequestParameter('account_credit'));
 
     $user->save();
+
+    // if adding a new user, send an email
+    if (!$this->getRequestParameter('id')) {
+		$this->getRequest()->setParameter("user", $user->getId());
+
+		$raw_email = $this->sendEmail('mail', 'signup');
+		$this->logMessage($raw_email, "debug");
+	}
 
     return $this->redirect('user_admin/show?id='.$user->getId());
   }
