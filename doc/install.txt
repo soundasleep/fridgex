@@ -8,4 +8,5 @@
    $ symfony propel-build-all fridge
    $ symfony cc
    $ symfony propel-load-data fridge
-   
+
+4. set config values in [apps/fridge/config/app.yml] if you want to send e-mails

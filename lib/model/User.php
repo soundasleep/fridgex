@@ -14,7 +14,9 @@ class User extends BaseUser
 	{
 		// does such a user exist?
 		$c = new Criteria();
-		$c->add(UserPeer::EMAIL, $context->getRequestParameter("email", ""));
+		$c_q = $c->getNewCriterion(UserPeer::EMAIL, $context->getRequestParameter("email", ""));
+		$c_q->addOr($c->getNewCriterion(UserPeer::NICKNAME, $context->getRequestParameter("email", "")));
+		$c->add($c_q);
 		$user = UserPeer::doSelectOne($c);
 
 		if (!$user) {

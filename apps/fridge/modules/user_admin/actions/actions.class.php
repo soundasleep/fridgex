@@ -84,12 +84,6 @@ class user_adminActions extends myActions
     $user->setEmail($this->getRequestParameter('email'));
     $user->setName($this->getRequestParameter('name'));
     $user->setNickname($this->getRequestParameter('nickname'));
-    $user->setPasswordHash($this->getRequestParameter('password_hash'));
-    if ($this->getRequestParameter('last_login'))
-    {
-      list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('last_login'), $this->getUser()->getCulture());
-      $user->setLastLogin("$y-$m-$d");
-    }
 
 	if ($this->current_user->canSetCredit($this->user))
     	$user->setAccountCredit($this->getRequestParameter('account_credit'));

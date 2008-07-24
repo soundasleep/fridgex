@@ -2,6 +2,29 @@
 
 <?php use_helper('Number'); ?>
 
+<h2>Account Details</h2>
+
+<table>
+<tr>
+  <th>Name</th>
+  <td><?php echo $user->getName(); ?></td>
+</tr>
+<tr>
+  <th>Email</th>
+  <td><?php echo $user->getEmail(); ?></td>
+</tr>
+<tr>
+  <th>Nickname</th>
+  <td><?php echo $user->getNickname(); ?></td>
+</tr>
+<tr>
+  <th>Account Credit</th>
+  <td><?php echo format_currency($user->getAccountCredit()); ?></td>
+</tr>
+</table>
+
+<?php echo link_to("edit account details", "user/edit"); ?>
+
 <h2>Recent Activity</h2>
 
 <table>

@@ -1,0 +1,8 @@
+fields:
+  email:
+    required:
+      msg:      e-mail is required
+
+  password:
+    required:
+      msg:      password is required

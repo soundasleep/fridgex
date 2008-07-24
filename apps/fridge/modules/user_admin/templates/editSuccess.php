@@ -28,19 +28,6 @@
   'size' => 80,
 )) ?></td>
 </tr>
-<tr>
-  <th>Password hash:</th>
-  <td><?php echo object_input_tag($user, 'getPasswordHash', array (
-  'size' => 80,
-)) ?></td>
-</tr>
-<tr>
-  <th>Last login:</th>
-  <td><?php echo object_input_date_tag($user, 'getLastLogin', array (
-  'rich' => true,
-  'withtime' => true,
-)) ?></td>
-</tr>
 <?php if ($current_user->canSetCredit($user)) { ?>
 <tr>
   <th>Account credit:</th>
