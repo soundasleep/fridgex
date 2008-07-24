@@ -58,7 +58,7 @@ class User extends BaseUser
 	}
 
 	public function canSetInventory($product) {
-		return $this->hasSpecificPermission("inventory");
+		return $this->hasSpecificPermission("edit") && $this->hasSpecificPermission("inventory");
 	}
 
 	public function canAddUser() {
@@ -69,12 +69,20 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("verify");
 	}
 
+	public function canListUsers() {
+		return $this->hasSpecificPermission("user");
+	}
+
 	public function canEditUser($user) {
 		return $this->hasSpecificPermission("user");
 	}
 
-	public function canDeleteUser($product) {
+	public function canDeleteUser($user) {
 		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("delete");
+	}
+
+	public function canSetCredit($user) {
+		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("credit");
 	}
 
 	public function hasSpecificPermission($key) {
@@ -86,5 +94,47 @@ class User extends BaseUser
 
 		return false;
 	}
+
+	/**
+	 * Return a string describing the recent activity of the user
+	 */
+	public function getRecentActivity() {
+
+		if (!$this->recent_activity) {
+			$c = new Criteria();
+			$c->add(PurchasePeer::USER_ID, $this->getId());
+			$c->add(PurchasePeer::CREATED_AT, date("Y-m-d", strtotime(sfConfig::get("app_user_recent", "-14 days"))), Criteria::GREATER_EQUAL);
+			$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
+			$c->setLimit(100);
+			$this->recent_activity = PurchasePeer::doSelect($c);
+		}
+
+		$purchase = $credit = array("count" => 0, "value" => 0, "items" => 0);
+		foreach ($this->recent_activity as $p) {
+			if ($p->getQuantity() < 0) {
+				$purchase["count"]++;
+				$purchase["value"] += -$p->getQuantity() * $p->getPrice();
+				$purchase["items"] += -$p->getQuantity();
+			} else {
+				$credit["count"]++;
+				$credit["value"] += $p->getQuantity() * $p->getPrice();
+				$credit["items"] += $p->getQuantity();
+			}
+		}
+
+		$str = array();
+		if ($purchase["count"]) {
+			sfLoader::loadHelpers("Number");
+			$str[] = number_format($purchase["count"]) . " purchases (" . number_format($purchase["items"]) . " items) : " . format_currency($purchase["value"]);
+		}
+		if ($credit["count"]) {
+			sfLoader::loadHelpers("Number");
+			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . format_currency($credit["value"]);
+		}
+
+		return $str ? implode("; ", $str) : "-";
+
+	}
+	var $recent_activity;
 
 }
