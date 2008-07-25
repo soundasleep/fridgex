@@ -1,14 +1,25 @@
-1. set up mysql
+1. install from subversion
+   $ svn checkout svn checkout http://fridgex.googlecode.com/svn/trunk/ fridgex
+
+2. set your symfony directories in [config/config.php]
+   -- $sf_symfony_lib_dir  = '/usr/share/pear/symfony';
+   -- $sf_symfony_data_dir = '/usr/share/pear/data/symfony';
+
+3. create the cache directory
+   $ mkdir cache
+   $ symfony cc
+
+4. set up mysql
    -- create database fridge;
    -- grant all privileges on fridge.* to 'fridge'@'localhost' identified by 'orange123';
 
-2. config/databases.yml: set up database username and password
+5. configure databases in [config/databases.yml] and [config/propel.ini]
 
-3. update database mapping, sample data
+6. update database mapping; load database; insert sample data
    $ symfony propel-build-all fridge
    $ symfony cc
    $ symfony propel-load-data fridge
 
-4. set config values in [apps/fridge/config/app.yml] if you want to send e-mails
+7. set config values in [apps/fridge/config/app.yml] if you want to send e-mails
 
 5. set config values in [apps/fridge/config/view.yml] if you want to change the page title
