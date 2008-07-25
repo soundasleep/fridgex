@@ -91,10 +91,26 @@ class User extends BaseUser
 		$permissions = $this->getUserPermissions();
 		foreach ($permissions as $p) {
 			if ($p->getPermission() == $key)
-				return true;
+				return $p;
 		}
 
 		return false;
+	}
+
+	public function hasPermission($key) {
+		return $this->hasSpecificPermission($key);
+	}
+
+	public function addPermission(UserPermission $p) {
+		return $this->addUserPermission($p);
+	}
+
+	public function deletePermission($key) {
+		$p = $this->hasPermission($key);
+		if ($p) {
+			$p->delete();
+			$this->save();
+		}
 	}
 
 	/**
@@ -111,16 +127,18 @@ class User extends BaseUser
 			$this->recent_activity = PurchasePeer::doSelect($c);
 		}
 
-		$purchase = $credit = array("count" => 0, "value" => 0, "items" => 0);
+		$purchase = $credit = array("count" => 0, "value" => 0, "items" => 0, "verified" => 0);
 		foreach ($this->recent_activity as $p) {
 			if ($p->getQuantity() < 0) {
 				$purchase["count"]++;
 				$purchase["value"] += -$p->getQuantity() * $p->getPrice();
 				$purchase["items"] += -$p->getQuantity();
+				$purchase["verified"] += $p->getVerifiedBy() ? 1 : 0;
 			} else {
 				$credit["count"]++;
 				$credit["value"] += $p->getQuantity() * $p->getPrice();
 				$credit["items"] += $p->getQuantity();
+				$credit["verified"] += $p->getVerifiedBy() ? 1 : 0;
 			}
 		}
 
@@ -131,7 +149,7 @@ class User extends BaseUser
 		}
 		if ($credit["count"]) {
 			sfLoader::loadHelpers("Number");
-			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . format_currency($credit["value"]);
+			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . format_currency($credit["value"]) . ", " . number_format(($credit["verified"] / $credit["count"]) * 100) . "% verified";
 		}
 
 		return $str ? implode("; ", $str) : "-";

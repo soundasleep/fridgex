@@ -21,6 +21,10 @@ class Purchase extends BasePurchase
 		return $this->setUserRelatedByVerifiedById($v);
 	}
 
+	public function setVerifiedBy($v) {
+		return $this->setUserRelatedByVerifiedById($v);
+	}
+
 	public function getUser() {
 		return $this->getUserRelatedByUserId();
 	}

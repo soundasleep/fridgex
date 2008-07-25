@@ -56,6 +56,17 @@ class userActions extends myActions
 			}
 		}
 
+		// new nickname should not exist
+		if ($this->getRequestParameter("nickname") != $this->user->getNickname()) {
+			$c = new Criteria();
+			$c->add(UserPeer::EMAIL, trim($this->getRequestParameter("email")));
+			$user = UserPeer::doSelectOne($c);
+
+			if ($user) {
+				$this->getRequest()->setError("nickname", "nickname already exists");
+			}
+		}
+
 		// new email address should not exist
 		if ($this->getRequestParameter("email_confirm") && $this->getRequestParameter("email_confirm") != $this->user->getEmail()) {
 			$c = new Criteria();

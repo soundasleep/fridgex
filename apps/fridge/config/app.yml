@@ -7,3 +7,12 @@ all:
     
     from:       Fridex
     address:    fridex@jevon.org
+
+  permission:
+    list:
+      - edit
+      - user
+      - delete
+      - verify
+      - credit
+      - inventory

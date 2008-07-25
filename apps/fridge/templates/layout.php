@@ -23,6 +23,9 @@
 		<?php if ($sf_user->getUserObject(false)->canAddUser()) { ?>
 		<li class="admin"><?php echo link_to("manage users", "user_admin/index"); ?></li>
 		<?php } ?>
+		<?php if ($sf_user->getUserObject(false)->canVerifyCredit()) { ?>
+		<li class="admin"><?php echo link_to("manage purchases", "purchase/index"); ?></li>
+		<?php } ?>
 
 		<li><?php echo link_to("logout", "security/logout"); ?></li>
 		<?php } else { ?>

@@ -44,6 +44,19 @@
 )) ?></td>
 </tr>
 <?php } ?>
+<tr>
+  <th>Permissions:</th>
+  <td><?php
+  	foreach (sfConfig::get("app_permission_list", array()) as $permission) {
+		?>
+		<label>
+		<?php echo checkbox_tag("permission_".$permission, "1", $user->hasPermission($permission)); ?>
+		<?php echo $permission; ?>
+		</label>
+		<?php
+	}
+  ?></td>
+</tr>
 </tbody>
 </table>
 <hr />
