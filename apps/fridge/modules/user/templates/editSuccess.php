@@ -4,7 +4,7 @@
 ?>
 <?php use_helper('Object') ?>
 
-<h1>edit profile</h1>
+<h1>Edit account details</h1>
 
 <?php if ($sf_request->hasErrors()): ?>
 <div class="error">
@@ -18,7 +18,7 @@
 <tbody>
 <tr>
   <th>Email:</th>
-  <td>Currently <?php echo $user->getEmail(); ?><br>
+  <td>Currently <?php echo mail_to($user->getEmail()); ?><br>
   	<?php echo object_input_tag($user, 'getEmail', array (
   'size' => 40,
 )) ?></td>

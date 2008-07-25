@@ -144,12 +144,12 @@ class User extends BaseUser
 
 		$str = array();
 		if ($purchase["count"]) {
-			sfLoader::loadHelpers("Number");
-			$str[] = number_format($purchase["count"]) . " purchases (" . number_format($purchase["items"]) . " items) : " . format_currency($purchase["value"]);
+			sfLoader::loadHelpers("My");
+			$str[] = number_format($purchase["count"]) . " purchases (" . number_format($purchase["items"]) . " items) : " . my_format_currency($purchase["value"]);
 		}
 		if ($credit["count"]) {
-			sfLoader::loadHelpers("Number");
-			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . format_currency($credit["value"]) . ", " . number_format(($credit["verified"] / $credit["count"]) * 100) . "% verified";
+			sfLoader::loadHelpers("My");
+			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . my_format_currency($credit["value"]) . ", " . number_format(($credit["verified"] / $credit["count"]) * 100) . "% verified";
 		}
 
 		return $str ? implode("; ", $str) : "-";

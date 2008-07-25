@@ -52,6 +52,7 @@ class mailActions extends sfActions
 		// send signup e-mail
 		$this->user = UserPeer::retrieveByPk($this->getRequestParameter("user"));		// alternative would be to use sfUser::setParameter
 		$this->forward404Unless($this->user, "no such user to mail");
+		$this->password = $this->getRequestParameter("password");		// alternative would be to use sfUser::setParameter
 
 		$e = new Email();
 		$e->initialise($this->user->getName(), $this->user->getEmail());

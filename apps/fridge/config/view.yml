@@ -3,10 +3,10 @@ default:
     content-type: text/html
 
   metas:
-    title:        symfony project
+    title:        Fridge
     robots:       index, follow
-    description:  symfony project
-    keywords:     symfony, project
+    description:  A fridge billing system for a community of likely computer scientists
+    keywords:     fridge, billing, community, symfony
     language:     en
 
   stylesheets:    [main]

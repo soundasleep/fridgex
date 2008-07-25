@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <th>Price:</th>
-  <td><?php echo object_input_tag($product, 'getPrice', array (
+  <td>$ <?php echo object_input_tag($product, 'getPrice', array (
   'size' => 7,
 )) ?></td>
 </tr>
@@ -40,7 +40,7 @@
   <th>Image:</th>
   <td><?php echo $product->getImageUrl() ? image_tag($product->getImageUrl()) : "(empty)"; ?><br>
 
-    Upload new: <?php echo input_file_tag('upload_image') ?><br>
+    Upload new: <?php echo input_file_tag('upload_image') ?> (optimal 100x140)<br>
 
 </td>
 </tr>

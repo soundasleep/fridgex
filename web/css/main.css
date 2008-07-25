@@ -16,30 +16,68 @@ body, td
 {
   margin: 0;
   padding: 0;
-  font-family: Arial, Verdana, sans-serif;
-  font-size: 11px;
-  background-color: #fff;
+  font-family: Calibri, Arial, Verdana, sans-serif;
+  font-size: 1em;
+  background-color: white;
 }
 
 body
 {
   padding: 20px;
+  background: #eee;
 }
 
 /* my changes */
+table { border: 1px solid #aaa; background: white; }
 td,th { line-height: 1.4em; background: white; padding: 2px; }
 th { font-weight: bold; text-align: left; background: #ddeeff; }
 h1 { margin-top: .2em; margin-bottom: .2em; }
-div.error { padding: 5px; margin: 5px; width: 40%; border: 1px solid #cc9999; background: #ffcccc; }
-div.message { padding: 5px; margin: 5px; width: 40%; border: 1px solid #9999cc; background: #ccccff; }
+div.error { padding: 5px; margin: 5px; width: 40%; border: 1px solid #c99; background: #fcc; }
+div.message { padding: 5px; margin: 5px; width: 40%; border: 1px solid #99c; background: #ccf; }
 ul,ol { padding-left: 1em; margin: 1em; }
 span.disabled { color: gray; }
+span.negative { color: red; }
+input { font-family: Calibri, Arial, Verdana, sans-serif; }
+input[type=submit] { padding: 3px; }
+input[type=text],input[type=password] { padding: 2px; }
 
 /* top navigation bar */
 div#navigation { margin-left: auto; margin-right: auto; width: auto; }
-div#navigation ul { list-style: none; padding: 7px 7px 7px 5px; margin: 0; width: 600px; border: 1px inset #ddeeff; background: #ddeeff; }
+div#navigation ul { list-style: none; padding: 11px 11px 11px 7px; margin: 0; width: auto; border: 1px inset #def; background: #def; }
 div#navigation li { display: inline; margin-right: 1px; }
-div#navigation li a { padding: 2px 5px 2px 5px; margin-right: 1px; border: 1px outset #aaccee; background: #aaccee; }
-div#navigation li.manager a { border: 1px outset #ddbbdd; background: #ddbbdd; }
-div#navigation li.admin a { border: 1px outset #ddccbb; background: #ddccbb; }
-div#navigation li.offline a { border: 1px outset #bbddcc; background: #bbddcc; }
+div#navigation li a { padding: 4px 7px 4px 7px; margin-right: 1px; border: 1px outset #ace; background: #ace; }
+div#navigation li.manager a { border: 1px outset #dbd; background: #dbd; }
+div#navigation li.admin a { border: 1px outset #dcb; background: #dcb; }
+div#navigation li.offline a { border: 1px outset #bdc; background: #bdc; }
+div#navigation li.title { font-weight: bold; }
+div#navigation li.login { position: absolute; right: 26px; }
+div#powered_by { clear: both; font-size: 70%; float: right; margin-bottom: 10px; }
+
+/* navigation icons */
+div#navigation li a.home { padding-left: 25px; background: #ace url('../images/icons/kfm_home.png') 5px 5px no-repeat; }
+div#navigation li a.logout { padding-left: 25px; background: #ace url('../images/icons/exit.png') 5px 5px no-repeat; }
+div#navigation li a.account { padding-left: 25px; background: #ace url('../images/icons/kgpg_identity.png') 5px 5px no-repeat; }
+div#navigation li a.login { padding-left: 25px; background: #ace url('../images/icons/kgpg_key2.png') 5px 5px no-repeat; }
+div#navigation li a.signup { padding-left: 25px; background: #ace url('../images/icons/kgpg_gen.png') 5px 5px no-repeat; }
+div#navigation li a.help { padding-left: 25px; background: #ace url('../images/icons/help.png') 5px 5px no-repeat; }
+
+div#navigation li a.users { padding-left: 25px; background: #dcb url('../images/icons/kdmconfig.png') 5px 5px no-repeat; }
+div#navigation li a.purchases { padding-left: 25px; background: #dcb url('../images/icons/kpdf.png') 5px 5px no-repeat; }
+
+/* page specific */
+
+td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
+td.currency { text-align: right; }
+td.number { text-align: left; }
+
+div#product_list table { width: 100%; border: 1px solid #aaa; background: #eee; }
+div#product_list table td { width: 20%; border: 1px solid #ddd; background: #fff; vertical-align: top; padding: 10px; }
+div#product_list table td img { width: 100px; border: 1px solid #666; margin-bottom: 5px; }
+div#product_list div.image_tag { height: 142px; overflow-y: hidden; }
+div#product_list div.display_switch { position: relative; float: right; top: -20px; font-size: 80%; }
+
+div#product_show div.info { float: left; }
+div#product_show div.purchase { float: left; margin-left: 20px; }
+div#product_show div.purchase table { margin-bottom: 20px; }
+
+div#user_admin_edit td.permissions label { margin-right: 15px; }

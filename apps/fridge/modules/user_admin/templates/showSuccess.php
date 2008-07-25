@@ -3,7 +3,9 @@
 // date: 2008/07/24 15:35:45
 ?>
 
-<?php use_helper("Number"); ?>
+<h1><?php echo $user->getNickname(); ?></h1>
+
+<?php use_helper("My"); ?>
 
 <table>
 <tbody>
@@ -13,7 +15,7 @@
 </tr>
 <tr>
 <th>Email: </th>
-<td><?php echo $user->getEmail() ?></td>
+<td><?php echo mail_to($user->getEmail()) ?></td>
 </tr>
 <tr>
 <th>Name: </th>
@@ -25,19 +27,19 @@
 </tr>
 <tr>
 <th>Created at: </th>
-<td><?php echo $user->getCreatedAt() ?></td>
+<td><?php echo my_format_date($user->getCreatedAt()) ?></td>
 </tr>
 <tr>
 <th>Updated at: </th>
-<td><?php echo $user->getUpdatedAt() ?></td>
+<td><?php echo my_format_date($user->getUpdatedAt()) ?></td>
 </tr>
 <tr>
 <th>Last login: </th>
-<td><?php echo $user->getLastLogin() ?></td>
+<td><?php echo my_format_date($user->getLastLogin()) ?></td>
 </tr>
 <tr>
 <th>Account credit: </th>
-<td><?php echo $user->getAccountCredit() ?></td>
+<td><?php echo my_format_currency($user->getAccountCredit()) ?></td>
 </tr>
 <tr>
 <th>Permissions: </th>
@@ -70,10 +72,10 @@
 <?php if ($purchase->getQuantity() < 0) { ?>
 	<td><?php echo $purchase->getCreatedAt(); ?></td>
 	<td>Purchase: <?php echo link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()); ?></td>
-	<td><?php echo format_currency($purchase->getPrice()); ?></td>
-	<td><?php echo format_number(-$purchase->getQuantity()); ?></td>
-	<td></td>
-	<td><?php echo format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="number"><?php echo format_number(-$purchase->getQuantity()); ?></td>
+	<td class="currency"></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
 	<td><?php echo $purchase->getCreatedAt(); ?></td>
 	<td>Credit: <?php echo link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()); ?>
@@ -81,17 +83,24 @@
 		(<?php echo link_to("Unverified", "purchase/list"); ?>)
 		<?php } ?>
 		</td>
-	<td><?php echo format_currency($purchase->getPrice()); ?></td>
-	<td><?php echo format_number($purchase->getQuantity()); ?></td>
-	<td><?php echo format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
-	<td></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="number"><?php echo format_number($purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"></td>
 <?php } ?>
 </tr>
 <?php } ?>
+
+<?php if (!$purchases) { ?>
+<tr>
+	<td colspan="7" class="no_activity">(No recent activity in the last 14 days.)</td>
+</tr>
+<?php } ?>
+
 <tr>
 	<th colspan="5">Account Balance</th>
-	<th><?php if ($user->getAccountCredit() > 0) echo format_currency($user->getAccountCredit()); ?></th>
-	<th><?php if ($user->getAccountCredit() <= 0) echo format_currency($user->getAccountCredit()); ?></th>
+	<th><?php if ($user->getAccountCredit() > 0) echo my_format_currency($user->getAccountCredit()); ?></th>
+	<th><?php if ($user->getAccountCredit() <= 0) echo my_format_currency($user->getAccountCredit()); ?></th>
 </tr>
 </tbody>
 </table>

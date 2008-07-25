@@ -10,3 +10,5 @@
    $ symfony propel-load-data fridge
 
 4. set config values in [apps/fridge/config/app.yml] if you want to send e-mails
+
+5. set config values in [apps/fridge/config/view.yml] if you want to change the page title

@@ -144,6 +144,11 @@ class user_adminActions extends myActions
 
     // if adding a new user, send an email
     if (!$this->getRequestParameter('id')) {
+		$password = sprintf("%04x%04x%04x", rand(0,0xffff), rand(0,0xffff), rand(0,0xffff));
+		$user->setPasswordHash(md5($password));
+		$user->save();
+
+		$this->getRequest()->setParameter("password", $password);
 		$this->getRequest()->setParameter("user", $user->getId());
 
 		$raw_email = $this->sendEmail('mail', 'signup');

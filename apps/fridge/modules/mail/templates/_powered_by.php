@@ -1,0 +1,1 @@
+<small>[ Powered by <?php echo link_to("Fridgex 0.1", "http://code.google.com/p/fridgex"); ?> ]</small>
