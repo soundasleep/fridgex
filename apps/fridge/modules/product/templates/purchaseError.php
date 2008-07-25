@@ -7,6 +7,6 @@
 
 <?php if ($sf_request->hasErrors()): ?>
 <div class="error">
-  <?php echo str_replace("credit your account", link_to("credit your account", "user/credit"), implode("; ", $sf_request->getErrors())); ?> - please try again
+  <?php echo implode("; ", $sf_request->getErrors()); ?> - please try again
 </div>
 <?php endif; ?>
