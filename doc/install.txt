@@ -1,25 +1,65 @@
-1. install from subversion
-   $ svn checkout svn checkout http://fridgex.googlecode.com/svn/trunk/ fridgex
+Fridgex installation instructions
 
-2. set your symfony directories in [config/config.php]
+1. install from subversion
+   $ mkdir /var/www/fridge
+   $ svn checkout svn checkout http://fridgex.googlecode.com/svn/trunk/ /var/www/fridge
+   
+2. set up apache alias/virtual host to "web" directory
+---
+# set up symfony
+<Directory "/usr/share/pear/data/symfony/web/sf">
+   Options FollowSymLinks
+   AllowOverride All
+   Allow from All
+</Directory>
+
+# set up fridge
+Alias /fridge/sf "/usr/share/pear/data/symfony/web/sf"
+Alias "/fridge" "/var/www/fridge/web"
+<Directory "/var/www/fridge/web">
+   Options Indexes FollowSymLinks
+   DirectoryIndex index.html index.php default.html default.php
+   AllowOverride All
+   Allow from All
+</Directory>
+---
+
+3. restart apache
+
+4. set your symfony directories in [config/config.php]
    -- $sf_symfony_lib_dir  = '/usr/share/pear/symfony';
    -- $sf_symfony_data_dir = '/usr/share/pear/data/symfony';
 
-3. create the cache directory
+5. create the cache and log directories
    $ mkdir cache
+   $ mkdir log
+   $ chmod 777 cache
+   $ chmod 777 log
    $ symfony cc
 
-4. set up mysql
+6. set up mysql
    -- create database fridge;
    -- grant all privileges on fridge.* to 'fridge'@'localhost' identified by 'orange123';
 
-5. configure databases in [config/databases.yml] and [config/propel.ini]
+7. configure databases in [config/databases.yml] and [config/propel.ini]
 
-6. update database mapping; load database; insert sample data
+8. update database mapping; load database; insert sample data
    $ symfony propel-build-all fridge
    $ symfony cc
    $ symfony propel-load-data fridge
 
-7. set config values in [apps/fridge/config/app.yml] if you want to send e-mails
+9. set config values in [apps/fridge/config/app.yml] if you want to send e-mails
 
-5. set config values in [apps/fridge/config/view.yml] if you want to change the page title
+10. set config values in [apps/fridge/config/view.yml] if you want to change the page title
+
+11. login to / with the username "admin" / password "apples"
+
+12. change admin password and create new users
+
+
+if you get this error when accessing http://host/fridge/:
+Not Found
+The requested URL /var/www/fridge/web/index.php was not found on this server.
+
+go to [web/.htaccess] and set RewriteBase:
+  RewriteBase /fridge

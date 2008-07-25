@@ -1,4 +1,7 @@
 all:
+  # title:        Our Fridge System
+  # help:         http://code.google.com/p/fridgex
+  
   mail:
     charset:    utf-8
     hostname:   localhost

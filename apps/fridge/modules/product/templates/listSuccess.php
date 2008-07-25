@@ -55,16 +55,18 @@
       <td class="number"><?php echo format_number($product->getInventory()) ?></td>
       <td>
 
+		<?php if ($user) { ?>
       	<?php echo form_tag("product/purchase"); ?>
 	  	      	<?php echo input_hidden_tag("id", $product->getId()); ?>
 	  	      	<?php echo input_hidden_tag("quantity", 1); ?>
-	  	      	<?php echo submit_tag("purchase one (" . my_format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
+				<?php echo submit_tag("purchase one (" . my_format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
 
 		<?php if ($user && $user->canEditProduct($product)) { ?>
 		<?php echo link_to("edit", "product_admin/edit?id=".$product->getId()); ?>
 		<?php } ?>
 
       	</form>
+		<?php } ?>
 
     </td>
   </tr>
@@ -92,16 +94,18 @@
 
 	<?php echo link_to($product->getTitle(), 'product/show?id='.$product->getId()) ?> - <b><?php echo my_format_currency($product->getPrice()) ?></b><br>
 
+      	<?php if ($user) { ?>
 		<?php echo form_tag("product/purchase"); ?>
 	      	<?php echo input_hidden_tag("id", $product->getId()); ?>
 	      	<?php echo input_hidden_tag("quantity", 1); ?>
-	      	<?php echo submit_tag("purchase one (" . my_format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
+      		<?php echo submit_tag("purchase one (" . my_format_currency($product->getPrice()) . ")", array("disabled" => ($product->getInventory() <= 0))); ?>
 
 		<?php if ($user && $user->canEditProduct($product)) { ?>
 		<?php echo link_to("edit", "product_admin/edit?id=".$product->getId()); ?>
 		<?php } ?>
 
       	</form>
+      	<?php } ?>
 
 </td>
 
