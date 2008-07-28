@@ -83,6 +83,7 @@ CREATE TABLE `purchase`
 	`verified_by_id` INTEGER,
 	`verified_at` DATETIME,
 	`notes` VARCHAR(255),
+	`surcharge` DECIMAL(9,2),
 	PRIMARY KEY (`id`),
 	INDEX `purchase_FI_1` (`user_id`),
 	CONSTRAINT `purchase_FK_1`

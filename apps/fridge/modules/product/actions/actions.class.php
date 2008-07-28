@@ -69,7 +69,8 @@ class productActions extends myActions
 		  $this->forward404Unless($this->product, "no product specified");
 		  $this->quantity = (int) $this->getRequestParameter('quantity');
 		  $this->forward404Unless($this->quantity > 0, "no quantity specified");
-		  $total = $this->product->getPrice() * $this->quantity;
+		  $surcharge = get_surcharge_for($this->product->getPrice());
+		  $total = apply_surcharge($this->product->getPrice()) * $this->quantity;
 		  $this->forward404Unless($this->product->getInventory() >= $this->quantity, "insufficient quantites available");
 
 		  // do we have enough credit?
@@ -85,6 +86,7 @@ class productActions extends myActions
 		  $purchase->setProduct($this->product);
 		  $purchase->setQuantity(-$this->quantity);
 		  $purchase->setPrice($this->product->getPrice());
+		  $purchase->setSurcharge($surcharge);
 		  $purchase->save();
 
 		  // deduct balance
@@ -125,6 +127,7 @@ class productActions extends myActions
 		  $purchase->setProduct($this->product);
 		  $purchase->setQuantity($this->quantity);
 		  $purchase->setPrice($this->price);
+		  $purchase->setSurcharge(0);
 		  $purchase->save();
 
 		  // add balance

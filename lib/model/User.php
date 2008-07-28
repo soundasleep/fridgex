@@ -87,6 +87,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("credit");
 	}
 
+	public function canViewSurcharge($user) {
+		return $this->hasSpecificPermission("edit");
+	}
+
 	public function hasSpecificPermission($key) {
 		$permissions = $this->getUserPermissions();
 		foreach ($permissions as $p) {

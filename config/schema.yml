@@ -43,7 +43,7 @@ propel:
     user_id:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
     product_id:     { type: integer, foreignTable: product, foreignReference: id, onDelete: setnull }
     quantity:       integer
-    price:          # per item
+    price:          # per item (incl surcharge)
       type: decimal
       size: 9
       scale: 2
@@ -53,6 +53,12 @@ propel:
     verified_by_id: { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
     verified_at:    timestamp
     notes:          varchar(255)
+    
+    # when a surcharge applies, the amount added on is stored in here
+    surcharge:
+      type: decimal
+      size: 9
+      scale: 2
     
   # emails
   email:

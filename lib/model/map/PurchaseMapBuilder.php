@@ -50,5 +50,7 @@ class PurchaseMapBuilder {
 
 		$tMap->addColumn('NOTES', 'Notes', 'string', CreoleTypes::VARCHAR, false, 255);
 
+		$tMap->addColumn('SURCHARGE', 'Surcharge', 'double', CreoleTypes::DECIMAL, false, 9);
+
 	} 
 } 

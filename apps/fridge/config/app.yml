@@ -2,6 +2,9 @@ all:
   # title:        Our Fridge System
   # help:         http://code.google.com/p/fridgex
   
+  surcharge:      10%
+  surcharge_units:    100   # calculate surcharge to 100ths of a $
+  
   mail:
     charset:    utf-8
     hostname:   localhost

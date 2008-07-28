@@ -13,7 +13,8 @@
 	<tbody>
 	<tr>
 	<th>Price: </th>
-	<td><?php echo my_format_currency($product->getPrice()) ?></td>
+	<td><?php echo my_format_currency(apply_surcharge($product->getPrice())) ?>
+	<?php if ($user && $user->canViewSurcharge() && get_surcharge_for($product->getPrice())) { ?>, includes a surcharge of <?php echo my_format_currency(get_surcharge_for($product->getPrice())); ?><?php } ?></td>
 	</tr>
 	<tr>
 	<th>Inventory: </th>
@@ -91,11 +92,11 @@
 
 <?php } else { ?>
 
-<div class="disabled">Purchase some of these</span>
+<div class="disabled">You cannot afford to purchase some of this product.</div>
 
 <?php } ?>
 
-<?php if ($user->canEditProduct($product)) { ?>
+<?php if ($user && $user->canEditProduct($product)) { ?>
 <?php echo link_to("Edit product", "product_admin/edit?id=".$product->getId()); ?>
 <?php } ?>
 

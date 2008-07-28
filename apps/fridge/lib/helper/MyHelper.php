@@ -36,3 +36,20 @@ function my_format_date($d) {
 	return date_format("D-m-y", $d);
 
 }
+
+function get_surcharge_for($price) {
+	$surcharge = sfConfig::get("app_surcharge", 0);
+	$surcharge_units = sfConfig::get("app_surcharge_units", 100);
+
+	if (!$surcharge) return 0;
+	if (strpos($surcharge, "%") !== false) {
+		$surcharge = (str_replace("%", "", $surcharge)) * 0.01;		// to %
+		return round(($price * $surcharge * $surcharge_units)) / $surcharge_units;	// to the units
+	} else {
+		return round($surcharge * $surcharge_units) / $surcharge_units;			// to the units
+	}
+}
+
+function apply_surcharge($price) {
+	return $price + get_surcharge_for($price);
+}

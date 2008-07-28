@@ -43,6 +43,10 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	
 	protected $notes;
 
+
+	
+	protected $surcharge;
+
 	
 	protected $aUserRelatedByUserId;
 
@@ -149,6 +153,13 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	{
 
 		return $this->notes;
+	}
+
+	
+	public function getSurcharge()
+	{
+
+		return $this->surcharge;
 	}
 
 	
@@ -304,6 +315,16 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setSurcharge($v)
+	{
+
+		if ($this->surcharge !== $v) {
+			$this->surcharge = $v;
+			$this->modifiedColumns[] = PurchasePeer::SURCHARGE;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -326,11 +347,13 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 			$this->notes = $rs->getString($startcol + 8);
 
+			$this->surcharge = $rs->getFloat($startcol + 9);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 9; 
+						return $startcol + 10; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Purchase object", $e);
 		}
@@ -532,6 +555,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 8:
 				return $this->getNotes();
 				break;
+			case 9:
+				return $this->getSurcharge();
+				break;
 			default:
 				return null;
 				break;
@@ -551,6 +577,7 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			$keys[6] => $this->getVerifiedById(),
 			$keys[7] => $this->getVerifiedAt(),
 			$keys[8] => $this->getNotes(),
+			$keys[9] => $this->getSurcharge(),
 		);
 		return $result;
 	}
@@ -593,6 +620,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 8:
 				$this->setNotes($value);
 				break;
+			case 9:
+				$this->setSurcharge($value);
+				break;
 		} 	}
 
 	
@@ -609,6 +639,7 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[6], $arr)) $this->setVerifiedById($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setVerifiedAt($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setNotes($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setSurcharge($arr[$keys[9]]);
 	}
 
 	
@@ -625,6 +656,7 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(PurchasePeer::VERIFIED_BY_ID)) $criteria->add(PurchasePeer::VERIFIED_BY_ID, $this->verified_by_id);
 		if ($this->isColumnModified(PurchasePeer::VERIFIED_AT)) $criteria->add(PurchasePeer::VERIFIED_AT, $this->verified_at);
 		if ($this->isColumnModified(PurchasePeer::NOTES)) $criteria->add(PurchasePeer::NOTES, $this->notes);
+		if ($this->isColumnModified(PurchasePeer::SURCHARGE)) $criteria->add(PurchasePeer::SURCHARGE, $this->surcharge);
 
 		return $criteria;
 	}
@@ -670,6 +702,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		$copyObj->setVerifiedAt($this->verified_at);
 
 		$copyObj->setNotes($this->notes);
+
+		$copyObj->setSurcharge($this->surcharge);
 
 
 		$copyObj->setNew(true);

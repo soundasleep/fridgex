@@ -13,7 +13,7 @@ abstract class BasePurchasePeer {
 	const CLASS_DEFAULT = 'lib.model.Purchase';
 
 	
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -47,23 +47,26 @@ abstract class BasePurchasePeer {
 	const NOTES = 'purchase.NOTES';
 
 	
+	const SURCHARGE = 'purchase.SURCHARGE';
+
+	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'ProductId', 'Quantity', 'Price', 'CreatedAt', 'VerifiedById', 'VerifiedAt', 'Notes', ),
-		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID, PurchasePeer::USER_ID, PurchasePeer::PRODUCT_ID, PurchasePeer::QUANTITY, PurchasePeer::PRICE, PurchasePeer::CREATED_AT, PurchasePeer::VERIFIED_BY_ID, PurchasePeer::VERIFIED_AT, PurchasePeer::NOTES, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'product_id', 'quantity', 'price', 'created_at', 'verified_by_id', 'verified_at', 'notes', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'ProductId', 'Quantity', 'Price', 'CreatedAt', 'VerifiedById', 'VerifiedAt', 'Notes', 'Surcharge', ),
+		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID, PurchasePeer::USER_ID, PurchasePeer::PRODUCT_ID, PurchasePeer::QUANTITY, PurchasePeer::PRICE, PurchasePeer::CREATED_AT, PurchasePeer::VERIFIED_BY_ID, PurchasePeer::VERIFIED_AT, PurchasePeer::NOTES, PurchasePeer::SURCHARGE, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'user_id', 'product_id', 'quantity', 'price', 'created_at', 'verified_by_id', 'verified_at', 'notes', 'surcharge', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'ProductId' => 2, 'Quantity' => 3, 'Price' => 4, 'CreatedAt' => 5, 'VerifiedById' => 6, 'VerifiedAt' => 7, 'Notes' => 8, ),
-		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID => 0, PurchasePeer::USER_ID => 1, PurchasePeer::PRODUCT_ID => 2, PurchasePeer::QUANTITY => 3, PurchasePeer::PRICE => 4, PurchasePeer::CREATED_AT => 5, PurchasePeer::VERIFIED_BY_ID => 6, PurchasePeer::VERIFIED_AT => 7, PurchasePeer::NOTES => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'product_id' => 2, 'quantity' => 3, 'price' => 4, 'created_at' => 5, 'verified_by_id' => 6, 'verified_at' => 7, 'notes' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'ProductId' => 2, 'Quantity' => 3, 'Price' => 4, 'CreatedAt' => 5, 'VerifiedById' => 6, 'VerifiedAt' => 7, 'Notes' => 8, 'Surcharge' => 9, ),
+		BasePeer::TYPE_COLNAME => array (PurchasePeer::ID => 0, PurchasePeer::USER_ID => 1, PurchasePeer::PRODUCT_ID => 2, PurchasePeer::QUANTITY => 3, PurchasePeer::PRICE => 4, PurchasePeer::CREATED_AT => 5, PurchasePeer::VERIFIED_BY_ID => 6, PurchasePeer::VERIFIED_AT => 7, PurchasePeer::NOTES => 8, PurchasePeer::SURCHARGE => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'user_id' => 1, 'product_id' => 2, 'quantity' => 3, 'price' => 4, 'created_at' => 5, 'verified_by_id' => 6, 'verified_at' => 7, 'notes' => 8, 'surcharge' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
@@ -134,6 +137,8 @@ abstract class BasePurchasePeer {
 		$criteria->addSelectColumn(PurchasePeer::VERIFIED_AT);
 
 		$criteria->addSelectColumn(PurchasePeer::NOTES);
+
+		$criteria->addSelectColumn(PurchasePeer::SURCHARGE);
 
 	}
 
