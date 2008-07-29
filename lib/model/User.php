@@ -10,6 +10,9 @@
 class User extends BaseUser
 {
 
+	/**
+	 * Try to log in as a user with a given context
+	 */
 	static function login(sfActions $context)
 	{
 		// does such a user exist?
@@ -37,12 +40,18 @@ class User extends BaseUser
 		return false;
 	}
 
+	/**
+	 * Log the current user out (not log out the user represented by this object)
+	 */
 	static public function logout(sfActions $context) {
 		$context->getUser()->setAuthenticated(false);
 		$context->getUser()->setUserId(false);
 
 	}
 
+	/**
+	 * Some convenience functions to specify user permissions
+	 */
 	public function canCredit($product) {
 		return true;		// currently all members can always credit new purchases
 	}
@@ -87,10 +96,14 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("credit");
 	}
 
-	public function canViewSurcharge($user) {
+	public function canViewSurcharge() {
 		return $this->hasSpecificPermission("edit");
 	}
 
+	/**
+	 * Does this user have a specific permission key?
+	 * @see UserPermission
+	 */
 	public function hasSpecificPermission($key) {
 		$permissions = $this->getUserPermissions();
 		foreach ($permissions as $p) {
@@ -119,6 +132,7 @@ class User extends BaseUser
 
 	/**
 	 * Return a string describing the recent activity of the user
+	 * eg. "5 purchases ($10); 12 credits ($8.50)".
 	 */
 	public function getRecentActivity() {
 
