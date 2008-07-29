@@ -37,6 +37,9 @@
   <th>Activity</th>
   <th>Price</th>
   <th>Quantity</th>
+<?php if ($user->canViewSurcharge()) { ?>
+  <th>Surcharge</th>
+<?php } ?>
   <th>Credit</th>
   <th>Debit</th>
 </tr>
@@ -50,6 +53,9 @@
 	<td>Purchase: <?php echo link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()); ?></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
 	<td class="number"><?php echo format_number(-$purchase->getQuantity()); ?></td>
+<?php if ($user->canViewSurcharge()) { ?>
+	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
+<?php } ?>
 	<td class="currency"></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
@@ -61,6 +67,9 @@
 		</td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
 	<td class="number"><?php echo format_number($purchase->getQuantity()); ?></td>
+<?php if ($user->canViewSurcharge()) { ?>
+	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
+<?php } ?>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
 	<td class="currency"></td>
 <?php } ?>
