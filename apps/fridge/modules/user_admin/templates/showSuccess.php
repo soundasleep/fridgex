@@ -3,6 +3,7 @@
 // date: 2008/07/24 15:35:45
 ?>
 
+<?php echo link_to('List of users', 'user_admin/list') ?>
 <h1><?php echo $user->getNickname(); ?></h1>
 
 <?php use_helper("My"); ?>
@@ -43,13 +44,15 @@
 </tr>
 <tr>
 <th>Permissions: </th>
-<td><?php foreach ($user->getUserPermissions() as $p) echo $p->getPermission() . " "; ?></td>
+<td><?php $p_list = array();
+	foreach ($user->getUserPermissions() as $p)
+		$p_list[] = $p;
+	echo implode(", ", $p_list); ?></td>
 </tr>
 </tbody>
 </table>
+<?php echo link_to('Edit user', 'user_admin/edit?id='.$user->getId()) ?>
 <hr />
-<?php echo link_to('edit', 'user_admin/edit?id='.$user->getId()) ?>
-&nbsp;<?php echo link_to('list', 'user_admin/list') ?>
 
 <h2>Recent Activity</h2>
 
@@ -102,6 +105,9 @@
 
 <tr>
 	<th colspan="5">Account Balance</th>
+<?php if ($user->canViewSurcharge()) { ?>
+	<th></th>
+<?php } ?>
 	<th><?php if ($user->getAccountCredit() > 0) echo my_format_currency($user->getAccountCredit()); ?></th>
 	<th><?php if ($user->getAccountCredit() <= 0) echo my_format_currency($user->getAccountCredit()); ?></th>
 </tr>
