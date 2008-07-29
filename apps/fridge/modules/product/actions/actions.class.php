@@ -65,6 +65,8 @@ class productActions extends myActions
 
 	  // how much do we need?
 	  try {
+		  sfLoader::loadHelpers("My");
+
 		  $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
 		  $this->forward404Unless($this->product, "no product specified");
 		  $this->quantity = (int) $this->getRequestParameter('quantity');
