@@ -46,7 +46,7 @@
 <th>Permissions: </th>
 <td><?php $p_list = array();
 	foreach ($user->getUserPermissions() as $p)
-		$p_list[] = $p;
+		$p_list[] = $p->getPermission();
 	echo implode(", ", $p_list); ?></td>
 </tr>
 </tbody>

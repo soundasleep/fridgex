@@ -2,7 +2,7 @@ Fridgex installation instructions
 
 1. install from subversion
    $ mkdir /var/www/fridge
-   $ svn checkout svn checkout http://fridgex.googlecode.com/svn/trunk/ /var/www/fridge
+   $ svn checkout http://fridgex.googlecode.com/svn/trunk/ /var/www/fridge
    
 2. set up apache alias/virtual host to "web" directory
 ---
