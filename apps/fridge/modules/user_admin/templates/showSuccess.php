@@ -83,7 +83,7 @@
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
 	<td><?php echo $purchase->getCreatedAt(); ?></td>
-	<td>Credit: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId() : "null"); ?>
+	<td>Credit: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
 		<?php if (!$purchase->getVerifiedBy()) { ?>
 		(<?php echo link_to("Unverified", "purchase/list"); ?>)
 		<?php } ?>
