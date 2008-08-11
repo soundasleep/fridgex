@@ -23,9 +23,6 @@ class purchaseActions extends myActions
 
 		// get the user object
 		$this->user = $this->getUserObject();
-
-		if (!($this->user->canVerifyCredit()))
-			$this->insufficientRights();
 	}
 
   public function executeIndex()
@@ -35,6 +32,22 @@ class purchaseActions extends myActions
 
   public function executeList()
   {
+	// verify permissions
+	if (!($this->user->canViewActivity()))
+		$this->insufficientRights();
+
+	$c = new Criteria();
+	$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
+	$c->setLimit(30);
+    $this->purchases = PurchasePeer::doSelect($c);
+  }
+
+  public function executeCredit()
+  {
+	// verify permissions
+	if (!($this->user->canVerifyCredit()))
+		$this->insufficientRights();
+
 	$c = new Criteria();
 	$c->add(PurchasePeer::QUANTITY, 0, Criteria::GREATER_THAN);
 	$c->add(PurchasePeer::VERIFIED_BY_ID, null);
@@ -44,6 +57,10 @@ class purchaseActions extends myActions
 
   public function executeUpdate()
   {
+	// verify permissions
+	if (!($this->user->canVerifyCredit()))
+		$this->insufficientRights();
+
     $purchase = PurchasePeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($purchase);
 

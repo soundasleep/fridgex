@@ -29,6 +29,10 @@ UserPermission:
   admin_credit:
     user_id:          user_admin
     permission:       credit  
+    
+  admin_activity:
+    user_id:          user_admin
+    permission:       activity  
 
 Product:
   product_dew_can:

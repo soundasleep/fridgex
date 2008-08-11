@@ -36,4 +36,8 @@ class Purchase extends BasePurchase
 	public function getVerifiedBy() {
 		return $this->getUserRelatedByVerifiedById();
 	}
+
+	public function isVerified() {
+		return $this->getVerifiedAt();
+	}
 }

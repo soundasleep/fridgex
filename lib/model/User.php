@@ -100,6 +100,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("edit");
 	}
 
+	public function canViewActivity() {
+		return $this->hasSpecificPermission("activity");
+	}
+
 	/**
 	 * Does this user have a specific permission key?
 	 * @see UserPermission

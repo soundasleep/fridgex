@@ -20,14 +20,16 @@
 		<?php if ($sf_user->isAuthenticated() && $sf_user->getUserObject(false)) { ?>
 		<li><?php echo link_to("your account", "user/index", array("class" => "account")); ?></li>
 
+		<?php if ($sf_user->getUserObject(false)->canViewActivity()) { ?>
+		<li class="manager"><?php echo link_to("recent activity", "purchase/index", array("class" => "activity")); ?></li>
+		<?php } ?>
 		<?php if ($sf_user->getUserObject(false)->canAddUser()) { ?>
 		<li class="admin"><?php echo link_to("manage users", "user_admin/index", array("class" => "users")); ?></li>
 		<?php } ?>
 		<?php if ($sf_user->getUserObject(false)->canVerifyCredit()) { ?>
-		<li class="admin"><?php echo link_to("manage purchases", "purchase/index", array("class" => "purchases")); ?></li>
+		<li class="admin"><?php echo link_to("manage purchases", "purchase/credit", array("class" => "purchases")); ?></li>
 		<?php } ?>
 
-		<li><?php echo link_to("logout", "security/logout", array("class" => "logout")); ?></li>
 		<?php } else { ?>
 		<li><?php echo link_to("signup", "security/signup", array("class" => "signup")); ?></li>
 		<li><?php echo link_to("login", "security/index", array("class" => "login")); ?></li>
@@ -38,7 +40,7 @@
 		<?php } ?>
 
 		<?php if ($sf_user->getUserObject(false)) { ?>
-		<li class="login">You are logged in as <?php echo link_to($sf_user->getUserObject()->getNickname(), "user/index", array("class" => "account")); ?></li>
+		<li class="login">You are logged in as <?php echo link_to($sf_user->getUserObject()->getNickname(), "user/index", array("class" => "username")); ?> <?php echo link_to("logout", "security/logout", array("class" => "logout")); ?></li>
 		<?php } else { ?>
 		<li class="login">You are anonymous</li>
 		<?php } ?>
@@ -48,7 +50,7 @@
 <?php echo $sf_data->getRaw('sf_content') ?>
 
 <div id="powered_by">
-	<?php echo link_to(sfConfig::get("app_title", "This fridge system"), "@homepage"); ?> powered by <?php echo link_to("Fridgex 0.1", "http://code.google.com/p/fridgex"); ?>
+	<?php echo link_to(sfConfig::get("app_title", "This fridge system"), "@homepage"); ?> powered by <?php echo link_to("Fridgex", "http://code.google.com/p/fridgex"); ?>
 </div>
 
 </body>
