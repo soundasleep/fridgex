@@ -36,7 +36,8 @@
 <tr>
   <th>Nickname:</th>
   <td><?php echo object_input_tag($user, 'getNickname', array (
-  'size' => 80,
+  'size' => 30,
+  "class" => "username",
 )) ?></td>
 </tr>
 <tr>

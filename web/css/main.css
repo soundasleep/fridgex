@@ -61,6 +61,8 @@ div#navigation li a.login { padding-left: 25px; background: #ace url('../images/
 div#navigation li a.signup { padding-left: 25px; background: #ace url('../images/icons/kgpg_gen.png') 5px 5px no-repeat; }
 div#navigation li a.help { padding-left: 25px; background: #ace url('../images/icons/help.png') 5px 5px no-repeat; }
 
+.username { padding: 0 0 0 25px; background: url('../images/icons/kgpg_identity.png') 3px 0 no-repeat; border: 0; }
+input.username { border: 2px inset gray; padding-left: 22px; }
 div#navigation li a.username { padding: 0 0 0 25px; background: url('../images/icons/kgpg_identity.png') 3px 0 no-repeat; border: 0; }
 div#navigation li a.logout { padding-left: 25px; background: #ace url('../images/icons/exit.png') 5px 5px no-repeat; }
 

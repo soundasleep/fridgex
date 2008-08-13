@@ -22,7 +22,7 @@
 <tr>
       <td><?php echo link_to($user->getEmail(), 'user_admin/show?id='.$user->getId()) ?></td>
       <td><?php echo $user->getName() ?></td>
-      <td><?php echo $user->getNickname() ?></td>
+      <td><span class="username"><?php echo $user->getNickname() ?></span></td>
       <td><?php echo my_format_date($user->getLastLogin()) ?></td>
       <td class="number"><?php echo my_format_currency($user->getAccountCredit()) ?></td>
       <td><?php echo $user->getRecentActivity() ?></td>

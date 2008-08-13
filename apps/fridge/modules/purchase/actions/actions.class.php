@@ -51,6 +51,7 @@ class purchaseActions extends myActions
 	$c = new Criteria();
 	$c->add(PurchasePeer::QUANTITY, 0, Criteria::GREATER_THAN);
 	$c->add(PurchasePeer::VERIFIED_BY_ID, null);
+	$c->add(PurchasePeer::USER_ID, $this->user->getId(), Criteria::NOT_EQUAL);
 	$c->addAscendingOrderByColumn(PurchasePeer::CREATED_AT);
     $this->purchases = PurchasePeer::doSelect($c);
   }

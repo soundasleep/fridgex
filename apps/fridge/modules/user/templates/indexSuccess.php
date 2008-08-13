@@ -15,7 +15,7 @@
 </tr>
 <tr>
   <th>Nickname</th>
-  <td><?php echo $user->getNickname(); ?></td>
+  <td><span class="username"><?php echo $user->getNickname(); ?></span></td>
 </tr>
 <tr>
   <th>Account Credit</th>

@@ -4,7 +4,7 @@
 ?>
 
 <?php echo link_to('List of users', 'user_admin/list') ?>
-<h1><?php echo $user->getNickname(); ?></h1>
+<h1 class="username"><?php echo $user->getNickname(); ?></h1>
 
 <?php use_helper("My"); ?>
 
@@ -24,7 +24,7 @@
 </tr>
 <tr>
 <th>Nickname: </th>
-<td><?php echo $user->getNickname() ?></td>
+<td><span class="username"><?php echo $user->getNickname() ?></span></td>
 </tr>
 <tr>
 <th>Created at: </th>
