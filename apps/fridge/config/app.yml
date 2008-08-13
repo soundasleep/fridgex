@@ -1,6 +1,6 @@
 all:
-  # title:        Our Fridge System
-  # help:         http://code.google.com/p/fridgex
+  title:        Our fridge system
+  help:         http://code.google.com/p/fridgex
   
   surcharge:      10%
   surcharge_units:    100   # calculate surcharge to 100ths of a $
@@ -16,10 +16,18 @@ all:
 
   permission:
     list:
+      - activity
       - edit
-      - user
+      - inventory
       - delete
       - verify
+      - user
       - credit
-      - inventory
-      - activity
+    
+    edit:       add and edit products, view surcharge
+    delete:     delete things
+    inventory:  set product inventory
+    user:       add, edit and list users
+    credit:     set user credit
+    activity:   view recent activity
+    verify:     verify product credits

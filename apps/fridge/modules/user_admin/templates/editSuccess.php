@@ -56,8 +56,8 @@
 		?>
 		<label>
 		<?php echo checkbox_tag("permission_".$permission, "1", $user->hasPermission($permission)); ?>
-		<?php echo $permission; ?>
-		</label>
+		<b><?php echo $permission; ?></b> : <?php echo sfConfig::get("app_permission_".$permission, "undefined"); ?>
+		</label><br>
 		<?php
 	}
   ?></td>

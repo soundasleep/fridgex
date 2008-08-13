@@ -15,6 +15,12 @@
 
 <div id="navigation">
 	<ul>
+		<?php if ($sf_user->getUserObject(false)) { ?>
+		<li class="login">You are logged in as <?php echo link_to($sf_user->getUserObject()->getNickname(), "user/index", array("class" => "username")); ?> <?php echo link_to("logout", "security/logout", array("class" => "logout")); ?></li>
+		<?php } else { ?>
+		<li class="login">You are anonymous</li>
+		<?php } ?>
+
 		<li class="title"><?php echo sfConfig::get("app_title", "Fridgex Fridge System"); ?></li>
 		<li><?php echo link_to("home", "@homepage", array("class" => "home")); ?></li>
 		<?php if ($sf_user->isAuthenticated() && $sf_user->getUserObject(false)) { ?>
@@ -37,12 +43,6 @@
 
 		<?php if (sfConfig::get("app_help")) { ?>
 		<li><?php echo link_to("help", sfConfig::get("app_help"), array("class" => "help")); ?></li>
-		<?php } ?>
-
-		<?php if ($sf_user->getUserObject(false)) { ?>
-		<li class="login">You are logged in as <?php echo link_to($sf_user->getUserObject()->getNickname(), "user/index", array("class" => "username")); ?> <?php echo link_to("logout", "security/logout", array("class" => "logout")); ?></li>
-		<?php } else { ?>
-		<li class="login">You are anonymous</li>
 		<?php } ?>
 	</ul>
 </div>

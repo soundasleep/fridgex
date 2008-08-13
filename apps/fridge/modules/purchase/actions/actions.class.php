@@ -72,7 +72,7 @@ class purchaseActions extends myActions
 
     $purchase->save();
 
-    return $this->redirect('purchase/list');
+    return $this->redirect('purchase/credit');
   }
 
 }

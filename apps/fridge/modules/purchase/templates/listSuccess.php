@@ -16,7 +16,9 @@
   <th>Quantity</th>
   <th>Credit</th>
   <th>Debit</th>
+<?php if ($user->canVerifyCredit()) { ?>
   <th>Notes</th>
+<?php } ?>
 </tr>
 </thead>
 <tbody>
@@ -29,16 +31,18 @@
       <td class="number"><?php echo format_number($purchase->getQuantity()) ?></td>
 <?php if ($purchase->getQuantity() < 0) { ?>
       <td class="currency"></td>
-      <td class="currency"><?php echo my_format_currency(-$purchase->getPrice()) ?></td>
+      <td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()) ?></td>
 <?php } else { ?>
-      <td class="currency"><?php echo my_format_currency($purchase->getPrice()) ?></td>
+      <td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()) ?></td>
       <td class="currency"></td>
 <?php } ?>
+<?php if ($user->canVerifyCredit()) { ?>
       <td><?php echo $purchase->getNotes(); ?>
 		<?php if ($purchase->getQuantity() > 0 && !$purchase->isVerified()) { ?>
 			<?php echo link_to("unverified", "purchase/credit"); ?>
 		<?php } ?>
 	  </td>
+<?php } ?>
   </tr>
 <?php endforeach; ?>
 <?php if (!$purchases) { ?>

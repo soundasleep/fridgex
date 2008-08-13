@@ -44,10 +44,16 @@
 </tr>
 <tr>
 <th>Permissions: </th>
-<td><?php $p_list = array();
-	foreach ($user->getUserPermissions() as $p)
-		$p_list[] = $p->getPermission();
-	echo implode(", ", $p_list); ?></td>
+<td>
+	<?php if (!$user->getUserPermissions()) { ?>
+		<i>none</i><?php } else { ?>
+		<ul>
+		<?php foreach ($user->getUserPermissions() as $p) { ?>
+			<li><b><?php echo $p->getPermission(); ?></b> : <?php echo sfConfig::get("app_permission_".$p->getPermission(), "undefined"); ?></li>
+		<?php } ?>
+		</ul>
+	<?php } ?>
+	</td>
 </tr>
 </tbody>
 </table>

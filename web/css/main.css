@@ -40,17 +40,18 @@ span.negative { color: red; }
 input { font-family: Calibri, Arial, Verdana, sans-serif; }
 input[type=submit] { padding: 3px; }
 input[type=text],input[type=password] { padding: 2px; }
+table td ul { margin: 0; padding: 0; padding-left: 1.2em; }
 
 /* top navigation bar */
 div#navigation { margin-left: auto; margin-right: auto; width: auto; }
-div#navigation ul { list-style: none; padding: 11px 11px 11px 7px; margin: 0; width: auto; border: 1px inset #def; background: #def; }
+div#navigation ul { list-style: none; padding: 5px 11px 5px 7px; margin: 0; width: auto; border: 1px inset #def; background: #def; }
 div#navigation li { display: inline; margin-right: 1px; }
-div#navigation li a { padding: 4px 7px 4px 7px; margin-right: 1px; border: 1px outset #ace; background: #ace; }
+div#navigation li a { padding: 4px 7px 4px 7px; margin-right: 1px; border: 1px outset #ace; background: #ace; line-height: 2em; white-space: nowrap; }
 div#navigation li.manager a { border: 1px outset #bdb; background: #bdb; }
 div#navigation li.admin a { border: 1px outset #dbb; background: #dbb; }
 div#navigation li.offline a { border: 1px outset #dbd; background: #dbd; }
 div#navigation li.title { font-weight: bold; }
-div#navigation li.login { position: absolute; right: 26px; }
+div#navigation li.login { float: right; }
 div#powered_by { clear: both; font-size: 70%; float: right; margin-bottom: 10px; }
 
 /* navigation icons */
