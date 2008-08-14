@@ -76,6 +76,7 @@ div#navigation li a.purchases { padding-left: 25px; background: #dbb url('../ima
 td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
 td.currency { text-align: right; }
 td.number { text-align: left; }
+tr.day1, tr.day1 td { background: #f0f0f6; }
 
 div#product_list table { width: 100%; border: 1px solid #aaa; background: #eee; }
 div#product_list table td { width: 20%; border: 1px solid #ddd; background: #fff; vertical-align: top; padding: 10px; }

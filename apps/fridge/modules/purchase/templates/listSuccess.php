@@ -22,8 +22,16 @@
 </tr>
 </thead>
 <tbody>
-<?php foreach ($purchases as $purchase): ?>
-<tr>
+<?php $i = 0;
+$last_day = 0;
+foreach ($purchases as $purchase):
+	$this_d = date("Y-m-d", strtotime($purchase->getCreatedAt()));
+	if ($this_d != $last_day) {
+		$i++;
+		$last_day = $this_d;
+	}
+	?>
+<tr class="<?php echo "day".($i%2); ?>">
     <td class="number"><?php echo $purchase->getId() ?></td>
       <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
       <td><?php echo $purchase->getUser() ? link_to($purchase->getUser()->getNickname(), "user_admin/show?id=".$purchase->getUser()->getId(), array("class" => "username")) : "null" ?></td>
