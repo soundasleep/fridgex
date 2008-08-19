@@ -53,3 +53,10 @@ function get_surcharge_for($price) {
 function apply_surcharge($price) {
 	return $price + get_surcharge_for($price);
 }
+
+function yes_icon() {
+	return '<span class="yes">Y</span>';
+}
+function no_icon() {
+	return '<span class="no"></span>';
+}

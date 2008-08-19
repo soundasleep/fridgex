@@ -14,7 +14,11 @@
   <th>Nickname</th>
   <th>Last login</th>
   <th>Account credit</th>
-  <th>Recent activity</th>
+  <th>Purchases</th>
+  <th>Credits</th>
+  <th>Debit</th>
+  <th>Credit</th>
+  <th>Verified</th>
 </tr>
 </thead>
 <tbody>
@@ -24,11 +28,34 @@
       <td><?php echo $user->getName() ?></td>
       <td><span class="username"><?php echo $user->getNickname() ?></span></td>
       <td><?php echo my_format_date($user->getLastLogin()) ?></td>
-      <td class="number"><?php echo my_format_currency($user->getAccountCredit()) ?></td>
-      <td><?php echo $user->getRecentActivity() ?></td>
+      <td class="currency"><?php echo my_format_currency($user->getAccountCredit()) ?></td>
+      <td class="number">
+      	<?php if ($user->getPurchaseCount()) { ?>
+      		<?php echo number_format($user->getPurchaseCount()); ?> (<?php echo number_format($user->getPurchaseItems()); ?> items)
+      	<?php } else { ?>
+      		-
+      	<?php } ?>
+      </td>
+      <td class="number">
+      	<?php if ($user->getCreditCount()) { ?>
+      		<?php echo number_format($user->getCreditCount()); ?> (<?php echo number_format($user->getPurchaseItems()); ?> items)
+      	<?php } else { ?>
+      		-
+      	<?php } ?>
+      </td>
+      <td class="currency"><?php echo my_format_currency($user->getPurchaseValue()); ?></td>
+      <td class="currency"><?php echo my_format_currency($user->getCreditValue()); ?></td>
+      <td class="number">
+      	<?php if ($user->getCreditCount()) { ?>
+	      	<?php echo number_format($user->getCreditPercent()); ?> %
+      	<?php } else { ?>
+      		-
+      	<?php } ?>
+      </td>
   </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
 
 <?php echo link_to ('Create new user', 'user_admin/create') ?>
+ | <?php echo link_to('User permissions', 'user_admin/permissions') ?>

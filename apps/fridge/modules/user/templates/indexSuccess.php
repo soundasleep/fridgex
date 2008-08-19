@@ -87,8 +87,8 @@
 <?php if ($user->canViewSurcharge()) { ?>
 	<th></th>
 <?php } ?>
-	<th><?php if ($user->getAccountCredit() > 0) echo my_format_currency($user->getAccountCredit()); ?></th>
-	<th><?php if ($user->getAccountCredit() <= 0) echo my_format_currency($user->getAccountCredit()); ?></th>
+	<th class="currency"><?php if ($user->getAccountCredit() > 0) echo my_format_currency($user->getAccountCredit()); ?></th>
+	<th class="currency"><?php if ($user->getAccountCredit() <= 0) echo my_format_currency($user->getAccountCredit()); ?></th>
 </tr>
 </tbody>
 </table>

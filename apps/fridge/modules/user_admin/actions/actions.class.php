@@ -35,7 +35,16 @@ class user_adminActions extends myActions
 
   public function executeList()
   {
-    $this->users = UserPeer::doSelect(new Criteria());
+	$c = new Criteria();
+	$c->addAscendingOrderByColumn(UserPeer::EMAIL);
+    $this->users = UserPeer::doSelect($c);
+  }
+
+  public function executePermissions()
+  {
+	$c = new Criteria();
+	$c->addAscendingOrderByColumn(UserPeer::EMAIL);
+    $this->users = UserPeer::doSelect($c);
   }
 
   public function executeShow()

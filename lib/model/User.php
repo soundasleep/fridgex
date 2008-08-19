@@ -178,9 +178,38 @@ class User extends BaseUser
 			$str[] = number_format($credit["count"]) . " credits (" . number_format($credit["items"]) . " items) : " . my_format_currency($credit["value"]) . ", " . number_format(($credit["verified"] / $credit["count"]) * 100) . "% verified";
 		}
 
+		$this->recent_purchases = $purchase;
+		$this->recent_credits = $credit;
+
 		return $str ? implode("; ", $str) : "-";
 
 	}
 	var $recent_activity;
+	var $recent_purchases;
+	var $recent_credits;
+
+	protected function getPurchaseVariable($key) {
+		if (!$this->recent_purchases)
+			$this->getRecentActivity();
+		return $this->recent_purchases[$key];
+	}
+
+	protected function getCreditVariable($key) {
+		if (!$this->recent_purchases)
+			$this->getRecentActivity();
+		return $this->recent_credits[$key];
+	}
+
+	public function getPurchaseCount() { return $this->getPurchaseVariable("count"); }
+	public function getPurchaseItems() { return $this->getPurchaseVariable("items"); }
+	public function getPurchaseValue() { return -$this->getPurchaseVariable("value"); }
+	public function getPurchaseVerified() { return $this->getPurchaseVariable("verified"); }
+	public function getPurchasePercent() { return $this->getPurchaseCount() ? ($this->getPurchaseVariable("verified") / $this->getPurchaseVariable("count")) * 100 : 0; }
+
+	public function getCreditCount() { return $this->getCreditVariable("count"); }
+	public function getCreditItems() { return $this->getCreditVariable("items"); }
+	public function getCreditValue() { return $this->getCreditVariable("value"); }
+	public function getCreditVerified() { return $this->getCreditVariable("verified"); }
+	public function getCreditPercent() { return $this->getCreditCount() ? ($this->getCreditVariable("verified") / $this->getCreditVariable("count")) * 100 : 0; }
 
 }

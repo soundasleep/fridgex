@@ -30,7 +30,7 @@ body
 /* my changes */
 table { border: 1px solid #aaa; background: white; }
 td,th { line-height: 1.4em; background: white; padding: 2px; }
-th { font-weight: bold; text-align: left; background: #ddeeff; }
+th { font-weight: bold; text-align: left; background: #def; }
 h1 { margin-top: .2em; margin-bottom: .2em; }
 div.error { padding: 5px; margin: 5px; width: 40%; border: 1px solid #c99; background: #fcc; }
 div.message { padding: 5px; margin: 5px; width: 40%; border: 1px solid #99c; background: #ccf; }
@@ -46,37 +46,39 @@ table td ul { margin: 0; padding: 0; padding-left: 1.2em; }
 div#navigation { margin-left: auto; margin-right: auto; width: auto; }
 div#navigation ul { list-style: none; padding: 5px 11px 5px 7px; margin: 0; width: auto; border: 1px inset #def; background: #def; }
 div#navigation li { display: inline; margin-right: 1px; }
-div#navigation li a { padding: 4px 7px 4px 7px; margin-right: 1px; border: 1px outset #ace; background: #ace; line-height: 2em; white-space: nowrap; }
+div#navigation li a { padding: 4px 7px 4px 7px; margin-right: 1px; border: 1px outset #bdf; background: #bdf; line-height: 2em; white-space: nowrap; }
 div#navigation li.manager a { border: 1px outset #bdb; background: #bdb; }
-div#navigation li.admin a { border: 1px outset #dbb; background: #dbb; }
-div#navigation li.offline a { border: 1px outset #dbd; background: #dbd; }
+div#navigation li.admin a { border: 1px outset #ecc; background: #ecc; }
 div#navigation li.title { font-weight: bold; }
 div#navigation li.login { float: right; }
 div#powered_by { clear: both; font-size: 70%; float: right; margin-bottom: 10px; }
 
 /* navigation icons */
-div#navigation li a.home { padding-left: 25px; background: #ace url('../images/icons/kfm_home.png') 5px 5px no-repeat; }
-div#navigation li a.account { padding-left: 25px; background: #ace url('../images/icons/kgpg_identity.png') 5px 5px no-repeat; }
-div#navigation li a.login { padding-left: 25px; background: #ace url('../images/icons/kgpg_key2.png') 5px 5px no-repeat; }
-div#navigation li a.signup { padding-left: 25px; background: #ace url('../images/icons/kgpg_gen.png') 5px 5px no-repeat; }
-div#navigation li a.help { padding-left: 25px; background: #ace url('../images/icons/help.png') 5px 5px no-repeat; }
+div#navigation li a.home { padding-left: 25px; background: #bdf url('../images/icons/kfm_home.png') 5px 5px no-repeat; }
+div#navigation li a.account { padding-left: 25px; background: #bdf url('../images/icons/kgpg_identity.png') 5px 5px no-repeat; }
+div#navigation li a.login { padding-left: 25px; background: #bdf url('../images/icons/kgpg_key2.png') 5px 5px no-repeat; }
+div#navigation li a.signup { padding-left: 25px; background: #bdf url('../images/icons/kgpg_gen.png') 5px 5px no-repeat; }
+div#navigation li a.help { padding-left: 25px; background: #bdf url('../images/icons/help.png') 5px 5px no-repeat; }
 
+div#navigation li a.username { padding: 0 0 0 25px; background: url('../images/icons/kgpg_identity.png') 3px 0 no-repeat; border: 0; }
+div#navigation li a.logout { padding-left: 25px; background: #bdf url('../images/icons/exit.png') 5px 5px no-repeat; }
+
+div#navigation li a.activity { padding-left: 25px; background: #beb url('../images/icons/korganizer.png') 5px 5px no-repeat; }
+
+div#navigation li a.users { padding-left: 25px; background: #ecc url('../images/icons/kdmconfig.png') 5px 5px no-repeat; }
+div#navigation li a.purchases { padding-left: 25px; background: #ecc url('../images/icons/kpdf.png') 5px 5px no-repeat; }
+
+/* general */
+td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
+td.currency, th.currency { text-align: right; }
+td.number, th.number { text-align: left; }
+tr.day1, tr.day1 td { background: #f0f0f6; }
 .username { padding: 0 0 0 25px; background: url('../images/icons/kgpg_identity.png') 3px 0 no-repeat; border: 0; }
 input.username { border: 2px inset gray; padding-left: 22px; }
-div#navigation li a.username { padding: 0 0 0 25px; background: url('../images/icons/kgpg_identity.png') 3px 0 no-repeat; border: 0; }
-div#navigation li a.logout { padding-left: 25px; background: #ace url('../images/icons/exit.png') 5px 5px no-repeat; }
-
-div#navigation li a.activity { padding-left: 25px; background: #bdb url('../images/icons/korganizer.png') 5px 5px no-repeat; }
-
-div#navigation li a.users { padding-left: 25px; background: #dbb url('../images/icons/kdmconfig.png') 5px 5px no-repeat; }
-div#navigation li a.purchases { padding-left: 25px; background: #dbb url('../images/icons/kpdf.png') 5px 5px no-repeat; }
+span.yes { display: block; text-indent: -700em; height: 16px; width: 60px; background: url('../images/icons/ok.png') 22px 0 no-repeat; }
+span.no { display: none; }
 
 /* page specific */
-
-td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
-td.currency { text-align: right; }
-td.number { text-align: left; }
-tr.day1, tr.day1 td { background: #f0f0f6; }
 
 div#product_list table { width: 100%; border: 1px solid #aaa; background: #eee; }
 div#product_list table td { width: 20%; border: 1px solid #ddd; background: #fff; vertical-align: top; padding: 10px; }
@@ -89,3 +91,4 @@ div#product_show div.purchase { float: left; margin-left: 20px; }
 div#product_show div.purchase table { margin-bottom: 20px; }
 
 div#user_admin_edit td.permissions label { margin-right: 15px; }
+div#user_admin_permissions th.permission { width: 60px; font-size: 80%; text-align: center; font-weight: normal; background: #bdf; }
