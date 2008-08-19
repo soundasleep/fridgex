@@ -127,16 +127,18 @@ class user_adminActions extends myActions
     $user->save();
 
     // set permissions
-    foreach (sfConfig::get("app_permission_list", array()) as $permission) {
-		if ($this->getRequestParameter("permission_".$permission)) {
-			if (!$user->hasPermission($permission)) {
-				// add it
-				$p = new UserPermission($permission);
-				$user->addPermission($p);
+    if ($this->current_user->canAssignPermissions()) {
+		foreach (sfConfig::get("app_permission_list", array()) as $permission) {
+			if ($this->getRequestParameter("permission_".$permission)) {
+				if (!$user->hasPermission($permission) && $this->current_user->hasPermission($permission)) {
+					// add it
+					$p = new UserPermission($permission);
+					$user->addPermission($p);
+				}
+			} elseif ($user->hasPermission($permission)) {
+				// delete it
+				$user->deletePermission($permission);
 			}
-		} elseif ($user->hasPermission($permission)) {
-			// delete it
-			$user->deletePermission($permission);
 		}
 	}
 

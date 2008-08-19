@@ -104,6 +104,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("activity");
 	}
 
+	public function canAssignPermissions() {
+		return $this->hasSpecificPermission("permission");
+	}
+
 	/**
 	 * Does this user have a specific permission key?
 	 * @see UserPermission

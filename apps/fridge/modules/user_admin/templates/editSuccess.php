@@ -49,20 +49,25 @@
   'size' => 7,
 )) ?></td>
 </tr>
-<?php } ?>
+<?php }
+if ($current_user->canAssignPermissions()) { ?>
 <tr>
   <th>Permissions:</th>
   <td class="permissions"><?php
   	foreach (sfConfig::get("app_permission_list", array()) as $permission) {
+		// user can only assign permissions that they themselves have
+		if ($current_user->hasPermission($permission)) {
 		?>
 		<label>
 		<?php echo checkbox_tag("permission_".$permission, "1", $user->hasPermission($permission)); ?>
 		<b><?php echo $permission; ?></b> : <?php echo sfConfig::get("app_permission_".$permission, "undefined"); ?>
 		</label><br>
 		<?php
+		}
 	}
   ?></td>
 </tr>
+<?php } ?>
 </tbody>
 </table>
 <hr />

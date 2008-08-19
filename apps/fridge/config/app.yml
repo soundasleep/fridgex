@@ -23,11 +23,13 @@ all:
       - verify
       - user
       - credit
+      - permission
     
     edit:       add and edit products, view surcharge
-    delete:     delete things
+    delete:     delete products and users
     inventory:  set product inventory
     user:       add, edit and list users
     credit:     set user credit
     activity:   view recent activity
     verify:     verify product credits
+    permission: set user permissions    
