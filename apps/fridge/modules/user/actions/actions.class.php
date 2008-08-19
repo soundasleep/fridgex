@@ -59,7 +59,7 @@ class userActions extends myActions
 		// new nickname should not exist
 		if ($this->getRequestParameter("nickname") != $this->user->getNickname()) {
 			$c = new Criteria();
-			$c->add(UserPeer::EMAIL, trim($this->getRequestParameter("email")));
+			$c->add(UserPeer::NICKNAME, trim($this->getRequestParameter("nickname")));
 			$user = UserPeer::doSelectOne($c);
 
 			if ($user) {
