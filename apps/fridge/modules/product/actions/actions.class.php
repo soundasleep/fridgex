@@ -114,6 +114,8 @@ class productActions extends myActions
 	  $this->user = $this->getUserObject();
 
 	  try {
+		  sfLoader::loadHelpers("My");
+
 		  $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
 		  $this->forward404Unless($this->product, "no product specified");
 		  $this->quantity = (int) $this->getRequestParameter('quantity');
@@ -122,6 +124,11 @@ class productActions extends myActions
 		  $this->forward404Unless($this->price > 0, "no price specified");
 		  $total = $this->price * $this->quantity;
 		  $this->forward404Unless($this->user->canCredit($this->product), "user cannot credit this product");
+
+		  $max_credit = sfConfig::get("app_credit_max", 50);
+		  if ($total > $max_credit) {
+			  throw new sfError404Exception("You cannot credit more than " . my_format_currency($max_credit) . ".");
+		  }
 
 		  // execute credit
 		  $purchase = new Purchase();
