@@ -47,6 +47,14 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	
 	protected $surcharge;
 
+
+	
+	protected $cancelled_at;
+
+
+	
+	protected $cancelled_by_id;
+
 	
 	protected $aUserRelatedByUserId;
 
@@ -55,6 +63,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	
 	protected $aUserRelatedByVerifiedById;
+
+	
+	protected $aUserRelatedByCancelledById;
 
 	
 	protected $alreadyInSave = false;
@@ -160,6 +171,35 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	{
 
 		return $this->surcharge;
+	}
+
+	
+	public function getCancelledAt($format = 'Y-m-d H:i:s')
+	{
+
+		if ($this->cancelled_at === null || $this->cancelled_at === '') {
+			return null;
+		} elseif (!is_int($this->cancelled_at)) {
+						$ts = strtotime($this->cancelled_at);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse value of [cancelled_at] as date/time value: " . var_export($this->cancelled_at, true));
+			}
+		} else {
+			$ts = $this->cancelled_at;
+		}
+		if ($format === null) {
+			return $ts;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $ts);
+		} else {
+			return date($format, $ts);
+		}
+	}
+
+	
+	public function getCancelledById()
+	{
+
+		return $this->cancelled_by_id;
 	}
 
 	
@@ -325,6 +365,43 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setCancelledAt($v)
+	{
+
+		if ($v !== null && !is_int($v)) {
+			$ts = strtotime($v);
+			if ($ts === -1 || $ts === false) { 				throw new PropelException("Unable to parse date/time value for [cancelled_at] from input: " . var_export($v, true));
+			}
+		} else {
+			$ts = $v;
+		}
+		if ($this->cancelled_at !== $ts) {
+			$this->cancelled_at = $ts;
+			$this->modifiedColumns[] = PurchasePeer::CANCELLED_AT;
+		}
+
+	} 
+	
+	public function setCancelledById($v)
+	{
+
+		
+		
+		if ($v !== null && !is_int($v) && is_numeric($v)) {
+			$v = (int) $v;
+		}
+
+		if ($this->cancelled_by_id !== $v) {
+			$this->cancelled_by_id = $v;
+			$this->modifiedColumns[] = PurchasePeer::CANCELLED_BY_ID;
+		}
+
+		if ($this->aUserRelatedByCancelledById !== null && $this->aUserRelatedByCancelledById->getId() !== $v) {
+			$this->aUserRelatedByCancelledById = null;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -349,11 +426,15 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 			$this->surcharge = $rs->getFloat($startcol + 9);
 
+			$this->cancelled_at = $rs->getTimestamp($startcol + 10, null);
+
+			$this->cancelled_by_id = $rs->getInt($startcol + 11);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 10; 
+						return $startcol + 12; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Purchase object", $e);
 		}
@@ -437,6 +518,13 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 				$this->setUserRelatedByVerifiedById($this->aUserRelatedByVerifiedById);
 			}
 
+			if ($this->aUserRelatedByCancelledById !== null) {
+				if ($this->aUserRelatedByCancelledById->isModified()) {
+					$affectedRows += $this->aUserRelatedByCancelledById->save($con);
+				}
+				$this->setUserRelatedByCancelledById($this->aUserRelatedByCancelledById);
+			}
+
 
 						if ($this->isModified()) {
 				if ($this->isNew()) {
@@ -504,6 +592,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->aUserRelatedByCancelledById !== null) {
+				if (!$this->aUserRelatedByCancelledById->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByCancelledById->getValidationFailures());
+				}
+			}
+
 
 			if (($retval = PurchasePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
@@ -558,6 +652,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 9:
 				return $this->getSurcharge();
 				break;
+			case 10:
+				return $this->getCancelledAt();
+				break;
+			case 11:
+				return $this->getCancelledById();
+				break;
 			default:
 				return null;
 				break;
@@ -578,6 +678,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			$keys[7] => $this->getVerifiedAt(),
 			$keys[8] => $this->getNotes(),
 			$keys[9] => $this->getSurcharge(),
+			$keys[10] => $this->getCancelledAt(),
+			$keys[11] => $this->getCancelledById(),
 		);
 		return $result;
 	}
@@ -623,6 +725,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 9:
 				$this->setSurcharge($value);
 				break;
+			case 10:
+				$this->setCancelledAt($value);
+				break;
+			case 11:
+				$this->setCancelledById($value);
+				break;
 		} 	}
 
 	
@@ -640,6 +748,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[7], $arr)) $this->setVerifiedAt($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setNotes($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setSurcharge($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setCancelledAt($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setCancelledById($arr[$keys[11]]);
 	}
 
 	
@@ -657,6 +767,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(PurchasePeer::VERIFIED_AT)) $criteria->add(PurchasePeer::VERIFIED_AT, $this->verified_at);
 		if ($this->isColumnModified(PurchasePeer::NOTES)) $criteria->add(PurchasePeer::NOTES, $this->notes);
 		if ($this->isColumnModified(PurchasePeer::SURCHARGE)) $criteria->add(PurchasePeer::SURCHARGE, $this->surcharge);
+		if ($this->isColumnModified(PurchasePeer::CANCELLED_AT)) $criteria->add(PurchasePeer::CANCELLED_AT, $this->cancelled_at);
+		if ($this->isColumnModified(PurchasePeer::CANCELLED_BY_ID)) $criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->cancelled_by_id);
 
 		return $criteria;
 	}
@@ -704,6 +816,10 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		$copyObj->setNotes($this->notes);
 
 		$copyObj->setSurcharge($this->surcharge);
+
+		$copyObj->setCancelledAt($this->cancelled_at);
+
+		$copyObj->setCancelledById($this->cancelled_by_id);
 
 
 		$copyObj->setNew(true);
@@ -814,6 +930,35 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			
 		}
 		return $this->aUserRelatedByVerifiedById;
+	}
+
+	
+	public function setUserRelatedByCancelledById($v)
+	{
+
+
+		if ($v === null) {
+			$this->setCancelledById(NULL);
+		} else {
+			$this->setCancelledById($v->getId());
+		}
+
+
+		$this->aUserRelatedByCancelledById = $v;
+	}
+
+
+	
+	public function getUserRelatedByCancelledById($con = null)
+	{
+		if ($this->aUserRelatedByCancelledById === null && ($this->cancelled_by_id !== null)) {
+						include_once 'lib/model/om/BaseUserPeer.php';
+
+			$this->aUserRelatedByCancelledById = UserPeer::retrieveByPK($this->cancelled_by_id, $con);
+
+			
+		}
+		return $this->aUserRelatedByCancelledById;
 	}
 
 } 

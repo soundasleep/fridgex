@@ -55,10 +55,14 @@ propel:
     notes:          varchar(255)
     
     # when a surcharge applies, the amount added on is stored in here
+    # (per item)
     surcharge:
       type: decimal
       size: 9
       scale: 2
+      
+    cancelled_at:   timestamp
+    cancelled_by_id:   { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
     
   # emails
   email:

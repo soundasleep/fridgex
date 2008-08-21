@@ -21,11 +21,13 @@ all:
       - inventory
       - delete
       - verify
+      - cancel
       - user
       - credit
       - permission
     
     edit:       add and edit products, view surcharge
+    cancel:     cancel purchases
     delete:     delete products and users
     inventory:  set product inventory
     user:       add, edit and list users

@@ -40,4 +40,16 @@ class Purchase extends BasePurchase
 	public function isVerified() {
 		return $this->getVerifiedAt();
 	}
+
+	public function isCancelled() {
+		return $this->getCancelledAt();
+	}
+
+	public function getCancelledBy() {
+		return $this->getUserRelatedByCancelledById();
+	}
+
+	public function setCancelledBy($user) {
+		return $this->setUserRelatedByCancelledById($user);
+	}
 }

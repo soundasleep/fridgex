@@ -38,6 +38,10 @@ UserPermission:
     user_id:          user_admin
     permission:       permission  
 
+  admin_cancel:
+    user_id:          user_admin
+    permission:       cancel  
+
 Product:
   product_dew_can:
     title:          Can of Mountain Dew

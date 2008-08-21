@@ -40,6 +40,8 @@ class purchaseActions extends myActions
 	$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
 	$c->setLimit(30);
     $this->purchases = PurchasePeer::doSelect($c);
+
+    $this->cancelled = PurchasePeer::retrieveByPk("cancelled");
   }
 
   public function executeCredit()
@@ -52,6 +54,7 @@ class purchaseActions extends myActions
 	$c->add(PurchasePeer::QUANTITY, 0, Criteria::GREATER_THAN);
 	$c->add(PurchasePeer::VERIFIED_BY_ID, null);
 	$c->add(PurchasePeer::USER_ID, $this->user->getId(), Criteria::NOT_EQUAL);
+	$c->add(PurchasePeer::CANCELLED_BY_ID, null);
 	$c->addAscendingOrderByColumn(PurchasePeer::CREATED_AT);
     $this->purchases = PurchasePeer::doSelect($c);
   }
@@ -74,6 +77,52 @@ class purchaseActions extends myActions
     $purchase->save();
 
     return $this->redirect('purchase/credit');
+  }
+
+  public function executeCancel() {
+	if (!($this->user->canCancelPurchases()))
+		$this->insufficientRights();
+
+	sfLoader::loadHelpers("My");
+
+    $purchase = PurchasePeer::retrieveByPk($this->getRequestParameter('id'));
+    $this->forward404Unless($purchase);
+	$product = $purchase->getProduct();
+	$this->forward404Unless($product);
+	$user = $purchase->getUser();
+	$this->forward404Unless($user);
+
+    $purchase->setCancelledAt(time());
+    $purchase->setCancelledBy($this->user);
+
+    // update product price logic
+    // we undo the inventory change based on the purchase price
+
+    // (old quantity * old price) - (quantity* price taken away) / (new quantity)
+    if ($purchase->getQuantity() == $product->getInventory()) {
+		// this was all the quantity we had: set price to zero
+		$product->setPrice(0);
+	} else {
+		$product->setPrice(
+			( ($product->getPrice() * $product->getInventory()) - ($purchase->getQuantity() * $purchase->getPrice()) )
+			/ ($product->getInventory() - $purchase->getQuantity()) );
+	}
+
+	// set new inventory
+    $product->setInventory($product->getInventory() - $purchase->getQuantity());
+
+	// update user credit
+	if ($purchase->getQuantity() > 0) {
+		$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * $purchase->getPrice()));
+	} else {
+		$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * ($purchase->getSurcharge() + $purchase->getPrice())));
+	}
+
+    $product->save();
+    $purchase->save();
+    $user->save();
+
+    return $this->redirect('purchase/list?cancelled='.$purchase->getId());
   }
 
 }

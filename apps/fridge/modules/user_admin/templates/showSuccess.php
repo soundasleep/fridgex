@@ -77,7 +77,7 @@
 </thead>
 <tbody>
 <?php foreach ($purchases as $purchase) { ?>
-<tr>
+<tr class="<?php if ($purchase->isCancelled()) echo "cancelled"; ?>">
 	<td><?php echo $purchase->getId(); ?></td>
 <?php if ($purchase->getQuantity() < 0) { ?>
 	<td><?php echo $purchase->getCreatedAt(); ?></td>

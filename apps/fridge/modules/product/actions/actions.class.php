@@ -87,7 +87,7 @@ class productActions extends myActions
 		  $purchase->setUser($this->user);
 		  $purchase->setProduct($this->product);
 		  $purchase->setQuantity(-$this->quantity);
-		  $purchase->setPrice($total);
+		  $purchase->setPrice($this->product->getPrice());
 		  $purchase->setSurcharge($surcharge);
 		  $purchase->save();
 

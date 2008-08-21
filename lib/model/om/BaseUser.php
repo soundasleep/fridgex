@@ -62,6 +62,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	protected $lastPurchaseRelatedByVerifiedByIdCriteria = null;
 
 	
+	protected $collPurchasesRelatedByCancelledById;
+
+	
+	protected $lastPurchaseRelatedByCancelledByIdCriteria = null;
+
+	
 	protected $collEmails;
 
 	
@@ -451,6 +457,14 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->collPurchasesRelatedByCancelledById !== null) {
+				foreach($this->collPurchasesRelatedByCancelledById as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collEmails !== null) {
 				foreach($this->collEmails as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -518,6 +532,14 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 				if ($this->collPurchasesRelatedByVerifiedById !== null) {
 					foreach($this->collPurchasesRelatedByVerifiedById as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collPurchasesRelatedByCancelledById !== null) {
+					foreach($this->collPurchasesRelatedByCancelledById as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -730,6 +752,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 			foreach($this->getPurchasesRelatedByVerifiedById() as $relObj) {
 				$copyObj->addPurchaseRelatedByVerifiedById($relObj->copy($deepCopy));
+			}
+
+			foreach($this->getPurchasesRelatedByCancelledById() as $relObj) {
+				$copyObj->addPurchaseRelatedByCancelledById($relObj->copy($deepCopy));
 			}
 
 			foreach($this->getEmails() as $relObj) {
@@ -1039,6 +1065,111 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		$this->lastPurchaseRelatedByVerifiedByIdCriteria = $criteria;
 
 		return $this->collPurchasesRelatedByVerifiedById;
+	}
+
+	
+	public function initPurchasesRelatedByCancelledById()
+	{
+		if ($this->collPurchasesRelatedByCancelledById === null) {
+			$this->collPurchasesRelatedByCancelledById = array();
+		}
+	}
+
+	
+	public function getPurchasesRelatedByCancelledById($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collPurchasesRelatedByCancelledById === null) {
+			if ($this->isNew()) {
+			   $this->collPurchasesRelatedByCancelledById = array();
+			} else {
+
+				$criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->getId());
+
+				PurchasePeer::addSelectColumns($criteria);
+				$this->collPurchasesRelatedByCancelledById = PurchasePeer::doSelect($criteria, $con);
+			}
+		} else {
+						if (!$this->isNew()) {
+												
+
+				$criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->getId());
+
+				PurchasePeer::addSelectColumns($criteria);
+				if (!isset($this->lastPurchaseRelatedByCancelledByIdCriteria) || !$this->lastPurchaseRelatedByCancelledByIdCriteria->equals($criteria)) {
+					$this->collPurchasesRelatedByCancelledById = PurchasePeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastPurchaseRelatedByCancelledByIdCriteria = $criteria;
+		return $this->collPurchasesRelatedByCancelledById;
+	}
+
+	
+	public function countPurchasesRelatedByCancelledById($criteria = null, $distinct = false, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		$criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->getId());
+
+		return PurchasePeer::doCount($criteria, $distinct, $con);
+	}
+
+	
+	public function addPurchaseRelatedByCancelledById(Purchase $l)
+	{
+		$this->collPurchasesRelatedByCancelledById[] = $l;
+		$l->setUserRelatedByCancelledById($this);
+	}
+
+
+	
+	public function getPurchasesRelatedByCancelledByIdJoinProduct($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collPurchasesRelatedByCancelledById === null) {
+			if ($this->isNew()) {
+				$this->collPurchasesRelatedByCancelledById = array();
+			} else {
+
+				$criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->getId());
+
+				$this->collPurchasesRelatedByCancelledById = PurchasePeer::doSelectJoinProduct($criteria, $con);
+			}
+		} else {
+									
+			$criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->getId());
+
+			if (!isset($this->lastPurchaseRelatedByCancelledByIdCriteria) || !$this->lastPurchaseRelatedByCancelledByIdCriteria->equals($criteria)) {
+				$this->collPurchasesRelatedByCancelledById = PurchasePeer::doSelectJoinProduct($criteria, $con);
+			}
+		}
+		$this->lastPurchaseRelatedByCancelledByIdCriteria = $criteria;
+
+		return $this->collPurchasesRelatedByCancelledById;
 	}
 
 	

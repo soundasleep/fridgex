@@ -69,6 +69,8 @@ div#navigation li a.users { padding-left: 25px; background: #ecc url('../images/
 div#navigation li a.purchases { padding-left: 25px; background: #ecc url('../images/icons/kpdf.png') 5px 5px no-repeat; }
 
 /* general */
+tr.cancelled td { text-decoration: line-through; }
+tr.cancelled td.notes { text-decoration: none; }
 td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
 td.currency, th.currency { text-align: right; }
 td.number, th.number { text-align: left; }

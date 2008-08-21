@@ -52,5 +52,9 @@ class PurchaseMapBuilder {
 
 		$tMap->addColumn('SURCHARGE', 'Surcharge', 'double', CreoleTypes::DECIMAL, false, 9);
 
+		$tMap->addColumn('CANCELLED_AT', 'CancelledAt', 'int', CreoleTypes::TIMESTAMP, false, null);
+
+		$tMap->addForeignKey('CANCELLED_BY_ID', 'CancelledById', 'int', CreoleTypes::INTEGER, 'user', 'ID', false, null);
+
 	} 
 } 

@@ -13,7 +13,7 @@
 <div class="message">
 	You have successfully purchased <?php echo number_format(-$purchase->getQuantity()); ?>
 	<?php echo link_to($purchase->getProduct()->getTitle() . (-$purchase->getQuantity() == 1 ? "" : "s"), "product/show?id=".$purchase->getProduct()->getId()); ?>
-	for <b><?php echo my_format_currency($purchase->getPrice() * -$purchase->getQuantity()); ?></b>.
+	for <b><?php echo my_format_currency((($purchase->getPrice() + $purchase->getSurcharge()) * -$purchase->getQuantity())); ?></b>.
 	<br>
 	Your <?php echo link_to("account balance", "user/index"); ?>
 	is now <b><?php echo my_format_currency($user->getAccountCredit()); ?></b>.

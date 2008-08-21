@@ -108,6 +108,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("permission");
 	}
 
+	public function canCancelPurchases() {
+		return $this->hasSpecificPermission("cancel");
+	}
+
 	/**
 	 * Does this user have a specific permission key?
 	 * @see UserPermission

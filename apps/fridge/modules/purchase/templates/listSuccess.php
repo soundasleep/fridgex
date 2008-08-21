@@ -6,6 +6,15 @@
 
 <?php use_helper("My"); ?>
 
+<?php if ($cancelled) { ?>
+<div class="message">
+	You have successfully cancelled <?php echo number_format($cancelled->getQuantity()); ?>
+	<?php echo link_to($cancelled->getProduct()->getTitle() . ($cancelled->getQuantity() == 1 ? "" : "s"), "product/show?id=".$cancelled->getProduct()->getId()); ?>
+	at <b><?php echo my_format_currency($cancelled->getPrice()); ?></b> each. The new product price
+	is now <b><?php echo my_format_currency(apply_surcharge($cancelled->getProduct()->getPrice())); ?></b>.
+</div>
+<?php } ?>
+
 <table>
 <thead>
 <tr>
@@ -19,6 +28,9 @@
 <?php if ($user->canVerifyCredit()) { ?>
   <th>Notes</th>
 <?php } ?>
+<?php if ($user->canCancelPurchases()) { ?>
+  <th></th>
+<?php } ?>
 </tr>
 </thead>
 <tbody>
@@ -31,7 +43,7 @@ foreach ($purchases as $purchase):
 		$last_day = $this_d;
 	}
 	?>
-<tr class="<?php echo "day".($i%2); ?>">
+<tr class="<?php echo "day".($i%2); ?><?php if ($purchase->isCancelled()) echo " cancelled"; ?>">
     <td class="number"><?php echo $purchase->getId() ?></td>
       <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
       <td><?php echo $purchase->getUser() ? link_to($purchase->getUser()->getNickname(), "user_admin/show?id=".$purchase->getUser()->getId(), array("class" => "username")) : "null" ?></td>
@@ -45,9 +57,18 @@ foreach ($purchases as $purchase):
       <td class="currency"></td>
 <?php } ?>
 <?php if ($user->canVerifyCredit()) { ?>
-      <td><?php echo $purchase->getNotes(); ?>
+      <td class="notes"><?php echo $purchase->getNotes(); ?>
 		<?php if ($purchase->getQuantity() > 0 && !$purchase->isVerified()) { ?>
 			<?php echo link_to("unverified", "purchase/credit"); ?>
+		<?php } ?>
+	  </td>
+<?php } ?>
+<?php if ($user->canCancelPurchases()) { ?>
+      <td class="notes">
+      	<?php if (!$purchase->isCancelled()) { ?>
+			<?php echo link_to("cancel", "purchase/cancel?id=".$purchase->getId()); ?>
+		<?php } else { ?>
+			Cancelled by <span class="username"><?php echo $purchase->getCancelledBy() ? $purchase->getCancelledBy()->getNickname() : "null"; ?></span>
 		<?php } ?>
 	  </td>
 <?php } ?>
