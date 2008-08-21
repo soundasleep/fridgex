@@ -66,7 +66,7 @@ foreach ($purchases as $purchase):
 <?php if ($user->canCancelPurchases()) { ?>
       <td class="notes">
       	<?php if (!$purchase->isCancelled()) { ?>
-			<?php echo link_to("cancel", "purchase/cancel?id=".$purchase->getId()); ?>
+			<?php echo link_to("cancel", "purchase/cancel?id=".$purchase->getId(), array('onclick' => "return confirm('Are you sure you want to cancel this purchase?');")); ?>
 		<?php } else { ?>
 			Cancelled by <span class="username"><?php echo $purchase->getCancelledBy() ? $purchase->getCancelledBy()->getNickname() : "null"; ?></span>
 		<?php } ?>
