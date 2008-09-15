@@ -32,12 +32,13 @@
 </div>
 <?php } ?>
 
+<div class="product_list">
+
 <?php if ($list) { ?>
 <div class="display_switch">
 <?php echo link_to("Display as gallery", "product/list?list=0"); ?>
 </div>
 
-<div class="product_list">
 <table>
 <thead>
 <tr>
@@ -85,14 +86,11 @@
 <?php echo link_to("Display as list", "product/list?list=1"); ?>
 </div>
 
-<div class="product_gallery">
-<table>
+<div id="product_gallery">
 <?php $i = 0; ?>
 <?php foreach ($products as $product): ?>
 
-<?php if ($i % $gallery_size == 0) echo "<tr>"; ?>
-
-<td>
+<div class="product">
 	<div class="image_tag">
 		<?php echo link_to(image_tag($product->getImageUrl(), array("width" => "100")), "product/show?id=".$product->getId()); ?><br>
 	</div>
@@ -111,28 +109,26 @@
 
       	</form>
       	<?php } ?>
-
-</td>
-
-<?php if ($i % $gallery_size == $gallery_size - 1) echo "</tr>"; ?>
+</div>
 
 <?php $i++; ?>
 <?php endforeach; ?>
 <?php if (!$products) { ?>
-<tr>
-   <td class="no_activity">There are no products to purchase!</td>
-</tr>
+   <div class="no_activity">There are no products to purchase!</td>
 <?php } ?>
 
-<?php if ($i && $i % $gallery_size != $gallery_size - 1) echo "</tr>"; ?>
-</table>
+<div class="bottom_wrap"></div>
 </div>
 
 <?php } ?>
 
+<div id="product_tools">
 <?php if ($user && $user->canAddProduct()) { ?>
 <?php echo link_to("Add new product", "product_admin/create"); ?>
 <?php } ?>
+</div>
+
+</div>
 
 <div id="statistics">
 <h2>Fridge statistics</h2>

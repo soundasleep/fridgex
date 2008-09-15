@@ -71,7 +71,7 @@ div#navigation li a.purchases { padding-left: 25px; background: #ecc url('../ima
 /* general */
 tr.cancelled td { text-decoration: line-through; }
 tr.cancelled td.notes { text-decoration: none; }
-td.no_activity { text-align: center; font-size: 80%; font-style: italic; }
+.no_activity { text-align: center; font-size: 80%; font-style: italic; }
 td.currency, th.currency { text-align: right; }
 td.number, th.number { text-align: left; }
 tr.day1, tr.day1 td { background: #f0f0f6; }
@@ -82,15 +82,17 @@ span.no { display: none; }
 
 /* page specific */
 
-div#product_list table { width: 100%; border: 1px solid #aaa; background: #eee; }
-div#product_list table td { width: 20%; border: 1px solid #ddd; background: #fff; vertical-align: top; padding: 10px; }
-div#product_list table td img { width: 100px; border: 1px solid #666; margin-bottom: 5px; }
-div#product_list div.image_tag { height: 142px; overflow-y: hidden; }
+div#product_list div#product_gallery { clear: both; border: 1px solid #aaa; background: #ddd; }
+div#product_list div#product_gallery div.bottom_wrap { clear: both; }
+div#product_list div#product_gallery div.product { width: 200px; height: 190px; float: left; border: 1px solid #ccc; background: #fff; margin: 5px; padding: 5px; overflow: hidden; }
+div#product_list div#product_gallery div.product img { width: 100px; border: 1px solid #666; margin-bottom: 5px; }
+div#product_list div#product_gallery div.product div.image_tag { height: 142px; overflow-y: hidden; }
 div#product_list div.display_switch { position: relative; float: right; top: -20px; font-size: 80%; }
+div#product_tools { clear: both; }
 
 div#product_list div#statistics { width: 40%; float: right; font-size: 80%; }
+div#product_list div#statistics table { width: 100%; font-size: 100%; }
 div#product_list div#statistics td { padding: 5px; }
-
 
 div#product_show div.info { float: left; }
 div#product_show div.purchase { float: left; margin-left: 20px; }
