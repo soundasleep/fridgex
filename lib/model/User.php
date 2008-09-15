@@ -186,9 +186,9 @@ class User extends BaseUser
 		if (!$this->recent_activity) {
 			$c = new Criteria();
 			$c->add(PurchasePeer::USER_ID, $this->getId());
-			$c->add(PurchasePeer::CREATED_AT, date("Y-m-d", strtotime(sfConfig::get("app_user_recent", "-14 days"))), Criteria::GREATER_EQUAL);
+			$c->add(PurchasePeer::CREATED_AT, date("Y-m-d", strtotime(sfConfig::get("app_user_recent", "-90 days"))), Criteria::GREATER_EQUAL);
 			$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
-			$c->setLimit(100);
+			$c->setLimit(300);
 			$this->recent_activity = PurchasePeer::doSelect($c);
 		}
 
