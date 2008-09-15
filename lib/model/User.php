@@ -163,6 +163,21 @@ class User extends BaseUser
 	}
 
 	/**
+	 * Are the purchases/credits from this user considered as stock losses?
+	 */
+	public function isIgnored() {
+		$ignore = sfConfig::get("app_losses_users", array());
+		if (!is_array($ignore))
+			$ignore = array($ignore);
+		foreach ($ignore as $i) {
+			if ($i == $this->getNickname()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Return a string describing the recent activity of the user
 	 * eg. "5 purchases ($10); 12 credits ($8.50)".
 	 */
