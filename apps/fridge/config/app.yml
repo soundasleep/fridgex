@@ -16,6 +16,10 @@ all:
     from:       Fridex
     address:    fridex@jevon.org
 
+  losses:
+    users:
+      - admin
+
   ignore:
     users:
       - admin

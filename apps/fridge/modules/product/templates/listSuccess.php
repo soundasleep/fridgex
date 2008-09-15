@@ -145,6 +145,9 @@
 	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<th>Surcharges</th>
 	<?php } ?>
+	<?php if ($user && $user->canSeeStockLosses()) { ?>
+		<th>Stock losses</th>
+	<?php } ?>
 </tr>
 <tr>
 	<th>Today</th>
@@ -152,6 +155,9 @@
 	<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_total_debit"] - $stat["today"]["sum_surcharge_debit"]); ?></td>
 	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+	<?php if ($user && $user->canSeeStockLosses()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stock_losses["today"]["sum_total_debit"]); ?></td>
 	<?php } ?>
 </tr>
 <tr>
@@ -161,6 +167,9 @@
 	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["week"]["sum_surcharge_debit"]); ?></td>
 	<?php } ?>
+	<?php if ($user && $user->canSeeStockLosses()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stock_losses["week"]["sum_total_debit"]); ?></td>
+	<?php } ?>
 </tr>
 <tr>
 	<th>Last month</th>
@@ -168,6 +177,9 @@
 	<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_total_debit"] - $stat["month"]["sum_surcharge_debit"]); ?></td>
 	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+	<?php if ($user && $user->canSeeStockLosses()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stock_losses["month"]["sum_total_debit"]); ?></td>
 	<?php } ?>
 </tr>
 </table>

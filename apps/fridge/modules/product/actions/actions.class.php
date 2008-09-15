@@ -52,6 +52,7 @@ class productActions extends myActions
 
 	// get statistics
 	$this->stat = $this->getStatistics();
+	$this->stock_losses = $this->getStockLosses();
   }
 
   protected function getStatistics() {
@@ -81,7 +82,6 @@ class productActions extends myActions
 	  		AND ".PurchasePeer::CREATED_AT." >= ?
 	  	GROUP BY date_formatted
 	  	ORDER BY date_formatted DESC";
-
 
 	  $stmt = $con->prepareStatement($sql);
 	  foreach ($not_in as $i => $v) {
@@ -124,6 +124,88 @@ class productActions extends myActions
    * uses the keys in $keys
    */
   private function addStatistics($rs, $init) {
+	  $init["count"] += $rs->getInt("count");
+	  $init["sum_quantity"] += $rs->getInt("sum_quantity");
+	  $init["sum_quantity_debit"] += $rs->getInt("sum_quantity_debit");
+	  $init["sum_quantity_credit"] += $rs->getInt("sum_quantity_credit");
+	  $init["sum_total"] += $rs->getFloat("sum_total");
+	  $init["sum_total_debit"] += $rs->getFloat("sum_total_debit");
+	  $init["sum_total_credit"] += $rs->getFloat("sum_total_credit");
+	  $init["sum_surcharge"] += $rs->getFloat("sum_surcharge");
+	  $init["sum_surcharge_debit"] += $rs->getFloat("sum_surcharge_debit");
+	  $init["sum_surcharge_credit"] += $rs->getFloat("sum_surcharge_credit");
+	  return $init;
+  }
+
+  protected function getStockLosses() {
+	  $con = Propel::getConnection(PurchasePeer::DATABASE_NAME);
+
+	  $not_in = sfConfig::get("app_losses_users", array());
+	  $not_in[] = "__ignored__";		// special one so we don't have lots of logic below
+	  $not_in_inserts = implode(",", array_fill(0, count($not_in), "?"));
+
+	  $sql = "SELECT COUNT(".PurchasePeer::CREATED_AT.") AS count,
+	  		SUM(".PurchasePeer::QUANTITY.") AS sum_quantity,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.") AS sum_total,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.") AS sum_surcharge,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_credit,
+	  		DATEDIFF(".PurchasePeer::CREATED_AT.", NOW()) AS diff_days,
+	  		DATE(".PurchasePeer::CREATED_AT.") AS date_formatted
+	  	FROM ".PurchasePeer::TABLE_NAME."
+	  	LEFT JOIN ".UserPeer::TABLE_NAME."
+	  		ON ".PurchasePeer::USER_ID." = ".UserPeer::ID."
+	  	WHERE ".PurchasePeer::CANCELLED_AT." IS NULL
+	  		AND ".UserPeer::NICKNAME." IN(".$not_in_inserts.")
+	  		AND ".PurchasePeer::CREATED_AT." >= ?
+	  	GROUP BY date_formatted
+	  	ORDER BY date_formatted DESC";
+
+	  $stmt = $con->prepareStatement($sql);
+	  foreach ($not_in as $i => $v) {
+		  $stmt->setString($i + 1, $v);
+	  }
+	  // another query parameter: the date limit
+	  $stmt->setDate(count($not_in) + 1, date("Y-m-d", strtotime("-1 month")));
+
+	  $rs = $stmt->executeQuery();
+	  $empty = array("count" => 0, "sum_quantity" => 0, "sum_total" => 0, "sum_surcharge" => 0,
+			"sum_quantity_debit" => 0, "sum_quantity_credit" => 0,
+			"sum_total_debit" => 0, "sum_total_credit" => 0,
+			"sum_surcharge_debit" => 0, "sum_surcharge_credit" => 0,
+	  	);
+	  $s = array(
+		  "today" => $empty,
+		  "week" => $empty,
+		  "month" => $empty,
+		  "all" => $empty,
+		  );
+	  while ($rs->next()) {
+		  $days = $rs->getInt("diff_days");
+		  if ($days == 0) {
+			  $s["today"] = $this->addStatistics($rs, $s["today"]);
+		  }
+		  if ($days >= -7) {
+			  $s["week"] = $this->addStatistics($rs, $s["week"]);
+		  }
+		  if ($days >= -31) {
+			  $s["month"] = $this->addStatistics($rs, $s["month"]);
+		  }
+		  $s["all"] = $this->addStatistics($rs, $s["all"]);
+	  }
+
+	  return $s;
+  }
+
+  /**
+   * Add statistics from $rs into the $init array and return the new stats
+   * uses the keys in $keys
+   */
+  private function addStockLosses($rs, $init) {
 	  $init["count"] += $rs->getInt("count");
 	  $init["sum_quantity"] += $rs->getInt("sum_quantity");
 	  $init["sum_quantity_debit"] += $rs->getInt("sum_quantity_debit");

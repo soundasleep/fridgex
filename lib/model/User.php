@@ -112,6 +112,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("cancel");
 	}
 
+	public function canSeeStockLosses() {
+		return $this->canViewSurcharge();
+	}
+
 	/**
 	 * Does this user have a specific permission key?
 	 * @see UserPermission
