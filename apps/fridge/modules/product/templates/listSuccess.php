@@ -142,7 +142,7 @@
 	<th></th>
 	<th>Purchases</th>
 	<th>Value</th>
-	<?php if ($user->canViewSurcharge()) { ?>
+	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<th>Surcharges</th>
 	<?php } ?>
 </tr>
@@ -150,7 +150,7 @@
 	<th>Today</th>
 	<td class="number"><?php echo format_number(-$stat["today"]["sum_quantity_debit"]); ?></td>
 	<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_total_debit"] - $stat["today"]["sum_surcharge_debit"]); ?></td>
-	<?php if ($user->canViewSurcharge()) { ?>
+	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_surcharge_debit"]); ?></td>
 	<?php } ?>
 </tr>
@@ -158,7 +158,7 @@
 	<th>Last week</th>
 	<td class="number"><?php echo format_number(-$stat["week"]["sum_quantity_debit"]); ?></td>
 	<td class="currency"><?php echo my_format_currency(-$stat["week"]["sum_total_debit"] - $stat["week"]["sum_surcharge_debit"]); ?></td>
-	<?php if ($user->canViewSurcharge()) { ?>
+	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["week"]["sum_surcharge_debit"]); ?></td>
 	<?php } ?>
 </tr>
@@ -166,7 +166,7 @@
 	<th>Last month</th>
 	<td class="number"><?php echo format_number(-$stat["month"]["sum_quantity_debit"]); ?></td>
 	<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_total_debit"] - $stat["month"]["sum_surcharge_debit"]); ?></td>
-	<?php if ($user->canViewSurcharge()) { ?>
+	<?php if ($user && $user->canViewSurcharge()) { ?>
 		<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_surcharge_debit"]); ?></td>
 	<?php } ?>
 </tr>
