@@ -88,6 +88,10 @@ div#product_list table td img { width: 100px; border: 1px solid #666; margin-bot
 div#product_list div.image_tag { height: 142px; overflow-y: hidden; }
 div#product_list div.display_switch { position: relative; float: right; top: -20px; font-size: 80%; }
 
+div#product_list div#statistics { width: 40%; float: right; font-size: 80%; }
+div#product_list div#statistics td { padding: 5px; }
+
+
 div#product_show div.info { float: left; }
 div#product_show div.purchase { float: left; margin-left: 20px; }
 div#product_show div.purchase table { margin-bottom: 20px; }

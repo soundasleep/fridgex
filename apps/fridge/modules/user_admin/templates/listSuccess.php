@@ -13,6 +13,7 @@
   <th>Name</th>
   <th>Nickname</th>
   <th>Last login</th>
+  <th>Ignore User</th>
   <th>Account credit</th>
   <th>Purchases</th>
   <th>Credits</th>
@@ -28,6 +29,7 @@
       <td><?php echo $user->getName() ?></td>
       <td><span class="username"><?php echo $user->getNickname() ?></span></td>
       <td><?php echo my_format_date($user->getLastLogin()) ?></td>
+      <td><?php echo $user->isIgnored() ? yes_icon() : no_icon(); ?></td>
       <td class="currency"><?php echo my_format_currency($user->getAccountCredit()) ?></td>
       <td class="number">
       	<?php if ($user->getPurchaseCount()) { ?>

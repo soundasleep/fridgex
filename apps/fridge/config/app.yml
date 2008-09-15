@@ -16,6 +16,10 @@ all:
     from:       Fridex
     address:    fridex@jevon.org
 
+  ignore:
+    users:
+      - admin
+
   permission:
     list:
       - activity

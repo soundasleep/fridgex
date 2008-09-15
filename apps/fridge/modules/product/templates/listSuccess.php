@@ -133,4 +133,44 @@
 <?php if ($user && $user->canAddProduct()) { ?>
 <?php echo link_to("Add new product", "product_admin/create"); ?>
 <?php } ?>
+
+<div id="statistics">
+<h2>Fridge statistics</h2>
+
+<table class="statistics">
+<tr>
+	<th></th>
+	<th>Purchases</th>
+	<th>Value</th>
+	<?php if ($user->canViewSurcharge()) { ?>
+		<th>Surcharges</th>
+	<?php } ?>
+</tr>
+<tr>
+	<th>Today</th>
+	<td class="number"><?php echo format_number(-$stat["today"]["sum_quantity_debit"]); ?></td>
+	<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_total_debit"] - $stat["today"]["sum_surcharge_debit"]); ?></td>
+	<?php if ($user->canViewSurcharge()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stat["today"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+</tr>
+<tr>
+	<th>Last week</th>
+	<td class="number"><?php echo format_number(-$stat["week"]["sum_quantity_debit"]); ?></td>
+	<td class="currency"><?php echo my_format_currency(-$stat["week"]["sum_total_debit"] - $stat["week"]["sum_surcharge_debit"]); ?></td>
+	<?php if ($user->canViewSurcharge()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stat["week"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+</tr>
+<tr>
+	<th>Last month</th>
+	<td class="number"><?php echo format_number(-$stat["month"]["sum_quantity_debit"]); ?></td>
+	<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_total_debit"] - $stat["month"]["sum_surcharge_debit"]); ?></td>
+	<?php if ($user->canViewSurcharge()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stat["month"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+</tr>
+</table>
+</div>
+
 </div>
