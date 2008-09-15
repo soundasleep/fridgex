@@ -165,7 +165,7 @@ class User extends BaseUser
 	/**
 	 * Are the purchases/credits from this user considered as stock losses?
 	 */
-	public function isIgnored() {
+	public function isStockLoss() {
 		$ignore = sfConfig::get("app_losses_users", array());
 		if (!is_array($ignore))
 			$ignore = array($ignore);
