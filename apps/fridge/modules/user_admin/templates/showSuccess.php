@@ -79,21 +79,29 @@
 <?php foreach ($purchases as $purchase) { ?>
 <tr class="<?php if ($purchase->isCancelled()) echo "cancelled"; ?>">
 	<td><?php echo $purchase->getId(); ?></td>
+	<td><?php echo my_format_date($purchase->getCreatedAt()); ?></td>
 <?php if ($purchase->getQuantity() < 0) { ?>
-	<td><?php echo $purchase->getCreatedAt(); ?></td>
-	<td>Purchase: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?></td>
+	<td>
+		Purchase: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
+		<?php if ($purchase->isCancelled() && $purchase->getCancelledBy()) { ?>
+			(cancelled by <?php echo link_to($purchase->getCancelledBy()->getNickname(), "user_admin/show?id=".$purchase->getCancelledBy()->getId(), array("class" => "username")); ?>)
+		<?php } ?>
+	</td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
 	<td class="number"><?php echo format_number(-$purchase->getQuantity()); ?></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
 	<td class="currency"></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
-	<td><?php echo $purchase->getCreatedAt(); ?></td>
-	<td>Credit: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
+	<td>
+		Credit: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
 		<?php if (!$purchase->getVerifiedBy()) { ?>
-		(<?php echo link_to("Unverified", "purchase/list"); ?>)
+			(<?php echo link_to("Unverified", "purchase/list"); ?>)
 		<?php } ?>
-		</td>
+		<?php if ($purchase->isCancelled() && $purchase->getCancelledBy()) { ?>
+			(cancelled by <?php echo link_to($purchase->getCancelledBy()->getNickname(), "user_admin/show?id=".$purchase->getCancelledBy()->getId(), array("class" => "username")); ?>)
+		<?php } ?>
+	</td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
 	<td class="number"><?php echo format_number($purchase->getQuantity()); ?></td>
 	<td class="currency"></td>
