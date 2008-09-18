@@ -48,19 +48,19 @@ UserPermission:
 
 Product:
   product_dew_can:
-    title:          Can of Mountain Dew
+    title:          Mountain Dew Can
     price:          0.99
     inventory:      12
     image_url:      "products/dew_can.jpg"
 
   product_coke_can:
-    title:          Can of Coke
+    title:          Coke Can
     price:          1.99
     inventory:      12
     image_url:      "products/coke_can.jpg"
 
   product_dew_bottle:
-    title:          Bottle of Mountain Dew
+    title:          Mountain Dew Bottle
     price:          2.99
     inventory:      12
     image_url:      "products/dew_bottle.jpg"

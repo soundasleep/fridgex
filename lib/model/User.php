@@ -9,7 +9,6 @@
  */
 class User extends BaseUser
 {
-
 	/**
 	 * Try to log in as a user with a given context
 	 */
@@ -34,10 +33,70 @@ class User extends BaseUser
 			$user->setLastLogin(time());
 			$user->save();
 
+			// autologin?
+			if ($context->getRequestParameter("autologin")) {
+				// set it!
+				$key = $user->createNewLoginKey();
+				$context->getResponse()->setCookie("fridge_autologin", $key, time() + 60*60*24*15, '/');	// 15 days
+				$context->getResponse()->setCookie("fridge_autologin_disable", 0, 0, '/');	// to end of session
+			}
+
+
 			return $user;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Login a user with a login key, instead of username/password.
+	 * We use login keys so we don't have to store the username/password as a cookie.
+	 */
+	static public function loginWithLoginKey($key, sfContext $context) {
+		// does such a user exist?
+		$c = new Criteria();
+		$c->add(UserPeer::LOGIN_KEY, $key);
+		$user = UserPeer::doSelectOne($c);
+
+		if (!$user) {
+			$context->getRequest()->setError("key", "No such login key exists");
+		} else {
+			// ok
+			$context->getUser()->setAuthenticated(true);
+			$context->getUser()->setUserId($user->getId());
+			$user->setLastLogin(time());
+			$user->save();
+
+			$context->getRequest()->setParameter("used_autologin", true);
+
+			return $user;
+		}
+
+		return false;
+	}
+
+	public function createNewLoginKey() {
+		$key_done = false;
+		for ($i = 0; $i < 100; $i++) {
+			// generate a new key (todo: make the login key an index in the db)
+			$new_key = sprintf("%04x%04x%04x%04x", rand(0,0xffff), rand(0,0xffff), rand(0,0xffff), rand(0,0xffff));
+
+			// does a user with such a key already exist?
+			$c = new Criteria();
+			$c->add(UserPeer::LOGIN_KEY, $new_key);
+			if (!UserPeer::doSelectOne($c)) {
+				$key_done = true;
+				break;
+			}
+		}
+
+		if (!$key_done)
+			throw new sfException("failed to generate new login key after $i iterations");
+
+		$this->setLoginKey($new_key);
+		$this->save();
+
+		return $new_key;
 	}
 
 	/**
@@ -46,6 +105,9 @@ class User extends BaseUser
 	static public function logout(sfActions $context) {
 		$context->getUser()->setAuthenticated(false);
 		$context->getUser()->setUserId(false);
+
+		// disable autologin for now
+		$context->getResponse()->setCookie("fridge_autologin_disable", 1, 0, '/');	// to end of session
 
 	}
 

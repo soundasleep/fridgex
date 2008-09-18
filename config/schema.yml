@@ -15,6 +15,9 @@ propel:
       type: decimal
       size: 9
       scale: 2
+
+    # autologin
+    login_key:      varchar(16)     # 16-character random hex
   
   # user permissions
   user_permission:

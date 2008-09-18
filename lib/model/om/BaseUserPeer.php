@@ -13,7 +13,7 @@ abstract class BaseUserPeer {
 	const CLASS_DEFAULT = 'lib.model.User';
 
 	
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -47,23 +47,26 @@ abstract class BaseUserPeer {
 	const ACCOUNT_CREDIT = 'user.ACCOUNT_CREDIT';
 
 	
+	const LOGIN_KEY = 'user.LOGIN_KEY';
+
+	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Email', 'Name', 'Nickname', 'PasswordHash', 'CreatedAt', 'UpdatedAt', 'LastLogin', 'AccountCredit', ),
-		BasePeer::TYPE_COLNAME => array (UserPeer::ID, UserPeer::EMAIL, UserPeer::NAME, UserPeer::NICKNAME, UserPeer::PASSWORD_HASH, UserPeer::CREATED_AT, UserPeer::UPDATED_AT, UserPeer::LAST_LOGIN, UserPeer::ACCOUNT_CREDIT, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'email', 'name', 'nickname', 'password_hash', 'created_at', 'updated_at', 'last_login', 'account_credit', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Email', 'Name', 'Nickname', 'PasswordHash', 'CreatedAt', 'UpdatedAt', 'LastLogin', 'AccountCredit', 'LoginKey', ),
+		BasePeer::TYPE_COLNAME => array (UserPeer::ID, UserPeer::EMAIL, UserPeer::NAME, UserPeer::NICKNAME, UserPeer::PASSWORD_HASH, UserPeer::CREATED_AT, UserPeer::UPDATED_AT, UserPeer::LAST_LOGIN, UserPeer::ACCOUNT_CREDIT, UserPeer::LOGIN_KEY, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'email', 'name', 'nickname', 'password_hash', 'created_at', 'updated_at', 'last_login', 'account_credit', 'login_key', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Email' => 1, 'Name' => 2, 'Nickname' => 3, 'PasswordHash' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, 'LastLogin' => 7, 'AccountCredit' => 8, ),
-		BasePeer::TYPE_COLNAME => array (UserPeer::ID => 0, UserPeer::EMAIL => 1, UserPeer::NAME => 2, UserPeer::NICKNAME => 3, UserPeer::PASSWORD_HASH => 4, UserPeer::CREATED_AT => 5, UserPeer::UPDATED_AT => 6, UserPeer::LAST_LOGIN => 7, UserPeer::ACCOUNT_CREDIT => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'email' => 1, 'name' => 2, 'nickname' => 3, 'password_hash' => 4, 'created_at' => 5, 'updated_at' => 6, 'last_login' => 7, 'account_credit' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Email' => 1, 'Name' => 2, 'Nickname' => 3, 'PasswordHash' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, 'LastLogin' => 7, 'AccountCredit' => 8, 'LoginKey' => 9, ),
+		BasePeer::TYPE_COLNAME => array (UserPeer::ID => 0, UserPeer::EMAIL => 1, UserPeer::NAME => 2, UserPeer::NICKNAME => 3, UserPeer::PASSWORD_HASH => 4, UserPeer::CREATED_AT => 5, UserPeer::UPDATED_AT => 6, UserPeer::LAST_LOGIN => 7, UserPeer::ACCOUNT_CREDIT => 8, UserPeer::LOGIN_KEY => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'email' => 1, 'name' => 2, 'nickname' => 3, 'password_hash' => 4, 'created_at' => 5, 'updated_at' => 6, 'last_login' => 7, 'account_credit' => 8, 'login_key' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
@@ -134,6 +137,8 @@ abstract class BaseUserPeer {
 		$criteria->addSelectColumn(UserPeer::LAST_LOGIN);
 
 		$criteria->addSelectColumn(UserPeer::ACCOUNT_CREDIT);
+
+		$criteria->addSelectColumn(UserPeer::LOGIN_KEY);
 
 	}
 

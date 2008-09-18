@@ -1,5 +1,10 @@
 rendering: ~
 web_debug: ~
+
+# do autologin before security, so we can autologin before checking
+autoLoginFilter:
+  class:    autoLoginFilter
+
 security:  ~
 
 # generally, you will want to insert your own filters here

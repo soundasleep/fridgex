@@ -11,6 +11,10 @@
 </tr>
 <tr>
 	<td></td>
+	<td><label><?php echo checkbox_tag("autologin"); ?> remember me</label></td>
+</tr>
+<tr>
+	<td></td>
 	<td><?php echo submit_tag('submit', 'class=default') ?></td>
 </tr>
 <tr>

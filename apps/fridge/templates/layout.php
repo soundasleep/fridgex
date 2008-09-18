@@ -47,6 +47,10 @@
 	</ul>
 </div>
 
+<?php if ($sf_request->getParameter("used_autologin") && $u = $sf_user->getUserObject(false)) { ?>
+<div class="message">Automatically logged in. Hi, <?php echo link_to($u->getNickname(), "user/index", array("class" => "username")); ?>!</div>
+<?php } ?>
+
 <?php echo $sf_data->getRaw('sf_content') ?>
 
 <div id="powered_by">

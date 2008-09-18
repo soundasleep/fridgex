@@ -43,6 +43,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	
 	protected $account_credit;
 
+
+	
+	protected $login_key;
+
 	
 	protected $collUserPermissions;
 
@@ -188,6 +192,13 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	}
 
 	
+	public function getLoginKey()
+	{
+
+		return $this->login_key;
+	}
+
+	
 	public function setId($v)
 	{
 
@@ -329,6 +340,22 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setLoginKey($v)
+	{
+
+		
+		
+		if ($v !== null && !is_string($v)) {
+			$v = (string) $v; 
+		}
+
+		if ($this->login_key !== $v) {
+			$this->login_key = $v;
+			$this->modifiedColumns[] = UserPeer::LOGIN_KEY;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -351,11 +378,13 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 			$this->account_credit = $rs->getFloat($startcol + 8);
 
+			$this->login_key = $rs->getString($startcol + 9);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 9; 
+						return $startcol + 10; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating User object", $e);
 		}
@@ -599,6 +628,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			case 8:
 				return $this->getAccountCredit();
 				break;
+			case 9:
+				return $this->getLoginKey();
+				break;
 			default:
 				return null;
 				break;
@@ -618,6 +650,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$keys[6] => $this->getUpdatedAt(),
 			$keys[7] => $this->getLastLogin(),
 			$keys[8] => $this->getAccountCredit(),
+			$keys[9] => $this->getLoginKey(),
 		);
 		return $result;
 	}
@@ -660,6 +693,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			case 8:
 				$this->setAccountCredit($value);
 				break;
+			case 9:
+				$this->setLoginKey($value);
+				break;
 		} 	}
 
 	
@@ -676,6 +712,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[6], $arr)) $this->setUpdatedAt($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setLastLogin($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setAccountCredit($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setLoginKey($arr[$keys[9]]);
 	}
 
 	
@@ -692,6 +729,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(UserPeer::UPDATED_AT)) $criteria->add(UserPeer::UPDATED_AT, $this->updated_at);
 		if ($this->isColumnModified(UserPeer::LAST_LOGIN)) $criteria->add(UserPeer::LAST_LOGIN, $this->last_login);
 		if ($this->isColumnModified(UserPeer::ACCOUNT_CREDIT)) $criteria->add(UserPeer::ACCOUNT_CREDIT, $this->account_credit);
+		if ($this->isColumnModified(UserPeer::LOGIN_KEY)) $criteria->add(UserPeer::LOGIN_KEY, $this->login_key);
 
 		return $criteria;
 	}
@@ -737,6 +775,8 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		$copyObj->setLastLogin($this->last_login);
 
 		$copyObj->setAccountCredit($this->account_credit);
+
+		$copyObj->setLoginKey($this->login_key);
 
 
 		if ($deepCopy) {

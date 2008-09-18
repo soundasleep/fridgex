@@ -21,6 +21,7 @@ CREATE TABLE `user`
 	`updated_at` DATETIME,
 	`last_login` DATETIME,
 	`account_credit` DECIMAL(9,2),
+	`login_key` VARCHAR(16),
 	PRIMARY KEY (`id`)
 )Type=MyISAM;
 

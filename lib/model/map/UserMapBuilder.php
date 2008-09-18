@@ -50,5 +50,7 @@ class UserMapBuilder {
 
 		$tMap->addColumn('ACCOUNT_CREDIT', 'AccountCredit', 'double', CreoleTypes::DECIMAL, false, 9);
 
+		$tMap->addColumn('LOGIN_KEY', 'LoginKey', 'string', CreoleTypes::VARCHAR, false, 16);
+
 	} 
 } 
