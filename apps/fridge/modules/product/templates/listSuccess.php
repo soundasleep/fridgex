@@ -5,7 +5,11 @@
 <div id="product_list">
 <h1>Product List</h1>
 
+<?php if ($user) { ?>
 <p>Select something to purchase from the fridge.</p>
+<?php } else { ?>
+<p>You know, if you <?php echo link_to("logged in", "security/index"); ?>, you could buy something from this fridge.</p>
+<?php } ?>
 
 <?php use_helper('My'); ?>
 

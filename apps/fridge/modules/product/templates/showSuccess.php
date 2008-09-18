@@ -92,7 +92,11 @@
 
 <?php } else { ?>
 
-<div class="disabled">You cannot afford to purchase some of this product.</div>
+<?php if ($user) { ?>
+<div class="disabled">You cannot afford to purchase this.</div>
+<?php } else { ?>
+<div class="disabled">You need to be <?php echo link_to("logged in", "security/index"); ?> to buy this.</div>
+<?php } ?>
 
 <?php } ?>
 
