@@ -100,6 +100,7 @@ class productActions extends myActions
 		  "today" => $empty,
 		  "week" => $empty,
 		  "month" => $empty,
+		  "year" => $empty,
 		  "all" => $empty,
 		  );
 	  while ($rs->next()) {
@@ -114,6 +115,41 @@ class productActions extends myActions
 			  $s["month"] = $this->addStatistics($rs, $s["month"]);
 		  }
 		  $s["all"] = $this->addStatistics($rs, $s["all"]);
+	  }
+
+	  // we also want to get statistics for the calendar year, but we don't want to have to parse 365 rows of data
+	  $sql = "SELECT COUNT(".PurchasePeer::CREATED_AT.") AS count,
+	  		SUM(".PurchasePeer::QUANTITY.") AS sum_quantity,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.") AS sum_total,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.") AS sum_surcharge,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_credit,
+	  		DATEDIFF(".PurchasePeer::CREATED_AT.", NOW()) AS diff_days,
+	  		DATE(".PurchasePeer::CREATED_AT.") AS date_formatted,
+	  		YEAR(".PurchasePeer::CREATED_AT.") AS purchase_year
+	  	FROM ".PurchasePeer::TABLE_NAME."
+	  	LEFT JOIN ".UserPeer::TABLE_NAME."
+	  		ON ".PurchasePeer::USER_ID." = ".UserPeer::ID."
+	  	WHERE ".PurchasePeer::CANCELLED_AT." IS NULL
+	  		AND ".UserPeer::NICKNAME." NOT IN(".$not_in_inserts.")
+	  		AND YEAR(".PurchasePeer::CREATED_AT.") = ?
+	  	GROUP BY purchase_year
+	  	ORDER BY date_formatted DESC";
+
+	  $stmt = $con->prepareStatement($sql);
+	  foreach ($not_in as $i => $v) {
+		  $stmt->setString($i + 1, $v);
+	  }
+	  // another query parameter: the date limit (we want everything from this calendar year)
+	  $stmt->setInt(count($not_in) + 1, date("Y"));
+	  $rs = $stmt->executeQuery();
+
+	  if ($rs->next()) {
+	  	$s["year"] = $this->addStatistics($rs, $s["year"]);
 	  }
 
 	  return $s;
@@ -182,6 +218,7 @@ class productActions extends myActions
 		  "today" => $empty,
 		  "week" => $empty,
 		  "month" => $empty,
+		  "year" => $empty,
 		  "all" => $empty,
 		  );
 	  while ($rs->next()) {
@@ -196,6 +233,41 @@ class productActions extends myActions
 			  $s["month"] = $this->addStatistics($rs, $s["month"]);
 		  }
 		  $s["all"] = $this->addStatistics($rs, $s["all"]);
+	  }
+
+	  // we also want to get statistics for the calendar year, but we don't want to have to parse 365 rows of data
+	  $sql = "SELECT COUNT(".PurchasePeer::CREATED_AT.") AS count,
+	  		SUM(".PurchasePeer::QUANTITY.") AS sum_quantity,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.") AS sum_total,
+	  		SUM(".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.") AS sum_surcharge,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY.", 0)) AS sum_quantity_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::PRICE.", 0)) AS sum_total_credit,
+	  		SUM(IF(".PurchasePeer::QUANTITY."<0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_debit,
+	  		SUM(IF(".PurchasePeer::QUANTITY.">0, ".PurchasePeer::QUANTITY." * ".PurchasePeer::SURCHARGE.", 0)) AS sum_surcharge_credit,
+	  		DATEDIFF(".PurchasePeer::CREATED_AT.", NOW()) AS diff_days,
+	  		DATE(".PurchasePeer::CREATED_AT.") AS date_formatted,
+	  		YEAR(".PurchasePeer::CREATED_AT.") AS purchase_year
+	  	FROM ".PurchasePeer::TABLE_NAME."
+	  	LEFT JOIN ".UserPeer::TABLE_NAME."
+	  		ON ".PurchasePeer::USER_ID." = ".UserPeer::ID."
+	  	WHERE ".PurchasePeer::CANCELLED_AT." IS NULL
+	  		AND ".UserPeer::NICKNAME." IN(".$not_in_inserts.")
+	  		AND YEAR(".PurchasePeer::CREATED_AT.") = ?
+	  	GROUP BY purchase_year
+	  	ORDER BY date_formatted DESC";
+
+	  $stmt = $con->prepareStatement($sql);
+	  foreach ($not_in as $i => $v) {
+		  $stmt->setString($i + 1, $v);
+	  }
+	  // another query parameter: the date limit (we want everything from this calendar year)
+	  $stmt->setInt(count($not_in) + 1, date("Y"));
+	  $rs = $stmt->executeQuery();
+
+	  if ($rs->next()) {
+	  	$s["year"] = $this->addStatistics($rs, $s["year"]);
 	  }
 
 	  return $s;

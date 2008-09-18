@@ -182,6 +182,17 @@
 		<td class="currency"><?php echo my_format_currency(-$stock_losses["month"]["sum_total_debit"]); ?></td>
 	<?php } ?>
 </tr>
+<tr>
+	<th>This year</th>
+	<td class="number"><?php echo format_number(-$stat["year"]["sum_quantity_debit"]); ?></td>
+	<td class="currency"><?php echo my_format_currency(-$stat["year"]["sum_total_debit"] - $stat["year"]["sum_surcharge_debit"]); ?></td>
+	<?php if ($user && $user->canViewSurcharge()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stat["year"]["sum_surcharge_debit"]); ?></td>
+	<?php } ?>
+	<?php if ($user && $user->canSeeStockLosses()) { ?>
+		<td class="currency"><?php echo my_format_currency(-$stock_losses["year"]["sum_total_debit"]); ?></td>
+	<?php } ?>
+</tr>
 </table>
 </div>
 
