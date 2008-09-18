@@ -47,6 +47,9 @@ class productActions extends myActions
 		$this->credit = PurchasePeer::doSelectOne($c);
 	}
 
+	// stock loss applied
+	$this->stock = $this->getRequestParameter("stock");
+
 	$this->list = $this->getRequestParameter("list", false);
 	$this->gallery_size = sfConfig::get("app_product_gallerysize", 5);
 
@@ -307,6 +310,13 @@ class productActions extends myActions
 	  try {
 		  sfLoader::loadHelpers("My");
 
+		  $stock_loss = $this->getRequestParameter("stock_loss") && $this->user->canChargeStockLosses();
+		  if ($stock_loss) {
+			  // get the stock loss user
+			  $stock_user = User::getStockLossUser();
+			  $this->forward404Unless($stock_user);
+		  }
+
 		  $this->product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
 		  $this->forward404Unless($this->product, "no product specified");
 		  $this->quantity = (int) $this->getRequestParameter('quantity');
@@ -315,16 +325,18 @@ class productActions extends myActions
 		  $total = apply_surcharge($this->product->getPrice()) * $this->quantity;
 		  $this->forward404Unless($this->product->getInventory() >= $this->quantity, "insufficient quantites available");
 
-		  // do we have enough credit?
-		  if (($this->user->getAccountCredit() - $total) < sfConfig::get("app_credit_minimum", 0)) {
-			  // no we don't; display an error message
-			  sfLoader::loadHelpers('Url');
-			  throw new sfError404Exception("You don't have enough credit in your account. You need to credit your account.");
+		  if (!$stock_loss) {
+			  // do we have enough credit?
+			  if (($this->user->getAccountCredit() - $total) < sfConfig::get("app_credit_minimum", 0)) {
+				  // no we don't; display an error message
+				  sfLoader::loadHelpers('Url');
+				  throw new sfError404Exception("You don't have enough credit in your account. You need to credit your account.");
+			  }
 		  }
 
 		  // execute purchase
 		  $purchase = new Purchase();
-		  $purchase->setUser($this->user);
+		  $purchase->setUser($stock_loss ? $stock_user : $this->user);
 		  $purchase->setProduct($this->product);
 		  $purchase->setQuantity(-$this->quantity);
 		  $purchase->setPrice($this->product->getPrice());
@@ -332,15 +344,17 @@ class productActions extends myActions
 		  $purchase->save();
 
 		  // deduct balance
-		  $this->user->setAccountCredit($this->user->getAccountCredit() - $total);
-		  $this->user->save();
+		  if (!$stock_loss) {
+			  $this->user->setAccountCredit($this->user->getAccountCredit() - $total);
+			  $this->user->save();
+		  }
 
 		  // update product
 		  $this->product->setInventory($this->product->getInventory() - $this->quantity);
 		  $this->product->save();
 
 		  // redirect to ok page
-		  return $this->redirect("product/list?purchase=".$purchase->getId());
+		  return $this->redirect("product/list?purchase=".$purchase->getId() . ($stock_loss ? "&stock=1" : "") );
 
 	  } catch (sfError404Exception $e) {
 		  $this->getRequest()->setError("exception", $e->getMessage());

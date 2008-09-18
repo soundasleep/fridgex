@@ -50,6 +50,19 @@ class User extends BaseUser
 	}
 
 	/**
+	 * Get a user which can be used to perform stock losses, or false if there is none.
+	 */
+	static public function getStockLossUser() {
+		$a = sfConfig::get("app_losses_users", array());
+		if (!$a || !is_array($a))
+			return false;
+
+		$c = new Criteria();
+		$c->add(UserPeer::NICKNAME, $a[0]);
+		return UserPeer::doSelectOne($c);
+	}
+
+	/**
 	 * Some convenience functions to specify user permissions
 	 */
 	public function canCredit($product) {
@@ -114,6 +127,10 @@ class User extends BaseUser
 
 	public function canSeeStockLosses() {
 		return $this->canViewSurcharge();
+	}
+
+	public function canChargeStockLosses() {
+		return $this->hasSpecificPermission("stock");
 	}
 
 	/**

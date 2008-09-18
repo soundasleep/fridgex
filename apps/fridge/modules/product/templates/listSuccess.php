@@ -36,6 +36,12 @@
 </div>
 <?php } ?>
 
+<?php if ($stock) { ?>
+<div class="message">
+	Stock loss action successful.
+</div>
+<?php } ?>
+
 <div class="product_list">
 
 <?php if ($list) { ?>

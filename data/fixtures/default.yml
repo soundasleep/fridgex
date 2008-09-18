@@ -41,6 +41,10 @@ UserPermission:
   admin_cancel:
     user_id:          user_admin
     permission:       cancel  
+    
+  admin_stock:
+    user_id:          user_admin
+    permission:       stock
 
 Product:
   product_dew_can:

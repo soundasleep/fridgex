@@ -16,10 +16,13 @@ all:
     from:       Fridex
     address:    fridex@jevon.org
 
+  # stock loss users. only the first username will be used when administrators
+  # create a stock loss "purchase"
   losses:
     users:
       - admin
 
+  # for home page statistics purposes, ignore all of these users
   ignore:
     users:
       - admin
@@ -32,12 +35,14 @@ all:
       - delete
       - verify
       - cancel
+      - stock
       - user
       - credit
       - permission
     
     edit:       add and edit products, view surcharge
     cancel:     cancel purchases
+    stock:      register stock losses
     delete:     delete products and users
     inventory:  set product inventory
     user:       add, edit and list users

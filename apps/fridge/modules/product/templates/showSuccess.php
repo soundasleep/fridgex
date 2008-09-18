@@ -49,7 +49,12 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td><?php echo submit_tag("Purchase"); ?></td>
+		<td>
+			<?php echo submit_tag("Purchase"); ?>
+			<?php if ($user->canChargeStockLosses()) { ?>
+				<?php echo submit_tag("Purchase as a stock loss", array("name" => "stock_loss")); ?>
+			<?php } ?>
+		</td>
 	</tr>
 	</tbody>
 	</table>
