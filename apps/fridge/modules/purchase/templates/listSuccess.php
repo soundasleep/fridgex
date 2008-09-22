@@ -51,9 +51,9 @@ foreach ($purchases as $purchase):
       <td class="number"><?php echo format_number($purchase->getQuantity()) ?></td>
 <?php if ($purchase->getQuantity() < 0) { ?>
       <td class="currency"></td>
-      <td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()) ?></td>
+      <td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()) ?></td>
 <?php } else { ?>
-      <td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()) ?></td>
+      <td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()) ?></td>
       <td class="currency"></td>
 <?php } ?>
 <?php if ($user->canVerifyCredit()) { ?>

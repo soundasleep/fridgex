@@ -57,7 +57,7 @@
 	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
 <?php } ?>
 	<td class="currency"></td>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
 	<td><?php echo my_format_date($purchase->getCreatedAt()); ?></td>
 	<td>Credit: <?php echo link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()); ?>
@@ -70,7 +70,7 @@
 <?php if ($user->canViewSurcharge()) { ?>
 	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
 <?php } ?>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()); ?></td>
 	<td class="currency"></td>
 <?php } ?>
 </tr>

@@ -91,7 +91,7 @@
 	<td class="number"><?php echo format_number(-$purchase->getQuantity()); ?></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getSurcharge()); ?></td>
 	<td class="currency"></td>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()); ?></td>
 <?php } else { ?>
 	<td>
 		Credit: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
@@ -105,7 +105,7 @@
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
 	<td class="number"><?php echo format_number($purchase->getQuantity()); ?></td>
 	<td class="currency"></td>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice() * $purchase->getQuantity()); ?></td>
+	<td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()); ?></td>
 	<td class="currency"></td>
 <?php } ?>
 </tr>
