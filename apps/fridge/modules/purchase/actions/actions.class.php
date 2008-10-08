@@ -88,7 +88,7 @@ class purchaseActions extends myActions
     $purchase = PurchasePeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($purchase);
 	$product = $purchase->getProduct();
-	$this->forward404Unless($product);
+	$this->forward404Unless($product || $purchase->getIsDirectCredit());
 	$user = $purchase->getUser();
 	$this->forward404Unless($user);
 
@@ -98,27 +98,34 @@ class purchaseActions extends myActions
     // update product price logic
     // we undo the inventory change based on the purchase price
 
-    // (old quantity * old price) - (quantity* price taken away) / (new quantity)
-    if ($purchase->getQuantity() == $product->getInventory()) {
-		// this was all the quantity we had: set price to zero
-		$product->setPrice(0);
+	if ($purchase->getIsDirectCredit()) {
+		// update user credit
+		$user->setAccountCredit($user->getAccountCredit() - $purchase->getPrice());
+
 	} else {
-		$product->setPrice(
-			( ($product->getPrice() * $product->getInventory()) - ($purchase->getQuantity() * $purchase->getPrice()) )
-			/ ($product->getInventory() - $purchase->getQuantity()) );
+		// (old quantity * old price) - (quantity* price taken away) / (new quantity)
+		if ($purchase->getQuantity() == $product->getInventory()) {
+			// this was all the quantity we had: set price to zero
+			$product->setPrice(0);
+		} else {
+			$product->setPrice(
+				( ($product->getPrice() * $product->getInventory()) - ($purchase->getQuantity() * $purchase->getPrice()) )
+				/ ($product->getInventory() - $purchase->getQuantity()) );
+		}
+
+		// set new inventory
+		$product->setInventory($product->getInventory() - $purchase->getQuantity());
+
+		// update user credit
+		if ($purchase->getQuantity() > 0) {
+			$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * $purchase->getPrice()));
+		} else {
+			$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * ($purchase->getSurcharge() + $purchase->getPrice())));
+		}
+
+		$product->save();
 	}
 
-	// set new inventory
-    $product->setInventory($product->getInventory() - $purchase->getQuantity());
-
-	// update user credit
-	if ($purchase->getQuantity() > 0) {
-		$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * $purchase->getPrice()));
-	} else {
-		$user->setAccountCredit($user->getAccountCredit() - ($purchase->getQuantity() * ($purchase->getSurcharge() + $purchase->getPrice())));
-	}
-
-    $product->save();
     $purchase->save();
     $user->save();
 

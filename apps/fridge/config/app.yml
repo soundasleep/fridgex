@@ -39,6 +39,7 @@ all:
       - user
       - credit
       - permission
+      - direct_credit
     
     edit:       add and edit products, view surcharge
     cancel:     cancel purchases
@@ -48,5 +49,6 @@ all:
     user:       add, edit and list users
     credit:     set user credit
     activity:   view recent activity
-    verify:     verify product credits
-    permission: set user permissions    
+    verify:     verify product and direct user credits
+    permission: set user permissions 
+    direct_credit: add direct credit to users

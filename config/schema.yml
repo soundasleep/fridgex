@@ -67,6 +67,10 @@ propel:
     cancelled_at:   timestamp
     cancelled_by_id:   { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
     
+    # direct credit is also seen as a purchase
+    is_direct_credit:   boolean
+    credited_by:        { type: integer, foreignTable: user, foreignReference: id, onDelete: setnull }
+    
   # emails
   email:
     id:

@@ -802,4 +802,39 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		return $this->collPurchases;
 	}
 
+
+	
+	public function getPurchasesJoinUserRelatedByCreditedBy($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collPurchases === null) {
+			if ($this->isNew()) {
+				$this->collPurchases = array();
+			} else {
+
+				$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
+
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByCreditedBy($criteria, $con);
+			}
+		} else {
+									
+			$criteria->add(PurchasePeer::PRODUCT_ID, $this->getId());
+
+			if (!isset($this->lastPurchaseCriteria) || !$this->lastPurchaseCriteria->equals($criteria)) {
+				$this->collPurchases = PurchasePeer::doSelectJoinUserRelatedByCreditedBy($criteria, $con);
+			}
+		}
+		$this->lastPurchaseCriteria = $criteria;
+
+		return $this->collPurchases;
+	}
+
 } 

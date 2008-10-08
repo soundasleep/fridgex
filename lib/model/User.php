@@ -171,6 +171,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("user") && $this->hasSpecificPermission("credit");
 	}
 
+	public function canDirectCredit($user) {
+		return $this->getId() != $user->getId() && $this->hasPermission("direct_credit");
+	}
+
 	public function canViewSurcharge() {
 		return $this->hasSpecificPermission("edit");
 	}

@@ -47,6 +47,17 @@ foreach ($purchases as $purchase):
     <td class="number"><?php echo $purchase->getId() ?></td>
       <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
       <td><?php echo $purchase->getUser() ? link_to($purchase->getUser()->getNickname(), "user_admin/show?id=".$purchase->getUser()->getId(), array("class" => "username")) : "null" ?></td>
+<?php if ($purchase->getIsDirectCredit()) { ?>
+	<td>
+		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+		<?php if (!$purchase->getVerifiedBy()) { ?>
+			(<?php echo link_to("Unverified", "purchase/list"); ?>)
+		<?php } ?>
+	</td>
+	<td class="number"></td>
+	<td class="currency"></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+<?php } else { ?>
       <td><?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null" ?></td>
       <td class="number"><?php echo format_number($purchase->getQuantity()) ?></td>
 <?php if ($purchase->getQuantity() < 0) { ?>
@@ -55,6 +66,7 @@ foreach ($purchases as $purchase):
 <?php } else { ?>
       <td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()) ?></td>
       <td class="currency"></td>
+<?php } ?>
 <?php } ?>
 <?php if ($user->canVerifyCredit()) { ?>
       <td class="notes"><?php echo $purchase->getNotes(); ?>

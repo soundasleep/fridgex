@@ -52,4 +52,12 @@ class Purchase extends BasePurchase
 	public function setCancelledBy($user) {
 		return $this->setUserRelatedByCancelledById($user);
 	}
+
+	public function setCreditedByUser($user) {
+		return $this->setUserRelatedByCreditedBy($user);
+	}
+
+	public function getCreditedByUser() {
+		return $this->getUserRelatedByCreditedBy();
+	}
 }

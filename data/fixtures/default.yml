@@ -46,6 +46,10 @@ UserPermission:
     user_id:          user_admin
     permission:       stock
 
+  admin_direct_credit:
+    user_id:          user_admin
+    permission:       direct_credit
+
 Product:
   product_dew_can:
     title:          Mountain Dew Can

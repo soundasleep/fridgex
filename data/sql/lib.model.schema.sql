@@ -87,6 +87,8 @@ CREATE TABLE `purchase`
 	`surcharge` DECIMAL(9,2),
 	`cancelled_at` DATETIME,
 	`cancelled_by_id` INTEGER,
+	`is_direct_credit` INTEGER,
+	`credited_by` INTEGER,
 	PRIMARY KEY (`id`),
 	INDEX `purchase_FI_1` (`user_id`),
 	CONSTRAINT `purchase_FK_1`
@@ -106,6 +108,11 @@ CREATE TABLE `purchase`
 	INDEX `purchase_FI_4` (`cancelled_by_id`),
 	CONSTRAINT `purchase_FK_4`
 		FOREIGN KEY (`cancelled_by_id`)
+		REFERENCES `user` (`id`)
+		ON DELETE SET NULL,
+	INDEX `purchase_FI_5` (`credited_by`),
+	CONSTRAINT `purchase_FK_5`
+		FOREIGN KEY (`credited_by`)
 		REFERENCES `user` (`id`)
 		ON DELETE SET NULL
 )Type=MyISAM;

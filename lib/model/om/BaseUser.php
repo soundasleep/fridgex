@@ -72,6 +72,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	protected $lastPurchaseRelatedByCancelledByIdCriteria = null;
 
 	
+	protected $collPurchasesRelatedByCreditedBy;
+
+	
+	protected $lastPurchaseRelatedByCreditedByCriteria = null;
+
+	
 	protected $collEmails;
 
 	
@@ -494,6 +500,14 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->collPurchasesRelatedByCreditedBy !== null) {
+				foreach($this->collPurchasesRelatedByCreditedBy as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collEmails !== null) {
 				foreach($this->collEmails as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -569,6 +583,14 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 				if ($this->collPurchasesRelatedByCancelledById !== null) {
 					foreach($this->collPurchasesRelatedByCancelledById as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collPurchasesRelatedByCreditedBy !== null) {
+					foreach($this->collPurchasesRelatedByCreditedBy as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -796,6 +818,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 			foreach($this->getPurchasesRelatedByCancelledById() as $relObj) {
 				$copyObj->addPurchaseRelatedByCancelledById($relObj->copy($deepCopy));
+			}
+
+			foreach($this->getPurchasesRelatedByCreditedBy() as $relObj) {
+				$copyObj->addPurchaseRelatedByCreditedBy($relObj->copy($deepCopy));
 			}
 
 			foreach($this->getEmails() as $relObj) {
@@ -1210,6 +1236,111 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		$this->lastPurchaseRelatedByCancelledByIdCriteria = $criteria;
 
 		return $this->collPurchasesRelatedByCancelledById;
+	}
+
+	
+	public function initPurchasesRelatedByCreditedBy()
+	{
+		if ($this->collPurchasesRelatedByCreditedBy === null) {
+			$this->collPurchasesRelatedByCreditedBy = array();
+		}
+	}
+
+	
+	public function getPurchasesRelatedByCreditedBy($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collPurchasesRelatedByCreditedBy === null) {
+			if ($this->isNew()) {
+			   $this->collPurchasesRelatedByCreditedBy = array();
+			} else {
+
+				$criteria->add(PurchasePeer::CREDITED_BY, $this->getId());
+
+				PurchasePeer::addSelectColumns($criteria);
+				$this->collPurchasesRelatedByCreditedBy = PurchasePeer::doSelect($criteria, $con);
+			}
+		} else {
+						if (!$this->isNew()) {
+												
+
+				$criteria->add(PurchasePeer::CREDITED_BY, $this->getId());
+
+				PurchasePeer::addSelectColumns($criteria);
+				if (!isset($this->lastPurchaseRelatedByCreditedByCriteria) || !$this->lastPurchaseRelatedByCreditedByCriteria->equals($criteria)) {
+					$this->collPurchasesRelatedByCreditedBy = PurchasePeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastPurchaseRelatedByCreditedByCriteria = $criteria;
+		return $this->collPurchasesRelatedByCreditedBy;
+	}
+
+	
+	public function countPurchasesRelatedByCreditedBy($criteria = null, $distinct = false, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		$criteria->add(PurchasePeer::CREDITED_BY, $this->getId());
+
+		return PurchasePeer::doCount($criteria, $distinct, $con);
+	}
+
+	
+	public function addPurchaseRelatedByCreditedBy(Purchase $l)
+	{
+		$this->collPurchasesRelatedByCreditedBy[] = $l;
+		$l->setUserRelatedByCreditedBy($this);
+	}
+
+
+	
+	public function getPurchasesRelatedByCreditedByJoinProduct($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BasePurchasePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collPurchasesRelatedByCreditedBy === null) {
+			if ($this->isNew()) {
+				$this->collPurchasesRelatedByCreditedBy = array();
+			} else {
+
+				$criteria->add(PurchasePeer::CREDITED_BY, $this->getId());
+
+				$this->collPurchasesRelatedByCreditedBy = PurchasePeer::doSelectJoinProduct($criteria, $con);
+			}
+		} else {
+									
+			$criteria->add(PurchasePeer::CREDITED_BY, $this->getId());
+
+			if (!isset($this->lastPurchaseRelatedByCreditedByCriteria) || !$this->lastPurchaseRelatedByCreditedByCriteria->equals($criteria)) {
+				$this->collPurchasesRelatedByCreditedBy = PurchasePeer::doSelectJoinProduct($criteria, $con);
+			}
+		}
+		$this->lastPurchaseRelatedByCreditedByCriteria = $criteria;
+
+		return $this->collPurchasesRelatedByCreditedBy;
 	}
 
 	

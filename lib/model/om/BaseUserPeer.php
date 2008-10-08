@@ -373,6 +373,12 @@ abstract class BaseUserPeer {
 			BasePeer::doUpdate($selectCriteria, $updateValues, $con); 
 						$selectCriteria = new Criteria(UserPeer::DATABASE_NAME);
 			$updateValues = new Criteria(UserPeer::DATABASE_NAME);
+			$selectCriteria->add(PurchasePeer::CREDITED_BY, $obj->getId());
+			$updateValues->add(PurchasePeer::CREDITED_BY, null);
+
+			BasePeer::doUpdate($selectCriteria, $updateValues, $con); 
+						$selectCriteria = new Criteria(UserPeer::DATABASE_NAME);
+			$updateValues = new Criteria(UserPeer::DATABASE_NAME);
 			$selectCriteria->add(EmailPeer::USER_ID, $obj->getId());
 			$updateValues->add(EmailPeer::USER_ID, null);
 

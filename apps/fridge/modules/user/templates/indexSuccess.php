@@ -48,7 +48,19 @@
 <?php foreach ($purchases as $purchase) { ?>
 <tr class="<?php if ($purchase->isCancelled()) echo "cancelled"; ?>">
 	<td><?php echo $purchase->getId(); ?></td>
-<?php if ($purchase->getQuantity() < 0) { ?>
+<?php if ($purchase->getIsDirectCredit()) { ?>
+	<td>
+		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+		<?php if (!$purchase->getVerifiedBy()) { ?>
+			(<?php echo link_to("Unverified", "purchase/list"); ?>)
+		<?php } ?>
+	</td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="number"></td>
+	<td class="currency"></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="currency"></td>
+<?php } elseif ($purchase->getQuantity() < 0) { ?>
 	<td><?php echo my_format_date($purchase->getCreatedAt()); ?></td>
 	<td>Purchase: <?php echo link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()); ?></td>
 	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>

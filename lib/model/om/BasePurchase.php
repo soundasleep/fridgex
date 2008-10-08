@@ -55,6 +55,14 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	
 	protected $cancelled_by_id;
 
+
+	
+	protected $is_direct_credit;
+
+
+	
+	protected $credited_by;
+
 	
 	protected $aUserRelatedByUserId;
 
@@ -66,6 +74,9 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	
 	protected $aUserRelatedByCancelledById;
+
+	
+	protected $aUserRelatedByCreditedBy;
 
 	
 	protected $alreadyInSave = false;
@@ -200,6 +211,20 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 	{
 
 		return $this->cancelled_by_id;
+	}
+
+	
+	public function getIsDirectCredit()
+	{
+
+		return $this->is_direct_credit;
+	}
+
+	
+	public function getCreditedBy()
+	{
+
+		return $this->credited_by;
 	}
 
 	
@@ -402,6 +427,36 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setIsDirectCredit($v)
+	{
+
+		if ($this->is_direct_credit !== $v) {
+			$this->is_direct_credit = $v;
+			$this->modifiedColumns[] = PurchasePeer::IS_DIRECT_CREDIT;
+		}
+
+	} 
+	
+	public function setCreditedBy($v)
+	{
+
+		
+		
+		if ($v !== null && !is_int($v) && is_numeric($v)) {
+			$v = (int) $v;
+		}
+
+		if ($this->credited_by !== $v) {
+			$this->credited_by = $v;
+			$this->modifiedColumns[] = PurchasePeer::CREDITED_BY;
+		}
+
+		if ($this->aUserRelatedByCreditedBy !== null && $this->aUserRelatedByCreditedBy->getId() !== $v) {
+			$this->aUserRelatedByCreditedBy = null;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -430,11 +485,15 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 
 			$this->cancelled_by_id = $rs->getInt($startcol + 11);
 
+			$this->is_direct_credit = $rs->getBoolean($startcol + 12);
+
+			$this->credited_by = $rs->getInt($startcol + 13);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 12; 
+						return $startcol + 14; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Purchase object", $e);
 		}
@@ -525,6 +584,13 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 				$this->setUserRelatedByCancelledById($this->aUserRelatedByCancelledById);
 			}
 
+			if ($this->aUserRelatedByCreditedBy !== null) {
+				if ($this->aUserRelatedByCreditedBy->isModified()) {
+					$affectedRows += $this->aUserRelatedByCreditedBy->save($con);
+				}
+				$this->setUserRelatedByCreditedBy($this->aUserRelatedByCreditedBy);
+			}
+
 
 						if ($this->isModified()) {
 				if ($this->isNew()) {
@@ -598,6 +664,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->aUserRelatedByCreditedBy !== null) {
+				if (!$this->aUserRelatedByCreditedBy->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUserRelatedByCreditedBy->getValidationFailures());
+				}
+			}
+
 
 			if (($retval = PurchasePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
@@ -658,6 +730,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 11:
 				return $this->getCancelledById();
 				break;
+			case 12:
+				return $this->getIsDirectCredit();
+				break;
+			case 13:
+				return $this->getCreditedBy();
+				break;
 			default:
 				return null;
 				break;
@@ -680,6 +758,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			$keys[9] => $this->getSurcharge(),
 			$keys[10] => $this->getCancelledAt(),
 			$keys[11] => $this->getCancelledById(),
+			$keys[12] => $this->getIsDirectCredit(),
+			$keys[13] => $this->getCreditedBy(),
 		);
 		return $result;
 	}
@@ -731,6 +811,12 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			case 11:
 				$this->setCancelledById($value);
 				break;
+			case 12:
+				$this->setIsDirectCredit($value);
+				break;
+			case 13:
+				$this->setCreditedBy($value);
+				break;
 		} 	}
 
 	
@@ -750,6 +836,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[9], $arr)) $this->setSurcharge($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setCancelledAt($arr[$keys[10]]);
 		if (array_key_exists($keys[11], $arr)) $this->setCancelledById($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setIsDirectCredit($arr[$keys[12]]);
+		if (array_key_exists($keys[13], $arr)) $this->setCreditedBy($arr[$keys[13]]);
 	}
 
 	
@@ -769,6 +857,8 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(PurchasePeer::SURCHARGE)) $criteria->add(PurchasePeer::SURCHARGE, $this->surcharge);
 		if ($this->isColumnModified(PurchasePeer::CANCELLED_AT)) $criteria->add(PurchasePeer::CANCELLED_AT, $this->cancelled_at);
 		if ($this->isColumnModified(PurchasePeer::CANCELLED_BY_ID)) $criteria->add(PurchasePeer::CANCELLED_BY_ID, $this->cancelled_by_id);
+		if ($this->isColumnModified(PurchasePeer::IS_DIRECT_CREDIT)) $criteria->add(PurchasePeer::IS_DIRECT_CREDIT, $this->is_direct_credit);
+		if ($this->isColumnModified(PurchasePeer::CREDITED_BY)) $criteria->add(PurchasePeer::CREDITED_BY, $this->credited_by);
 
 		return $criteria;
 	}
@@ -820,6 +910,10 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 		$copyObj->setCancelledAt($this->cancelled_at);
 
 		$copyObj->setCancelledById($this->cancelled_by_id);
+
+		$copyObj->setIsDirectCredit($this->is_direct_credit);
+
+		$copyObj->setCreditedBy($this->credited_by);
 
 
 		$copyObj->setNew(true);
@@ -959,6 +1053,35 @@ abstract class BasePurchase extends BaseObject  implements Persistent {
 			
 		}
 		return $this->aUserRelatedByCancelledById;
+	}
+
+	
+	public function setUserRelatedByCreditedBy($v)
+	{
+
+
+		if ($v === null) {
+			$this->setCreditedBy(NULL);
+		} else {
+			$this->setCreditedBy($v->getId());
+		}
+
+
+		$this->aUserRelatedByCreditedBy = $v;
+	}
+
+
+	
+	public function getUserRelatedByCreditedBy($con = null)
+	{
+		if ($this->aUserRelatedByCreditedBy === null && ($this->credited_by !== null)) {
+						include_once 'lib/model/om/BaseUserPeer.php';
+
+			$this->aUserRelatedByCreditedBy = UserPeer::retrieveByPK($this->credited_by, $con);
+
+			
+		}
+		return $this->aUserRelatedByCreditedBy;
 	}
 
 } 

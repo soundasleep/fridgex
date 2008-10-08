@@ -56,5 +56,9 @@ class PurchaseMapBuilder {
 
 		$tMap->addForeignKey('CANCELLED_BY_ID', 'CancelledById', 'int', CreoleTypes::INTEGER, 'user', 'ID', false, null);
 
+		$tMap->addColumn('IS_DIRECT_CREDIT', 'IsDirectCredit', 'boolean', CreoleTypes::BOOLEAN, false, null);
+
+		$tMap->addForeignKey('CREDITED_BY', 'CreditedBy', 'int', CreoleTypes::INTEGER, 'user', 'ID', false, null);
+
 	} 
 } 

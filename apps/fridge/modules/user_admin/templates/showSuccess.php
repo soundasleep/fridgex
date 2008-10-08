@@ -8,6 +8,15 @@
 
 <?php use_helper("My"); ?>
 
+<?php if ($credit) { ?>
+<div class="message">
+	You have successfully credited <b><?php echo my_format_currency($credit->getPrice()); ?></b>
+	to this user.
+	<br>
+	Their account balance is now <b><?php echo my_format_currency($user->getAccountCredit()); ?></b>.
+</div>
+<?php } ?>
+
 <table>
 <tbody>
 <tr>
@@ -60,6 +69,33 @@
 <?php echo link_to('Edit user', 'user_admin/edit?id='.$user->getId()) ?>
 <hr />
 
+<?php if ($current_user->canDirectCredit($user)) { ?>
+
+<?php echo form_tag("user_admin/credit"); ?>
+<?php echo input_hidden_tag("id", $user->getId()); ?>
+	<table>
+	<thead>
+	<tr>
+		<th colspan="2">Direct credit</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<th>Credit: </th>
+		<td>$ <?php echo input_tag("amount", "0.00"); ?></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<?php echo submit_tag("Credit Account"); ?>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+</form>
+
+<?php } ?>
+
 <h2>Recent Activity</h2>
 
 <table>
@@ -80,7 +116,19 @@
 <tr class="<?php if ($purchase->isCancelled()) echo "cancelled"; ?>">
 	<td><?php echo $purchase->getId(); ?></td>
 	<td><?php echo my_format_date($purchase->getCreatedAt()); ?></td>
-<?php if ($purchase->getQuantity() < 0) { ?>
+<?php if ($purchase->getIsDirectCredit()) { ?>
+	<td>
+		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+		<?php if (!$purchase->getVerifiedBy()) { ?>
+			(<?php echo link_to("Unverified", "purchase/list"); ?>)
+		<?php } ?>
+	</td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="number"></td>
+	<td class="currency"></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<td class="currency"></td>
+<?php } elseif ($purchase->getQuantity() < 0) { ?>
 	<td>
 		Purchase: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
 		<?php if ($purchase->isCancelled() && $purchase->getCancelledBy()) { ?>

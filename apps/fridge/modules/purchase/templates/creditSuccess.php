@@ -24,7 +24,13 @@
     <td class="number"><?php echo $purchase->getId() ?></td>
       <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
       <td><?php echo $purchase->getUser() ? link_to($purchase->getUser()->getNickname(), "user_admin/show?id=".$purchase->getUser()->getId(), array("class" => "username")) : "null" ?></td>
-      <td><?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null" ?></td>
+      <td>
+      <?php if ($purchase->getIsDirectCredit()) { ?>
+      		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+      	<?php } else { ?>
+      		<?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null" ?>
+      	<?php } ?>
+      </td>
       <td class="number"><?php echo format_number($purchase->getQuantity()) ?></td>
       <td class="currency"><?php echo my_format_currency($purchase->getPrice()) ?></td>
       <td>
