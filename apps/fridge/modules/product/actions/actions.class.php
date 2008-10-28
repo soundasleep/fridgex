@@ -24,6 +24,7 @@ class productActions extends myActions
   {
 	$c = new Criteria();
 	$c->addDescendingOrderByColumn(ProductPeer::SORT_ORDER);
+	$c->add(ProductPeer::IS_HIDDEN, 0);
 
     $this->products = ProductPeer::doSelect($c);
 

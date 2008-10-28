@@ -50,6 +50,11 @@
   'size' => 7,
 )) ?></td>
 </tr>
+<tr>
+  <th>Hidden:</th>
+  <td><?php echo object_checkbox_tag($product, 'getIsHidden', array (
+)) ?></td>
+</tr>
 </tbody>
 </table>
 <hr />

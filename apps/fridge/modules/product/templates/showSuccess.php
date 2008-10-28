@@ -5,6 +5,7 @@
 <div id="product_show">
 
 <h1><?php echo $product->getTitle(); ?></h1>
+<?php use_helper("My"); ?>
 
 &nbsp;<?php echo link_to('< Back to product list', 'product/list') ?>
 
@@ -24,6 +25,12 @@
 	<th>Image: </th>
 	<td><?php echo image_tag($product->getImageUrl()) ?></td>
 	</tr>
+	<?php if ($product->getIsHidden()) { ?>
+	<tr>
+	<th>Hidden: </th>
+	<td><?php echo yes_icon() ?></td>
+	</tr>
+	<?php } ?>
 	</tbody>
 	</table>
 </div>

@@ -39,6 +39,10 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 	
 	protected $updated_at;
 
+
+	
+	protected $is_hidden = false;
+
 	
 	protected $collPurchases;
 
@@ -135,6 +139,13 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		} else {
 			return date($format, $ts);
 		}
+	}
+
+	
+	public function getIsHidden()
+	{
+
+		return $this->is_hidden;
 	}
 
 	
@@ -262,6 +273,16 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setIsHidden($v)
+	{
+
+		if ($this->is_hidden !== $v || $v === false) {
+			$this->is_hidden = $v;
+			$this->modifiedColumns[] = ProductPeer::IS_HIDDEN;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -282,11 +303,13 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 			$this->updated_at = $rs->getTimestamp($startcol + 7, null);
 
+			$this->is_hidden = $rs->getBoolean($startcol + 8);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 8; 
+						return $startcol + 9; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Product object", $e);
 		}
@@ -463,6 +486,9 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			case 7:
 				return $this->getUpdatedAt();
 				break;
+			case 8:
+				return $this->getIsHidden();
+				break;
 			default:
 				return null;
 				break;
@@ -481,6 +507,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			$keys[5] => $this->getSortOrder(),
 			$keys[6] => $this->getCreatedAt(),
 			$keys[7] => $this->getUpdatedAt(),
+			$keys[8] => $this->getIsHidden(),
 		);
 		return $result;
 	}
@@ -520,6 +547,9 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			case 7:
 				$this->setUpdatedAt($value);
 				break;
+			case 8:
+				$this->setIsHidden($value);
+				break;
 		} 	}
 
 	
@@ -535,6 +565,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[5], $arr)) $this->setSortOrder($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setCreatedAt($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setUpdatedAt($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setIsHidden($arr[$keys[8]]);
 	}
 
 	
@@ -550,6 +581,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ProductPeer::SORT_ORDER)) $criteria->add(ProductPeer::SORT_ORDER, $this->sort_order);
 		if ($this->isColumnModified(ProductPeer::CREATED_AT)) $criteria->add(ProductPeer::CREATED_AT, $this->created_at);
 		if ($this->isColumnModified(ProductPeer::UPDATED_AT)) $criteria->add(ProductPeer::UPDATED_AT, $this->updated_at);
+		if ($this->isColumnModified(ProductPeer::IS_HIDDEN)) $criteria->add(ProductPeer::IS_HIDDEN, $this->is_hidden);
 
 		return $criteria;
 	}
@@ -593,6 +625,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		$copyObj->setCreatedAt($this->created_at);
 
 		$copyObj->setUpdatedAt($this->updated_at);
+
+		$copyObj->setIsHidden($this->is_hidden);
 
 
 		if ($deepCopy) {
