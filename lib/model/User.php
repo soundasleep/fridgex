@@ -155,6 +155,15 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("verify");
 	}
 
+	public function canVerifyActualCredit($purchase) {
+		if (!$this->canVerifyCredit())
+			return false;
+		if ($purchase->getIsDirectCredit()) {
+			return $purchase->getUser()->getId() != $this->getId() && $purchase->getCreditedByUser()->getId() != $this->getId();
+		}
+		return true;
+	}
+
 	public function canListUsers() {
 		return $this->hasSpecificPermission("user");
 	}

@@ -19,7 +19,10 @@
 </tr>
 </thead>
 <tbody>
+<?php $shown = false; ?>
 <?php foreach ($purchases as $purchase): ?>
+<?php if ($user->canVerifyActualCredit($purchase)) { ?>
+	<?php $shown = true; ?>
 <tr>
     <td class="number"><?php echo $purchase->getId() ?></td>
       <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
@@ -43,8 +46,9 @@
       </form>
       </td>
   </tr>
+<?php } ?>
 <?php endforeach; ?>
-<?php if (!$purchases) { ?>
+<?php if (!$purchases || !$shown) { ?>
 <tr>
 	<td colspan="7" class="no_activity">No unverified purchases to show!</td>
 </tr>

@@ -54,6 +54,7 @@ class purchaseActions extends myActions
 	$c->add(PurchasePeer::QUANTITY, 0, Criteria::GREATER_THAN);
 	$c->add(PurchasePeer::VERIFIED_BY_ID, null);
 	$c->add(PurchasePeer::USER_ID, $this->user->getId(), Criteria::NOT_EQUAL);
+	$c->add(PurchasePeer::CREDITED_BY, $this->user->getId(), Criteria::NOT_EQUAL);
 	$c->add(PurchasePeer::CANCELLED_BY_ID, null);
 	$c->addAscendingOrderByColumn(PurchasePeer::CREATED_AT);
     $this->purchases = PurchasePeer::doSelect($c);
@@ -67,6 +68,9 @@ class purchaseActions extends myActions
 
     $purchase = PurchasePeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($purchase);
+
+   	if (!($this->user->canVerifyActualCredit($purchase)))
+   		$this->insufficientRights();
 
     if ($this->getRequestParameter("verify")) {
 		$purchase->setVerifiedBy($this->user);
