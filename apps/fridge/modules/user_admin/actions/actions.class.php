@@ -23,9 +23,6 @@ class user_adminActions extends myActions
 
 		// get the user object
 		$this->current_user = $this->getUserObject();
-
-		if (!($this->current_user->canListUsers()))
-			$this->insufficientRights();
 	}
 
   public function executeIndex()
@@ -35,6 +32,10 @@ class user_adminActions extends myActions
 
   public function executeList()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
 	$c = new Criteria();
 	$c->addAscendingOrderByColumn(UserPeer::EMAIL);
     $this->users = UserPeer::doSelect($c);
@@ -42,6 +43,10 @@ class user_adminActions extends myActions
 
   public function executePermissions()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
 	$c = new Criteria();
 	$c->addAscendingOrderByColumn(UserPeer::EMAIL);
     $this->users = UserPeer::doSelect($c);
@@ -52,19 +57,27 @@ class user_adminActions extends myActions
     $this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($this->user);
 
-	  	$c = new Criteria();
-	  	$c->add(PurchasePeer::USER_ID, $this->user->getId());
-		$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
-	  	$c->setLimit(20);
-		$this->purchases = PurchasePeer::doSelect($c);
+	// permission check (users can see their own page)
+	if (!($this->current_user->canListUsers() || ($this->user->getId() == $this->current_user->getId() && $this->user->canViewActivity())))
+		$this->insufficientRights();
 
-		// credit purchase?
-		$this->credit = PurchasePeer::retrieveByPk($this->getRequestParameter("credit"));
+	$c = new Criteria();
+	$c->add(PurchasePeer::USER_ID, $this->user->getId());
+	$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
+	$c->setLimit(20);
+	$this->purchases = PurchasePeer::doSelect($c);
+
+	// credit purchase?
+	$this->credit = PurchasePeer::retrieveByPk($this->getRequestParameter("credit"));
 
   }
 
   public function executeCreate()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
     $this->user = new User();
 
     $this->setTemplate('edit');
@@ -76,6 +89,10 @@ class user_adminActions extends myActions
 
   public function executeEdit()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
     $this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($this->user);
 
@@ -115,6 +132,10 @@ class user_adminActions extends myActions
 
   public function executeUpdate()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
     if (!$this->getRequestParameter('id'))
     {
       $user = new User();
@@ -174,6 +195,10 @@ class user_adminActions extends myActions
 
   public function executeDelete()
   {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
     $user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
 
     $this->forward404Unless($user);
@@ -187,6 +212,10 @@ class user_adminActions extends myActions
   }
 
   public function executeCredit() {
+	// permission check
+	if (!($this->current_user->canListUsers()))
+		$this->insufficientRights();
+
     $this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
     $this->forward404Unless($this->user);
 
