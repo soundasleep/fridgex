@@ -51,7 +51,7 @@ foreach ($purchases as $purchase):
 	<td>
 		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
 		<?php if (!$purchase->getVerifiedBy()) { ?>
-			(<?php echo link_to("Unverified", "purchase/list"); ?>)
+			(<?php echo link_to("Unverified", "purchase/credit"); ?>)
 		<?php } ?>
 	</td>
 	<td class="number"></td>
