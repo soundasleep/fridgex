@@ -37,7 +37,7 @@ class user_adminActions extends myActions
 		$this->insufficientRights();
 
 	$c = new Criteria();
-	$c->addAscendingOrderByColumn(UserPeer::EMAIL);
+	$c->addDescendingOrderByColumn(UserPeer::LAST_LOGIN);
     $this->users = UserPeer::doSelect($c);
   }
 
