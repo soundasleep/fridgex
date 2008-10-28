@@ -22,9 +22,13 @@ class productActions extends myActions
 
   public function executeList()
   {
+	// display as list or gallery?
+	$this->list = $this->getRequestParameter("list", false);
+
 	$c = new Criteria();
 	$c->addDescendingOrderByColumn(ProductPeer::SORT_ORDER);
-	$c->add(ProductPeer::IS_HIDDEN, 0);
+	if (!$this->list)		// only display hidden products in the list view
+		$c->add(ProductPeer::IS_HIDDEN, 0);
 
     $this->products = ProductPeer::doSelect($c);
 
@@ -51,7 +55,6 @@ class productActions extends myActions
 	// stock loss applied
 	$this->stock = $this->getRequestParameter("stock");
 
-	$this->list = $this->getRequestParameter("list", false);
 	$this->gallery_size = sfConfig::get("app_product_gallerysize", 5);
 
 	// get statistics
