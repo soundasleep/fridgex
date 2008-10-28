@@ -300,6 +300,16 @@ class productActions extends myActions
     $this->forward404Unless($this->product);
 
     $this->user = $this->getUserObject(false);
+
+    // recent activity?
+    $this->activity = false;
+    if ($this->user && $this->user->canViewActivity()) {
+		$c = new Criteria();
+		$c->addDescendingOrderByColumn(PurchasePeer::CREATED_AT);
+		$c->add(PurchasePeer::PRODUCT_ID, $this->product->getId());
+		$c->setLimit(30);
+		$this->activity = PurchasePeer::doSelect($c);
+	}
   }
 
   public function executePurchase() {

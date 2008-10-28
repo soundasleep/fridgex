@@ -109,4 +109,92 @@
 <?php echo link_to("Edit product", "product_admin/edit?id=".$product->getId()); ?>
 <?php } ?>
 
+<?php if ($activity) { ?>
+
+<?php /* TODO: put this into a separate file */ ?>
+<h2>Recent activity</h2>
+
+<?php use_helper("My"); ?>
+
+<table>
+<thead>
+<tr>
+  <th>Id</th>
+  <th>Date</th>
+  <th>User</th>
+  <th>Product</th>
+  <th>Quantity</th>
+  <th>Credit</th>
+  <th>Debit</th>
+<?php if ($user->canVerifyCredit()) { ?>
+  <th>Notes</th>
+<?php } ?>
+<?php if ($user->canCancelPurchases()) { ?>
+  <th></th>
+<?php } ?>
+</tr>
+</thead>
+<tbody>
+<?php $i = 0;
+$last_day = 0;
+foreach ($activity as $purchase):
+	$this_d = date("Y-m-d", strtotime($purchase->getCreatedAt()));
+	if ($this_d != $last_day) {
+		$i++;
+		$last_day = $this_d;
+	}
+	?>
+<tr class="<?php echo "day".($i%2); ?><?php if ($purchase->isCancelled()) echo " cancelled"; ?>">
+    <td class="number"><?php echo $purchase->getId() ?></td>
+      <td><?php echo my_format_date($purchase->getCreatedAt()) ?></td>
+      <td><?php echo $purchase->getUser() ? link_to($purchase->getUser()->getNickname(), "user_admin/show?id=".$purchase->getUser()->getId(), array("class" => "username")) : "null" ?></td>
+<?php if ($purchase->getIsDirectCredit()) { ?>
+	<td>
+		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+		<?php if (!$purchase->getVerifiedBy()) { ?>
+			(<?php echo link_to("Unverified", "purchase/credit"); ?>)
+		<?php } ?>
+	</td>
+	<td class="number"></td>
+	<td class="currency"></td>
+	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+<?php } else { ?>
+      <td><?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null" ?></td>
+      <td class="number"><?php echo format_number($purchase->getQuantity()) ?></td>
+<?php if ($purchase->getQuantity() < 0) { ?>
+      <td class="currency"></td>
+      <td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()) ?></td>
+<?php } else { ?>
+      <td class="currency"><?php echo my_format_currency(($purchase->getPrice() + $purchase->getSurcharge()) * $purchase->getQuantity()) ?></td>
+      <td class="currency"></td>
+<?php } ?>
+<?php } ?>
+<?php if ($user->canVerifyCredit()) { ?>
+      <td class="notes"><?php echo $purchase->getNotes(); ?>
+		<?php if ($purchase->getQuantity() > 0 && !$purchase->isVerified()) { ?>
+			<?php echo link_to("unverified", "purchase/credit"); ?>
+		<?php } ?>
+	  </td>
+<?php } ?>
+<?php if ($user->canCancelPurchases()) { ?>
+      <td class="notes">
+      	<?php if (!$purchase->isCancelled()) { ?>
+			<?php echo link_to("cancel", "purchase/cancel?id=".$purchase->getId(), array('onclick' => "return confirm('Are you sure you want to cancel this purchase?');")); ?>
+		<?php } else { ?>
+			Cancelled by <span class="username"><?php echo $purchase->getCancelledBy() ? $purchase->getCancelledBy()->getNickname() : "null"; ?></span>
+		<?php } ?>
+	  </td>
+<?php } ?>
+  </tr>
+<?php endforeach; ?>
+<?php if (!$activity) { ?>
+<tr>
+	<td colspan="8" class="no_activity">No recent activity to show!</td>
+</tr>
+<?php } ?>
+</tbody>
+</table>
+
+<?php } /* end activity */ ?>
+
 </div>
