@@ -69,7 +69,7 @@ class product_adminActions extends myActions
     $product->setId($this->getRequestParameter('id'));
     $product->setTitle($this->getRequestParameter('title'));
     $product->setPrice($this->getRequestParameter('price'));
-    $product->setIsHidden($this->getRequestParameter('is_hidden'));
+    $product->setIsHidden($this->getRequestParameter('is_hidden', false) && true);	// make boolean
     if ($this->user->canSetInventory($product)) {
     	$product->setInventory($this->getRequestParameter('inventory'));
 	}
