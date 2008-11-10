@@ -33,7 +33,7 @@ function my_format_date($d) {
 		return number_format((($secs / 60) / 60) / 24) . " days ago";
 	}
 
-	return date_format("D-m-y", $d);
+	return date("Y-m-d", strtotime($d));
 
 }
 
