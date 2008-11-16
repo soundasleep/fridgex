@@ -215,74 +215,83 @@ class user_adminActions extends myActions
   }
 
   public function executeCredit() {
-	// permission check
-	if (!($this->current_user->canListUsers()))
-		$this->insufficientRights();
+	  try {
+		// permission check
+		if (!($this->current_user->canListUsers()))
+			$this->insufficientRights();
 
-    $this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
-    $this->forward404Unless($this->user);
+		$this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
+		$this->forward404Unless($this->user);
 
-    $amount = (float) $this->getRequestParameter("amount");
-    $this->forward404Unless($amount > 0, "cannot credit a negative or zero amount.");
-    $this->forward404Unless($amount < sfConfig::get("app_credit_max", 50), "cannot credit more than " . sfConfig::get("app_credit_max", 50));
+		$amount = (float) $this->getRequestParameter("amount");
+		$this->forward404Unless($amount > 0, "cannot credit a negative or zero amount.");
+		$this->forward404Unless($amount < sfConfig::get("app_credit_max", 50), "cannot credit more than " . sfConfig::get("app_credit_max", 50));
 
-	if (!($this->current_user->canDirectCredit($this->user)))
-		$this->insufficientRights();
+		if (!($this->current_user->canDirectCredit($this->user)))
+			$this->insufficientRights();
 
-	  // execute purchase
-	  $purchase = new Purchase();
-	  $purchase->setUser($this->user);
-	  $purchase->setProduct(null);
-	  $purchase->setQuantity(1);
-	  $purchase->setPrice($amount);
-	  $purchase->setSurcharge(0);
-	  // special fields
-	  $purchase->setIsDirectCredit(true);
-	  $purchase->setCreditedByUser($this->current_user);
-	  $purchase->save();
+		  // execute purchase
+		  $purchase = new Purchase();
+		  $purchase->setUser($this->user);
+		  $purchase->setProduct(null);
+		  $purchase->setQuantity(1);
+		  $purchase->setPrice($amount);
+		  $purchase->setSurcharge(0);
+		  // special fields
+		  $purchase->setIsDirectCredit(true);
+		  $purchase->setCreditedByUser($this->current_user);
+		  $purchase->save();
 
-	  // add balance
-	  $this->user->setAccountCredit($this->user->getAccountCredit() + $amount);
-	  $this->user->save();
+		  // add balance
+		  $this->user->setAccountCredit($this->user->getAccountCredit() + $amount);
+		  $this->user->save();
 
-	  // redirect to ok page
-	  return $this->redirect("user_admin/show?id=".$this->user->getId()."&credit=".$purchase->getId() );
-
+		  // redirect to ok page
+		  return $this->redirect("user_admin/show?id=".$this->user->getId()."&credit=".$purchase->getId() );
+	  } catch (sfError404Exception $e) {
+		  $this->getRequest()->setError("exception", $e->getMessage());
+		  return sfView::ERROR;
+	  }
   }
 
   public function executeDebit() {
-	// permission check
-	if (!($this->current_user->canListUsers()))
-		$this->insufficientRights();
+	  try {
+		// permission check
+		if (!($this->current_user->canListUsers()))
+			$this->insufficientRights();
 
-    $this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
-    $this->forward404Unless($this->user);
+		$this->user = UserPeer::retrieveByPk($this->getRequestParameter('id'));
+		$this->forward404Unless($this->user);
 
-    $amount = (float) $this->getRequestParameter("amount");
-    $this->forward404Unless($amount > 0, "cannot debit a negative or zero amount.");
-    $this->forward404Unless($amount < sfConfig::get("app_debit_max", 10), "cannot debit more than " . sfConfig::get("app_debit_max", 10));
+		$amount = (float) $this->getRequestParameter("amount");
+		$this->forward404Unless($amount > 0, "cannot debit a negative or zero amount.");
+		$this->forward404Unless($amount < sfConfig::get("app_debit_max", 10), "cannot debit more than " . sfConfig::get("app_debit_max", 10));
 
-	if (!($this->current_user->canDirectDebit($this->user)))
-		$this->insufficientRights();
+		if (!($this->current_user->canDirectDebit($this->user)))
+			$this->insufficientRights();
 
-	  // execute purchase
-	  $purchase = new Purchase();
-	  $purchase->setUser($this->user);
-	  $purchase->setProduct(null);
-	  $purchase->setQuantity(1);
-	  $purchase->setPrice(-$amount);
-	  $purchase->setSurcharge(0);
-	  // special fields
-	  $purchase->setIsDirectCredit(true);
-	  $purchase->setCreditedByUser($this->current_user);
-	  $purchase->save();
+		  // execute purchase
+		  $purchase = new Purchase();
+		  $purchase->setUser($this->user);
+		  $purchase->setProduct(null);
+		  $purchase->setQuantity(1);
+		  $purchase->setPrice(-$amount);
+		  $purchase->setSurcharge(0);
+		  // special fields
+		  $purchase->setIsDirectCredit(true);
+		  $purchase->setCreditedByUser($this->current_user);
+		  $purchase->save();
 
-	  // add balance
-	  $this->user->setAccountCredit($this->user->getAccountCredit() - $amount);
-	  $this->user->save();
+		  // add balance
+		  $this->user->setAccountCredit($this->user->getAccountCredit() - $amount);
+		  $this->user->save();
 
-	  // redirect to ok page
-	  return $this->redirect("user_admin/show?id=".$this->user->getId()."&debit=".$purchase->getId() );
+		  // redirect to ok page
+		  return $this->redirect("user_admin/show?id=".$this->user->getId()."&debit=".$purchase->getId() );
+	  } catch (sfError404Exception $e) {
+		  $this->getRequest()->setError("exception", $e->getMessage());
+		  return sfView::ERROR;
+	  }
 
   }
 
