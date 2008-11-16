@@ -153,17 +153,31 @@
 	<td><?php echo $purchase->getId(); ?></td>
 	<td><?php echo my_format_date($purchase->getCreatedAt()); ?></td>
 <?php if ($purchase->getIsDirectCredit()) { ?>
-	<td>
-		Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
-		<?php if (!$purchase->getVerifiedBy()) { ?>
-			(<?php echo link_to("Unverified", "purchase/credit"); ?>)
-		<?php } ?>
-	</td>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
-	<td class="number"></td>
-	<td class="currency"></td>
-	<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
-	<td class="currency"></td>
+	<?php if ($purchase->getPrice() > 0) { ?>
+		<td>
+			Direct credit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+			<?php if (!$purchase->getVerifiedBy()) { ?>
+				(<?php echo link_to("Unverified", "purchase/credit"); ?>)
+			<?php } ?>
+		</td>
+		<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+		<td class="number"></td>
+		<td class="currency"></td>
+		<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+		<td class="currency"></td>
+	<?php } else { ?>
+		<td>
+			Direct debit by <span class="username"><?php echo $purchase->getCreditedByUser() ? link_to($purchase->getCreditedByUser()->getNickname(), "user_admin/show?id=". $purchase->getCreditedByUser()->getId()) : "null"; ?></span>
+			<?php if (!$purchase->getVerifiedBy()) { ?>
+				(<?php echo link_to("Unverified", "purchase/credit"); ?>)
+			<?php } ?>
+		</td>
+		<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+		<td class="number"></td>
+		<td class="currency"></td>
+		<td class="currency"></td>
+		<td class="currency"><?php echo my_format_currency($purchase->getPrice()); ?></td>
+	<?php } ?>
 <?php } elseif ($purchase->getQuantity() < 0) { ?>
 	<td>
 		Purchase: <?php echo $purchase->getProduct() ? link_to($purchase->getProduct()->getTitle(), "product/show?id=".$purchase->getProduct()->getId()) : "null"; ?>
