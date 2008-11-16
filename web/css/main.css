@@ -79,6 +79,7 @@ tr.day1, tr.day1 td { background: #f0f0f6; }
 input.username { border: 2px inset gray; padding-left: 22px; }
 span.yes { display: block; text-indent: -700em; height: 16px; width: 60px; background: url('../images/icons/ok.png') 22px 0 no-repeat; }
 span.no { display: none; }
+form + form { margin-top: 0.8em; }	/* don't connect forms together */
 
 /* page specific */
 

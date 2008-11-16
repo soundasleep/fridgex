@@ -17,6 +17,15 @@
 </div>
 <?php } ?>
 
+<?php if ($debit) { ?>
+<div class="message">
+	You have successfully debited <b><?php echo my_format_currency($debit->getPrice()); ?></b>
+	from this user.
+	<br>
+	Their account balance is now <b><?php echo my_format_currency($user->getAccountCredit()); ?></b>.
+</div>
+<?php } ?>
+
 <table>
 <tbody>
 <tr>
@@ -88,6 +97,33 @@
 		<td></td>
 		<td>
 			<?php echo submit_tag("Credit Account"); ?>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+</form>
+
+<?php } ?>
+
+<?php if ($current_user->canDirectDebit($user)) { ?>
+
+<?php echo form_tag("user_admin/debit"); ?>
+<?php echo input_hidden_tag("id", $user->getId()); ?>
+	<table>
+	<thead>
+	<tr>
+		<th colspan="2">Direct debit</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<th>Debit: </th>
+		<td>$ <?php echo input_tag("amount", "0.00"); ?></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<?php echo submit_tag("Debit Account"); ?>
 		</td>
 	</tr>
 	</tbody>

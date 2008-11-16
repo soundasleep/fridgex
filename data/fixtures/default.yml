@@ -50,6 +50,10 @@ UserPermission:
     user_id:          user_admin
     permission:       direct_credit
 
+  admin_direct_debit:
+    user_id:          user_admin
+    permission:       direct_debit
+
 Product:
   product_dew_can:
     title:          Mountain Dew Can

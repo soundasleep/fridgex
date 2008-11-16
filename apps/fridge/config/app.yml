@@ -6,6 +6,7 @@ all:
   surcharge_units:    100   # calculate surcharge to 100ths of a $
   
   credit_max:     50       # max credit per purchase in $; will throw an error if more
+  debit_max:      10       # max debit per purchase in $; will throw an error if more
   
   mail:
     charset:    utf-8
@@ -39,6 +40,7 @@ all:
       - user
       - credit
       - permission
+      - direct_debit
       - direct_credit
     
     edit:       add and edit products, view surcharge
@@ -51,4 +53,5 @@ all:
     activity:   view recent activity
     verify:     verify product and direct user credits
     permission: set user permissions 
+    direct_debit:  remove credit by debit from users
     direct_credit: add direct credit to users
