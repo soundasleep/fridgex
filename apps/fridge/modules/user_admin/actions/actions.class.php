@@ -225,7 +225,7 @@ class user_adminActions extends myActions
 
 		$amount = (float) $this->getRequestParameter("amount");
 		$this->forward404Unless($amount > 0, "cannot credit a negative or zero amount.");
-		$this->forward404Unless($amount < sfConfig::get("app_credit_max", 50), "cannot credit more than " . sfConfig::get("app_credit_max", 50));
+		$this->forward404Unless($amount <= sfConfig::get("app_credit_max", 50), "cannot credit more than " . sfConfig::get("app_credit_max", 50));
 
 		if (!($this->current_user->canDirectCredit($this->user)))
 			$this->insufficientRights();
@@ -265,7 +265,8 @@ class user_adminActions extends myActions
 
 		$amount = (float) $this->getRequestParameter("amount");
 		$this->forward404Unless($amount > 0, "cannot debit a negative or zero amount.");
-		$this->forward404Unless($amount < sfConfig::get("app_debit_max", 10), "cannot debit more than " . sfConfig::get("app_debit_max", 10));
+		$this->forward404Unless($amount <= sfConfig::get("app_debit_max", 10), "cannot debit more than " . sfConfig::get("app_debit_max", 10));
+		$this->forward404Unless($amount >= $this->user->getAccountCredit(), "user does not have enough account credit to debit");
 
 		if (!($this->current_user->canDirectDebit($this->user)))
 			$this->insufficientRights();
