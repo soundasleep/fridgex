@@ -1,5 +1,6 @@
 all:
   title:        Our fridge system
+  title_suffix: " - Fridgex"
   help:         http://code.google.com/p/fridgex
   
   surcharge:      10%

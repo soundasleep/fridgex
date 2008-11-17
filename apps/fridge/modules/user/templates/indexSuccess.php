@@ -2,7 +2,8 @@
 
 <?php use_helper('My'); ?>
 
-<h2>Account Details</h2>
+<h2>Account details</h2>
+<?php set_title("Account details"); ?>
 
 <table>
 <tr>

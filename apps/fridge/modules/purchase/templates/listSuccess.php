@@ -6,6 +6,8 @@
 <?php /* TODO: put this into a separate file */ ?>
 <h1>Recent activity</h1>
 
+<?php set_title("Recent activity"); ?>
+
 <?php use_helper("My"); ?>
 
 <?php if ($cancelled) { ?>
