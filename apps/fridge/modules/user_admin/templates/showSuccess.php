@@ -216,7 +216,7 @@
 <?php } ?>
 
 <tr>
-	<th colspan="5">Account Balance</th>
+	<th colspan="6">Account Balance</th>
 <?php if ($user->canViewSurcharge()) { ?>
 	<th></th>
 <?php } ?>
