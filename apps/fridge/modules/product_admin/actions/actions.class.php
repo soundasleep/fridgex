@@ -38,6 +38,12 @@ class product_adminActions extends myActions
 	if (!($this->user->canEditProduct($this->product)))
 		$this->insufficientRights();
 
+	// get a list of all hidden products
+	$c = new Criteria();
+	$c->add(ProductPeer::IS_HIDDEN, true);
+	$c->addAscendingOrderByColumn(ProductPeer::TITLE);
+	$this->all_products = ProductPeer::doSelect($c);
+
     $this->setTemplate('edit');
   }
 

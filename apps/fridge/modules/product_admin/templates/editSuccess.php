@@ -3,12 +3,31 @@
 // date: 2008/07/24 15:06:18
 ?>
 <?php use_helper('Object') ?>
+<div id="product_edit">
 
 <?php if ($sf_request->hasErrors()): ?>
 <div class="error">
   <?php echo implode("; ", $sf_request->getErrors()); ?> - please try again
 </div>
 <?php endif; ?>
+
+<?php /* show unused products in create page */
+if (!$product->getId() && $all_products) {
+?>
+
+<div class="create_product_list">
+Did you mean any of these <?php echo link_to("unused products", "product/list?list=1"); ?>?
+
+<ul>
+<?php foreach ($all_products as $p) { ?>
+	<li><?php echo link_to($p->getTitle(), "product/show?id=".$p->getId()); ?></li>
+<?php } ?>
+</ul>
+</div>
+
+<?php
+}
+?>
 
 <?php echo form_tag('product_admin/update', 'multipart=true') ?><?php /* multipart required for file upload */ ?>
 
@@ -19,7 +38,7 @@
 <tr>
   <th>Title:</th>
   <td><?php echo object_input_tag($product, 'getTitle', array (
-  'size' => 80,
+  'size' => 40,
 )) ?></td>
 </tr>
 <tr>
@@ -68,3 +87,5 @@
   &nbsp;<?php echo link_to('cancel', 'product/list') ?>
 <?php endif; ?>
 </form>
+
+</div>

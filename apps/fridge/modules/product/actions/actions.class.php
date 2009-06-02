@@ -447,6 +447,7 @@ class productActions extends myActions
 		// are there any?
 		$c = new Criteria();
 		$c->add(ProductPeer::INVENTORY, 0);
+		$c->add(ProductPeer::IS_HIDDEN, false);
 		$c->add(ProductPeer::UPDATED_AT, date("Y-m-d", strtotime(sfConfig::get("app_remove_unused", "-2 months"))), Criteria::LESS_THAN);
 		$unused = ProductPeer::doSelect($c);
 

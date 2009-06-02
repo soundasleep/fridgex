@@ -101,3 +101,5 @@ div#product_show div.purchase table { margin-bottom: 20px; }
 
 div#user_admin_edit td.permissions label { margin-right: 15px; }
 div#user_admin_permissions th.permission { width: 60px; font-size: 80%; text-align: center; font-weight: normal; background: #bdf; }
+
+div#product_edit div.create_product_list { float: right; width: 30%; border: 1px solid #ccc; background: #fff; margin: 5px; padding: 5px; }
