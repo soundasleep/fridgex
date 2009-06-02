@@ -60,6 +60,9 @@ class productActions extends myActions
 	// get statistics
 	$this->stat = $this->getStatistics();
 	$this->stock_losses = $this->getStockLosses();
+
+	// can we verify any credits?
+	$this->has_verify_credits = $this->user && $this->user->hasPossibleCreditsToVerify();
   }
 
   protected function getStatistics() {

@@ -348,4 +348,25 @@ class User extends BaseUser
 	public function getCreditVerified() { return $this->getCreditVariable("verified"); }
 	public function getCreditPercent() { return $this->getCreditCount() ? ($this->getCreditVariable("verified") / $this->getCreditVariable("count")) * 100 : 0; }
 
+	/**
+	 * Get all of the credits that this user may be able to verify.
+	 */
+	public function getPossibleCreditsToVerify() {
+		$c = new Criteria();
+		$c->add(PurchasePeer::QUANTITY, 0, Criteria::GREATER_THAN);
+		$c->add(PurchasePeer::VERIFIED_BY_ID, null);
+		$c->add(PurchasePeer::USER_ID, $this->getId(), Criteria::NOT_EQUAL);
+		$c1 = $c->getNewCriterion(PurchasePeer::CREDITED_BY, $this->getId(), Criteria::NOT_EQUAL);
+		$c2 = $c->getNewCriterion(PurchasePeer::CREDITED_BY, null);
+		$c1->addOr($c2);
+		$c->add($c1);
+		$c->add(PurchasePeer::CANCELLED_BY_ID, null);
+		$c->addAscendingOrderByColumn(PurchasePeer::CREATED_AT);
+		return PurchasePeer::doSelect($c);
+	}
+
+	public function hasPossibleCreditsToVerify() {
+		return $this->getPossibleCreditsToVerify();
+	}
+
 }

@@ -42,6 +42,12 @@
 </div>
 <?php } ?>
 
+<?php if ($has_verify_credits) { ?>
+<div class="message">
+	There are some <?php echo link_to("unverified credit purchases", "purchase/credit"); ?> that you should <?php echo link_to("verify", "purchase/credit"); ?>.
+</div>
+<?php } ?>
+
 <div class="product_list">
 
 <?php if ($list) { ?>
