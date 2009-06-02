@@ -41,7 +41,7 @@ class purchaseActions extends myActions
 	$c->setLimit(30);
     $this->purchases = PurchasePeer::doSelect($c);
 
-    $this->cancelled = PurchasePeer::retrieveByPk("cancelled");
+    $this->cancelled = PurchasePeer::retrieveByPk($this->getRequestParameter("cancelled"));
   }
 
   public function executeCredit()
