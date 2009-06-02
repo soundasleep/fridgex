@@ -423,6 +423,9 @@ class productActions extends myActions
 
 		  $this->product->save();
 
+		  // remove unused products (issue 29)
+		  $this->removeUnusedProducts();
+
 		  // redirect to ok page
 		  return $this->redirect("product/list?credit=".$purchase->getId());
 
@@ -430,6 +433,31 @@ class productActions extends myActions
 		  $this->getRequest()->setError("exception", $e->getMessage());
 		  return sfView::ERROR;
 	  }
+
+  }
+
+  /**
+   * Issue 29: Hide out-of-stock and rarely updated items.
+   *
+   * We call this when we credit an existing product.
+   */
+  protected function removeUnusedProducts() {
+  		sfLogger::getInstance()->info('{product} searching for unused items...');
+
+		// are there any?
+		$c = new Criteria();
+		$c->add(ProductPeer::INVENTORY, 0);
+		$c->add(ProductPeer::UPDATED_AT, date("Y-m-d", strtotime(sfConfig::get("app_remove_unused", "-2 months"))), Criteria::LESS_THAN);
+		$unused = ProductPeer::doSelect($c);
+
+		if ($unused) {
+			sfLogger::getInstance()->info('{product} found ' . count($unused) . ' unused items');
+		}
+
+		foreach ($unused as $item) {
+			$item->setIsHidden(true);
+			$item->save();
+		}
 
   }
 

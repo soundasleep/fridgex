@@ -9,6 +9,8 @@ all:
   credit_max:     50       # max credit per purchase in $; will throw an error if more
   debit_max:      10       # max debit per purchase in $; will throw an error if more
   
+  remove_unused:    -2 months     # remove unused products after this length of time
+  
   mail:
     charset:    utf-8
     hostname:   localhost
