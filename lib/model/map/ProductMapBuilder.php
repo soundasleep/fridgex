@@ -48,6 +48,8 @@ class ProductMapBuilder {
 
 		$tMap->addColumn('UPDATED_AT', 'UpdatedAt', 'int', CreoleTypes::TIMESTAMP, false, null);
 
+		$tMap->addColumn('EXTRA_SURCHARGE', 'ExtraSurcharge', 'int', CreoleTypes::INTEGER, false, null);
+
 		$tMap->addColumn('IS_HIDDEN', 'IsHidden', 'boolean', CreoleTypes::BOOLEAN, true, null);
 
 	} 

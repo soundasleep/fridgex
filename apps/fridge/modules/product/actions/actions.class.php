@@ -338,8 +338,8 @@ class productActions extends myActions
 		  $this->forward404Unless($this->product, "no product specified");
 		  $this->quantity = (int) $this->getRequestParameter('quantity');
 		  $this->forward404Unless($this->quantity > 0, "no quantity specified");
-		  $surcharge = get_surcharge_for($this->product->getPrice());
-		  $total = apply_surcharge($this->product->getPrice()) * $this->quantity;
+		  $surcharge = get_surcharge_for_product($this->product);
+		  $total = apply_surcharge_product($this->product) * $this->quantity;
 		  $this->forward404Unless($this->product->getInventory() >= $this->quantity, "insufficient quantites available");
 
 		  if (!$stock_loss) {

@@ -79,6 +79,9 @@ class product_adminActions extends myActions
     if ($this->user->canSetInventory($product)) {
     	$product->setInventory($this->getRequestParameter('inventory'));
 	}
+    if ($this->user->canSetExtraSurcharge($product)) {
+    	$product->setExtraSurcharge($this->getRequestParameter('extra_surcharge'));
+	}
     $product->setSortOrder($this->getRequestParameter('sort_order'));
 
     // handle upload

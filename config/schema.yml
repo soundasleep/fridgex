@@ -40,6 +40,8 @@ propel:
     created_at:
     updated_at:
     
+    extra_surcharge:  integer   # in percent (i.e. 100 = 100% surcharge)
+    
     is_hidden:      { type: boolean, required: true, default: false }
 
   # people make purchases or credits (they are stored in the same table)

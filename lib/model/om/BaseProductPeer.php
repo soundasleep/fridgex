@@ -13,7 +13,7 @@ abstract class BaseProductPeer {
 	const CLASS_DEFAULT = 'lib.model.Product';
 
 	
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -44,6 +44,9 @@ abstract class BaseProductPeer {
 	const UPDATED_AT = 'product.UPDATED_AT';
 
 	
+	const EXTRA_SURCHARGE = 'product.EXTRA_SURCHARGE';
+
+	
 	const IS_HIDDEN = 'product.IS_HIDDEN';
 
 	
@@ -52,18 +55,18 @@ abstract class BaseProductPeer {
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Price', 'Inventory', 'ImageUrl', 'SortOrder', 'CreatedAt', 'UpdatedAt', 'IsHidden', ),
-		BasePeer::TYPE_COLNAME => array (ProductPeer::ID, ProductPeer::TITLE, ProductPeer::PRICE, ProductPeer::INVENTORY, ProductPeer::IMAGE_URL, ProductPeer::SORT_ORDER, ProductPeer::CREATED_AT, ProductPeer::UPDATED_AT, ProductPeer::IS_HIDDEN, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'price', 'inventory', 'image_url', 'sort_order', 'created_at', 'updated_at', 'is_hidden', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Price', 'Inventory', 'ImageUrl', 'SortOrder', 'CreatedAt', 'UpdatedAt', 'ExtraSurcharge', 'IsHidden', ),
+		BasePeer::TYPE_COLNAME => array (ProductPeer::ID, ProductPeer::TITLE, ProductPeer::PRICE, ProductPeer::INVENTORY, ProductPeer::IMAGE_URL, ProductPeer::SORT_ORDER, ProductPeer::CREATED_AT, ProductPeer::UPDATED_AT, ProductPeer::EXTRA_SURCHARGE, ProductPeer::IS_HIDDEN, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'price', 'inventory', 'image_url', 'sort_order', 'created_at', 'updated_at', 'extra_surcharge', 'is_hidden', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Price' => 2, 'Inventory' => 3, 'ImageUrl' => 4, 'SortOrder' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, 'IsHidden' => 8, ),
-		BasePeer::TYPE_COLNAME => array (ProductPeer::ID => 0, ProductPeer::TITLE => 1, ProductPeer::PRICE => 2, ProductPeer::INVENTORY => 3, ProductPeer::IMAGE_URL => 4, ProductPeer::SORT_ORDER => 5, ProductPeer::CREATED_AT => 6, ProductPeer::UPDATED_AT => 7, ProductPeer::IS_HIDDEN => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'price' => 2, 'inventory' => 3, 'image_url' => 4, 'sort_order' => 5, 'created_at' => 6, 'updated_at' => 7, 'is_hidden' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Price' => 2, 'Inventory' => 3, 'ImageUrl' => 4, 'SortOrder' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, 'ExtraSurcharge' => 8, 'IsHidden' => 9, ),
+		BasePeer::TYPE_COLNAME => array (ProductPeer::ID => 0, ProductPeer::TITLE => 1, ProductPeer::PRICE => 2, ProductPeer::INVENTORY => 3, ProductPeer::IMAGE_URL => 4, ProductPeer::SORT_ORDER => 5, ProductPeer::CREATED_AT => 6, ProductPeer::UPDATED_AT => 7, ProductPeer::EXTRA_SURCHARGE => 8, ProductPeer::IS_HIDDEN => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'price' => 2, 'inventory' => 3, 'image_url' => 4, 'sort_order' => 5, 'created_at' => 6, 'updated_at' => 7, 'extra_surcharge' => 8, 'is_hidden' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	
@@ -132,6 +135,8 @@ abstract class BaseProductPeer {
 		$criteria->addSelectColumn(ProductPeer::CREATED_AT);
 
 		$criteria->addSelectColumn(ProductPeer::UPDATED_AT);
+
+		$criteria->addSelectColumn(ProductPeer::EXTRA_SURCHARGE);
 
 		$criteria->addSelectColumn(ProductPeer::IS_HIDDEN);
 

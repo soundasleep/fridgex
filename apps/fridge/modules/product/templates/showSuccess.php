@@ -14,23 +14,29 @@
 	<tbody>
 	<tr>
 	<th>Price: </th>
-	<td><?php echo my_format_currency(apply_surcharge($product->getPrice())) ?>
-	<?php if ($user && $user->canViewSurcharge() && get_surcharge_for($product->getPrice())) { ?>, includes a surcharge of <?php echo my_format_currency(get_surcharge_for($product->getPrice())); ?><?php } ?></td>
+	<td><?php echo my_format_currency(apply_surcharge_product($product)) ?>
+	<?php if ($user && $user->canViewSurcharge() && get_surcharge_for_product($product)) { ?>, includes a surcharge of <?php echo my_format_currency(get_surcharge_for_product($product)); ?><?php } ?></td>
 	</tr>
 	<tr>
 	<th>Inventory: </th>
 	<td><?php echo format_number($product->getInventory()) ?></td>
 	</tr>
+	<?php if ($user && $user->canViewSurcharge() && $product->getExtraSurcharge()) { ?>
 	<tr>
-	<th>Image: </th>
-	<td><?php echo image_tag($product->getImageUrl()) ?></td>
+	<th>Extra surcharge: </th>
+	<td><?php echo number_format($product->getExtraSurcharge()) ?> %</td>
 	</tr>
+	<?php } ?>
 	<?php if ($product->getIsHidden()) { ?>
 	<tr>
 	<th>Hidden: </th>
 	<td><?php echo yes_icon() ?></td>
 	</tr>
 	<?php } ?>
+	<tr>
+	<th>Image: </th>
+	<td><?php echo image_tag($product->getImageUrl()) ?></td>
+	</tr>
 	</tbody>
 	</table>
 </div>

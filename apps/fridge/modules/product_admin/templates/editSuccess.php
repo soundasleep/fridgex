@@ -55,6 +55,14 @@ Did you mean any of these <?php echo link_to("unused products", "product/list?li
 )) ?></td>
 </tr>
 <?php } ?>
+<?php if ($user->canSetExtraSurcharge($product)) { ?>
+<tr>
+  <th>Extra surcharge:</th>
+  <td><?php echo object_input_tag($product, 'getExtraSurcharge', array (
+  'size' => 7,
+)) ?> %</td>
+</tr>
+<?php } ?>
 <tr>
   <th>Image:</th>
   <td><?php echo $product->getImageUrl() ? image_tag($product->getImageUrl()) : "(empty)"; ?><br>

@@ -63,6 +63,7 @@ CREATE TABLE `product`
 	`sort_order` INTEGER,
 	`created_at` DATETIME,
 	`updated_at` DATETIME,
+	`extra_surcharge` INTEGER,
 	`is_hidden` INTEGER default 0 NOT NULL,
 	PRIMARY KEY (`id`)
 )Type=MyISAM;

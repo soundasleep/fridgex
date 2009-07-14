@@ -37,21 +37,32 @@ function my_format_date($d) {
 
 }
 
-function get_surcharge_for($price) {
+function get_surcharge_for_product($product) {
+	$price = $product->getPrice();
+
 	$surcharge = sfConfig::get("app_surcharge", 0);
 	$surcharge_units = sfConfig::get("app_surcharge_units", 100);
 
+	// extra surcharge?
+	$extra = 0;
+	if ($product->getExtraSurcharge()) {
+		$extra = $product->getExtraSurcharge() / 100; 		// convert into %
+	}
+
 	if (!$surcharge) return 0;
 	if (strpos($surcharge, "%") !== false) {
+		// a %-based surcharge
 		$surcharge = (str_replace("%", "", $surcharge)) * 0.01;		// to %
+		$surcharge += $extra;	// add any extra surcharge
 		return round(($price * $surcharge * $surcharge_units)) / $surcharge_units;	// to the units
 	} else {
-		return round($surcharge * $surcharge_units) / $surcharge_units;			// to the units
+		// a fixed-price surcharge
+		return (round($surcharge * $surcharge_units) / $surcharge_units) * (1 + $extra);			// to the units
 	}
 }
 
-function apply_surcharge($price) {
-	return $price + get_surcharge_for($price);
+function apply_surcharge_product($product) {
+	return $product->getPrice() + get_surcharge_for_product($product);
 }
 
 function yes_icon() {

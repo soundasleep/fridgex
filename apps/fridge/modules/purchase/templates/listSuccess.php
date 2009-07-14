@@ -15,7 +15,7 @@
 	You have successfully cancelled <?php echo number_format($cancelled->getQuantity()); ?>
 	<?php echo link_to($cancelled->getProduct()->getTitle() . ($cancelled->getQuantity() == 1 ? "" : "s"), "product/show?id=".$cancelled->getProduct()->getId()); ?>
 	at <b><?php echo my_format_currency($cancelled->getPrice()); ?></b> each. The new product price
-	is now <b><?php echo my_format_currency(apply_surcharge($cancelled->getProduct()->getPrice())); ?></b>.
+	is now <b><?php echo my_format_currency(apply_surcharge_product($cancelled->getProduct())); ?></b>.
 </div>
 <?php } ?>
 

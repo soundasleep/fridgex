@@ -41,6 +41,10 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 
 	
+	protected $extra_surcharge;
+
+
+	
 	protected $is_hidden = false;
 
 	
@@ -139,6 +143,13 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		} else {
 			return date($format, $ts);
 		}
+	}
+
+	
+	public function getExtraSurcharge()
+	{
+
+		return $this->extra_surcharge;
 	}
 
 	
@@ -273,6 +284,22 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setExtraSurcharge($v)
+	{
+
+		
+		
+		if ($v !== null && !is_int($v) && is_numeric($v)) {
+			$v = (int) $v;
+		}
+
+		if ($this->extra_surcharge !== $v) {
+			$this->extra_surcharge = $v;
+			$this->modifiedColumns[] = ProductPeer::EXTRA_SURCHARGE;
+		}
+
+	} 
+	
 	public function setIsHidden($v)
 	{
 
@@ -303,13 +330,15 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 
 			$this->updated_at = $rs->getTimestamp($startcol + 7, null);
 
-			$this->is_hidden = $rs->getBoolean($startcol + 8);
+			$this->extra_surcharge = $rs->getInt($startcol + 8);
+
+			$this->is_hidden = $rs->getBoolean($startcol + 9);
 
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 9; 
+						return $startcol + 10; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Product object", $e);
 		}
@@ -487,6 +516,9 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 				return $this->getUpdatedAt();
 				break;
 			case 8:
+				return $this->getExtraSurcharge();
+				break;
+			case 9:
 				return $this->getIsHidden();
 				break;
 			default:
@@ -507,7 +539,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 			$keys[5] => $this->getSortOrder(),
 			$keys[6] => $this->getCreatedAt(),
 			$keys[7] => $this->getUpdatedAt(),
-			$keys[8] => $this->getIsHidden(),
+			$keys[8] => $this->getExtraSurcharge(),
+			$keys[9] => $this->getIsHidden(),
 		);
 		return $result;
 	}
@@ -548,6 +581,9 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 				$this->setUpdatedAt($value);
 				break;
 			case 8:
+				$this->setExtraSurcharge($value);
+				break;
+			case 9:
 				$this->setIsHidden($value);
 				break;
 		} 	}
@@ -565,7 +601,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[5], $arr)) $this->setSortOrder($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setCreatedAt($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setUpdatedAt($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setIsHidden($arr[$keys[8]]);
+		if (array_key_exists($keys[8], $arr)) $this->setExtraSurcharge($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setIsHidden($arr[$keys[9]]);
 	}
 
 	
@@ -581,6 +618,7 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ProductPeer::SORT_ORDER)) $criteria->add(ProductPeer::SORT_ORDER, $this->sort_order);
 		if ($this->isColumnModified(ProductPeer::CREATED_AT)) $criteria->add(ProductPeer::CREATED_AT, $this->created_at);
 		if ($this->isColumnModified(ProductPeer::UPDATED_AT)) $criteria->add(ProductPeer::UPDATED_AT, $this->updated_at);
+		if ($this->isColumnModified(ProductPeer::EXTRA_SURCHARGE)) $criteria->add(ProductPeer::EXTRA_SURCHARGE, $this->extra_surcharge);
 		if ($this->isColumnModified(ProductPeer::IS_HIDDEN)) $criteria->add(ProductPeer::IS_HIDDEN, $this->is_hidden);
 
 		return $criteria;
@@ -625,6 +663,8 @@ abstract class BaseProduct extends BaseObject  implements Persistent {
 		$copyObj->setCreatedAt($this->created_at);
 
 		$copyObj->setUpdatedAt($this->updated_at);
+
+		$copyObj->setExtraSurcharge($this->extra_surcharge);
 
 		$copyObj->setIsHidden($this->is_hidden);
 

@@ -212,6 +212,10 @@ class User extends BaseUser
 		return $this->hasSpecificPermission("stock");
 	}
 
+	public function canSetExtraSurcharge($product) {
+		return $this->canViewSurcharge() && $this->canSetInventory($product);
+	}
+
 	/**
 	 * Does this user have a specific permission key?
 	 * @see UserPermission
