@@ -422,7 +422,13 @@ class productActions extends myActions
 			  ($this->price * $this->quantity)) / ($this->product->getInventory() + $this->quantity));
 
 		  // now we have set the price, we can set the inventory
+		  $previous_inventory = $this->product->getInventory();
 		  $this->product->setInventory($this->product->getInventory() + $this->quantity);
+
+	      // if it was previously hidden, un-hide it
+	      if ($this->product->getIsHidden() && $previous_inventory == 0 && $this->product->getInventory() > 0) {
+			  $this->product->setIsHidden(false);
+		  }
 
 		  $this->product->save();
 
