@@ -10,7 +10,10 @@ function my_format_currency($a) {
 	return "$ " . number_format($a, 2);
 }
 
-function my_format_date($d) {
+/**
+ * Returns a relative date.
+ */
+function my_format_date_simple($d) {
 	if (!$d) {
 		return "<i>never</i>";
 	}
@@ -34,7 +37,19 @@ function my_format_date($d) {
 	}
 
 	return date("Y-m-d", strtotime($d));
+}
 
+/**
+ * Returns a relative date, wrapped with a &lt;span&gt; to also describe
+ * the precise date according to RFC 2822.
+ */
+function my_format_date($d) {
+	$formatted = my_format_date_simple($d);
+	if (!$d) {
+		return $formatted;
+	}
+
+	return '<span class="date" title="' . htmlspecialchars(date('r', strtotime($d))) . '">' . $formatted . '</span>';
 }
 
 function get_surcharge_for_product($product) {
